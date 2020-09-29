@@ -6,28 +6,25 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content color = "primary">
-    <div padding>    
-      <ion-item>    
-            <ion-label position = "floating">
-              Email Address
-            </ion-label>
-            <ion-input type = "text" [(ngModel)]="email"></ion-input>
-        </ion-item>
-
-        <ion-item>
-            <ion-label position = "floating">
-              Password
-            </ion-label>
-            <ion-input type="password" [(ngModel)]="password"></ion-input>
-        </ion-item>
-        </div>
-     
+<ion-content color = "white">  
+  <img class="displayed"  height="250 px" width="250 px" src="assets/images/GoodFoodLogo.png" alt="logo">
+         
  <div style="text-align: center"> 
   <section >
-    <ion-button [routerDirection] = "'forward'" [routerLink]="['/register']">Register</ion-button>
-    <ion-button (click)="login()">Login</ion-button>
+    <ion-button color = "primary" [routerDirection] = "'forward'" [routerLink]="['/register']">Create Account</ion-button>
   </section>
+  <section >  
+    <ion-button color = "secondary" [routerDirection] = "'forward'" [routerLink]="['/retailer-register']">I'm a Retailer</ion-button>
+  </section>
+  <section > 
+  <ion-text color="primary">
+    <h2>Already have an account?</h2>
+  </ion-text>
+  <ion-text [routerDirection] = "'forward'" [routerLink]="['/login']" color="primary">
+    <h2>Log In</h2>
+  </ion-text>
+</section > 
+
 </div>
   
 </ion-content>
