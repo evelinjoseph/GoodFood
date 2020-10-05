@@ -1,4 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { NavController } from '@ionic/angular';
+import { TabsPage } from '../tabs/tabs.page';
+import { UserService } from '../user.service';
+import * as firebase from 'firebase/app';
 
 @Component({
   selector: 'app-initial-page',
@@ -7,7 +12,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class InitialPagePage implements OnInit {
 
-  constructor() { }
+  constructor(public nacCtrl: NavController, public afAuth: AngularFireAuth, public user: UserService) {
+    afAuth.onAuthStateChanged(function(users) {
+      if (users) {
+        nacCtrl.navigateRoot(['./tabs'])
+      } else {
+        
+      }
+    });
+
+   }
 
   ngOnInit() {
   }
