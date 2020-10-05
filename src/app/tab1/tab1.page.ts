@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { UserService } from '../user.service';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-tab1',
@@ -7,6 +10,11 @@ import { Component } from '@angular/core';
 })
 export class Tab1Page {
 
-  constructor() {}
+  constructor(private nacCtrl: NavController, public afAuth: AngularFireAuth, public user: UserService) {}
+  async logout() {
+    this.afAuth.signOut();
+    this.nacCtrl.navigateRoot(['./login'])
+
+  }
 
 }
