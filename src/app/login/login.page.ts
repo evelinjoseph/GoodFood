@@ -34,7 +34,7 @@ export class LoginPage implements OnInit {
         // Handle Errors here.
         var errorCode = error.code;
         var errorMessage = error.message;
-        
+        console.log(errorMessage);
       });
       
       if(firebase.auth().currentUser){
@@ -43,10 +43,10 @@ export class LoginPage implements OnInit {
           uid:firebase.auth().currentUser.uid
         })
 
+        console.log(firebase.auth().currentUser)
+        this.nacCtrl.navigateRoot(['./tabs'])
+
       }
-      
-      console.log(firebase.auth().currentUser)
-      this.nacCtrl.navigateRoot(['./tabs'])
       
     }
     catch(err){
