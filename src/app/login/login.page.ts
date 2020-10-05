@@ -20,13 +20,12 @@ export class LoginPage implements OnInit {
   ngOnInit() {
   }
 
-  async login() {
+  public login() {
 
     const { email, password } = this
-    try{
-      
+    try{     
 
-      await this.afAuth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+      this.afAuth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
       .then(function() {
                 // New sign-in will be persisted with session persistence.
         return firebase.auth().signInWithEmailAndPassword(email, password);
@@ -35,6 +34,7 @@ export class LoginPage implements OnInit {
         // Handle Errors here.
         var errorCode = error.code;
         var errorMessage = error.message;
+        
       });
       
       if(firebase.auth().currentUser){
