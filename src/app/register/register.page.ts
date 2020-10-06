@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore'
 import { UserService } from '../user.service';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { NavController } from '@ionic/angular'
+import { NavController } from '@ionic/angular';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-register',
@@ -17,7 +18,7 @@ export class RegisterPage implements OnInit {
   password: string = "";
   cpassword: string = "";
 
-  constructor(private nacCtrl: NavController, public afAuth: AngularFireAuth, public afstore: AngularFirestore, public user:UserService) { }
+  constructor(private nacCtrl: NavController, public afAuth: AngularFireAuth, public afstore: AngularFirestore, public user:UserService, public alertController: AlertController) { }
 
   ngOnInit() {
   }
@@ -49,6 +50,7 @@ export class RegisterPage implements OnInit {
 
   }catch(error){
     console.dir(error)
+    alert(error.message);
   }
 }
 }

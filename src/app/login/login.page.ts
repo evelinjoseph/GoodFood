@@ -35,6 +35,7 @@ export class LoginPage implements OnInit {
         var errorCode = error.code;
         var errorMessage = error.message;
         console.log(errorMessage);
+        alert(error.message);
       });
       
       if(firebase.auth().currentUser){
