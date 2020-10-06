@@ -1,7 +1,8 @@
 {
   "name": "goodFood",
   "integrations": {
-    "capacitor": {}
+    "capacitor": {},
+    "cordova": {}
   },
   "type": "angular",
   "id": "53da455d"
