@@ -27,6 +27,7 @@ export class RegisterPage implements OnInit {
 
     const { firstname, lastname, email, password, cpassword} = this
     if(password !== cpassword){
+      alert("Passwords don't match")
       return console.error("Passwords don't match")
     }
 
