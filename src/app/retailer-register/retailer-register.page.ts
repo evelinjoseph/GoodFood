@@ -32,11 +32,12 @@ export class RetailerRegisterPage implements OnInit {
     try{
       const res = await this.afAuth.createUserWithEmailAndPassword(email, password)
 
-      this.afstore.doc(`retailers/${res.user.uid}`).set({
+      this.afstore.doc(`users/${res.user.uid}`).set({
         email,
         name,
         password,
-        isVerified: false
+        isVerified: false,
+        isRetailer: true
       })
 
       let newEmail = {
