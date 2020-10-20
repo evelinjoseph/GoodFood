@@ -15,8 +15,7 @@
       <ion-title size="large">Tab 1</ion-title>
     </ion-toolbar>
   </ion-header>
-
-  <app-explore-container name="Tab 1 page"></app-explore-container>
+  <ion-searchbar placeholder="Search by" (ionInput)="search($event)"></ion-searchbar>
 </ion-content>
 
 <ion-router-outlet id="main"></ion-router-outlet>

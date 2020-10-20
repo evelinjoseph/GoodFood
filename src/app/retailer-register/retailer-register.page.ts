@@ -41,7 +41,6 @@ export class RetailerRegisterPage implements OnInit {
 
       let newEmail = {
         to: 'goodfoodinnova@gmail.com',
-        //bcc: 'ejoseph2@mail.stmarytx.edu',
         subject: 'New Retailer Verification',
         body: 'Hello, please verify retailer: ' + name + ' with email: ' + email + ' and uid: ' + res.user.uid + '. Thank you!',
         isHtml: true,
@@ -52,9 +51,6 @@ export class RetailerRegisterPage implements OnInit {
           alert("isAvailable");
         }
        });
-       
-      
-      // Send a text message using default options
       this.emailComposer.open(newEmail);
            
     console.log(res)
@@ -65,5 +61,4 @@ export class RetailerRegisterPage implements OnInit {
     alert(error.message);
   }
 }
-
 }

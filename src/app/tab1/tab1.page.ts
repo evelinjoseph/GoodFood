@@ -17,4 +17,8 @@ export class Tab1Page {
 
   }
 
+  search(event){
+    
+  }
+
 }

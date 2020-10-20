@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { MenuController } from '@ionic/angular';
 
 @Component({
   selector: 'app-tab2',
@@ -8,7 +7,7 @@ import { MenuController } from '@ionic/angular';
 })
 export class Tab2Page {
 
-  constructor(private menu: MenuController) {}
+  constructor() {}
 
   
 
