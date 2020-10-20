@@ -1,0 +1,54 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button>[text]="Back"</ion-back-button>
+    </ion-buttons>      
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <br>
+  <ion-list>
+    <ion-item>
+      <ion-label position = "floating">
+          First Name
+        </ion-label>
+        <ion-input type = "text" [(ngModel)]="firstname"></ion-input>
+    </ion-item>
+    <br>
+    <ion-item>
+      <ion-label position = "floating">
+          Last Name
+        </ion-label>
+        <ion-input type = "text" [(ngModel)]="lastname"></ion-input>
+    </ion-item>
+    <br>
+  <ion-item>
+    <ion-label position = "floating">
+        Email Address
+      </ion-label>
+      <ion-input type = "text" [(ngModel)]="email"></ion-input>
+  </ion-item>
+  <br>
+  <ion-item>
+    <ion-label position = "floating">
+        Password
+      </ion-label>
+      <ion-input type="password" [(ngModel)]="password"></ion-input>
+  </ion-item>
+  <br>
+  <ion-item>
+    <ion-label position = "floating">
+      Confirm Password
+    </ion-label>
+    <ion-input type="password" [(ngModel)]="cpassword"></ion-input>
+</ion-item>
+</ion-list>
+  
+<div style="text-align: center">
+  <br>
+<ion-button fill="solid" Size = "large" color="primary" (click)="register()">Sign Up</ion-button>
+</div>
+</ion-content>
+
+
