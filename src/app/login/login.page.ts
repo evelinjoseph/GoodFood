@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { NavController } from '@ionic/angular';
+import { AlertController, NavController } from '@ionic/angular';
 import { TabsPage } from '../tabs/tabs.page';
 import { UserService } from '../user.service';
 import * as firebase from 'firebase/app';
@@ -14,30 +14,30 @@ import { AngularFirestore } from '@angular/fire/firestore';
 export class LoginPage implements OnInit {
 
   email: string = ""
-  password: string = "" 
-  userItems
+  password: string = ""
 
-  constructor(private nacCtrl: NavController, public afAuth: AngularFireAuth, public user: UserService, public afstore: AngularFirestore) { }
+  constructor(private nacCtrl: NavController, public afAuth: AngularFireAuth, public user: UserService, public afstore: AngularFirestore,public alertController: AlertController) { }
 
   ngOnInit() {
   }
 
   async login() {
-
-    const { email, password } = this
-    try{     
-
+    try{ 
+    const { email, password } = this        
+    if(email.length==0){
+      throw new Error('Please Enter Email Address');
+    }  
+    if(password.length==0){
+      throw new Error('Please Enter Password');
+    }
+    var self = this;
       this.afAuth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
       .then(function() {
                 // New sign-in will be persisted with local persistence.
         return firebase.auth().signInWithEmailAndPassword(email, password);
       })
       .catch(function(error) {
-        // Handle Errors here.
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        console.log(errorMessage);
-        alert(error.message);
+        self.presentAlert(error.message)
       });
       
       if(firebase.auth().currentUser){
@@ -53,21 +53,32 @@ export class LoginPage implements OnInit {
         else{
           this.nacCtrl.navigateRoot(['./retailertabs'])
         }
-        
-
-      
-        
-
-      }
-      
+      }      
     }
     catch(err){
-      console.dir(err)
-      if(err.code == "auth/user-not-found"){
-
-        console.log("User Not Found")
-
-      }
+      console.log(err.message);
+      this.presentAlert(err.message);
     }    
   }
+
+  public async presentAlert(errorMessage) : Promise<boolean> {
+    let resolveFunction: (confirm: boolean) => void;
+    const promise = new Promise<boolean>(resolve => {
+      resolveFunction = resolve;
+    });
+    
+    const alert = await this.alertController.create({
+      header: 'Login Error',
+      message: errorMessage,
+      buttons: [
+        {
+          text: 'OK',
+            handler: () => resolveFunction(true)
+        }
+      ]
+    });
+  
+    await alert.present();
+    return promise;
+  }  
 }

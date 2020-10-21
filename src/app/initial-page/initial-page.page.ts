@@ -13,9 +13,8 @@ import { LoginPage } from '../login/login.page';
   styleUrls: ['./initial-page.page.scss'],
 })
 export class InitialPagePage implements OnInit {
-
   constructor(public nacCtrl: NavController, public afAuth: AngularFireAuth, public afstore: AngularFirestore, public user: UserService) {
-    afAuth.onAuthStateChanged(async function(users) {
+     afAuth.onAuthStateChanged(async function(users) {
       if (users) {
          var docRef = (await afstore.collection("users").doc(users.uid).get().toPromise()).data()
          console.log(docRef)
@@ -25,13 +24,12 @@ export class InitialPagePage implements OnInit {
           else{
             nacCtrl.navigateRoot(['./retailertabs'])
           }
-      } else {
-        
+      } else {  
+           
       }
-    });
-   }
+    });    
+   }   
 
   ngOnInit() {
   }
-
 }
