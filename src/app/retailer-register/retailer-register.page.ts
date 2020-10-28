@@ -36,7 +36,13 @@ export class RetailerRegisterPage implements OnInit {
           name,
           password,
           isVerified: false,
-          isRetailer: true
+          isRetailer: true,
+          retailerUID: res.user.uid
+        })
+
+        this.user.setUser({
+          email,
+          uid: res.user.uid
         })
 
         const emailConfirmation = await this.presentAlertCheck();
