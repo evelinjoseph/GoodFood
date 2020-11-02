@@ -22,43 +22,92 @@ export class RetailerRegisterPage implements OnInit {
   }
 
   async register() {
-
-    const { name, email, password, cpassword} = this
-    if(password !== cpassword){
-      alert("Passwords don't match")
-      return console.error("Passwords don't match")
-    }
-
     try{
-      const res = await this.afAuth.createUserWithEmailAndPassword(email, password)
+      const { name, email, password, cpassword} = this
+      if(password !== cpassword){      
+        throw new Error('Passwords Do Not Match');
+      } 
+      if(name.length==0){
+        throw new Error('Please Enter a Name');
+      }     
+        const res = await this.afAuth.createUserWithEmailAndPassword(email, password)
+        this.afstore.doc(`users/${res.user.uid}`).set({
+          email,
+          name,
+          password,
+          isVerified: false,
+          isRetailer: true,
+          retailerUID: res.user.uid
+        })
 
-      this.afstore.doc(`retailers/${res.user.uid}`).set({
-        email,
-        name,
-        password,
-        isVerified: false
-      })
+        this.user.setUser({
+          email,
+          uid: res.user.uid
+        })
 
-      let newEmail = {
-        to: 'goodfoodinnova@gmail.com',
-        subject: 'New Retailer Verification',
-        body: 'Hello, please verify retailer: ' + name + ' with email: ' + email + ' and uid: ' + res.user.uid + '. Thank you!',
-        isHtml: true,
-      }
+        const emailConfirmation = await this.presentAlertCheck();
 
-      this.emailComposer.isAvailable().then((available: boolean) => {
-        if(available) {
-          alert("isAvailable");
+        if (emailConfirmation) {
+
+        let newEmail = {
+          to: 'goodfoodinnova@gmail.com',
+          subject: 'New Retailer Verification',
+          body: 'Hello, please verify retailer: ' + name + ' with email: ' + email + ' and uid: ' + res.user.uid + '. Thank you!',
+          isHtml: true,
         }
-       });
-      this.emailComposer.open(newEmail);
-           
-    console.log(res)
-    this.nacCtrl.navigateRoot(["./tabs"])
 
+        this.emailComposer.isAvailable().then((available: boolean) => {
+          if(available) {
+            alert("isAvailable");
+          }
+        });
+        this.emailComposer.open(newEmail);
+      }
+      this.nacCtrl.navigateRoot(["./retailertabs"])   
   }catch(error){
-    console.dir(error)
-    alert(error.message);
+    this.presentAlert(error.message);
   }
+}
+
+public async presentAlert(errorMessage) : Promise<boolean> {
+  let resolveFunction: (confirm: boolean) => void;
+  const promise = new Promise<boolean>(resolve => {
+    resolveFunction = resolve;
+  });
+  
+  const alert = await this.alertController.create({
+    header: 'Registration Error',
+    message: errorMessage,
+    buttons: [
+      {
+        text: 'OK',
+          handler: () => resolveFunction(true)
+      }
+    ]
+  });
+
+  await alert.present();
+  return promise;
+}
+
+public async presentAlertCheck() : Promise<boolean> {
+  let resolveFunction: (confirm: boolean) => void;
+  const promise = new Promise<boolean>(resolve => {
+    resolveFunction = resolve;
+  });
+  
+  const alert = await this.alertController.create({
+    header: 'Confirm Navigation',
+    message: 'You are about to be navigated out of this application. Click OK to continue.',
+    buttons: [
+      {
+        text: 'OK',
+          handler: () => resolveFunction(true)
+      }
+    ]
+  });
+
+  await alert.present();
+  return promise;
 }
 }

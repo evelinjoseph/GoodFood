@@ -38,7 +38,23 @@ const routes: Routes = [
   {
     path: 'tab4',
     loadChildren: () => import('./tab4/tab4.module').then( m => m.Tab4PageModule)
+  },  {
+    path: 'retailertabs',
+    loadChildren: () => import('./retailertabs/retailertabs.module').then( m => m.RetailertabsPageModule)
+  },
+  {
+    path: 'retailertab1',
+    loadChildren: () => import('./retailertab1/retailertab1.module').then( m => m.Retailertab1PageModule)
+  },
+  {
+    path: 'retailertab2',
+    loadChildren: () => import('./retailertab2/retailertab2.module').then( m => m.Retailertab2PageModule)
+  },
+  {
+    path: 'retailertab3',
+    loadChildren: () => import('./retailertab3/retailertab3.module').then( m => m.Retailertab3PageModule)
   }
+
 ];
 @NgModule({
   imports: [
