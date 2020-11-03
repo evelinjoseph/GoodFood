@@ -4,11 +4,17 @@
       <ion-back-button [text]="Back" defaultHref="/tab1"></ion-back-button>
     </ion-buttons>
     <ion-title>
-      Food Listing
+      Good Food
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  My item is: {{ item}}
+  <p> Name: {{ name }} </p>
+  <p> Description: {{ description }} </p>
+  <p> Price: ${{ price | number:'1.2-2' }}</p>
+  <p> Location: {{ location }}</p>
+  <p> Quantity: {{ quantity }}</p>
+  <p> Retailer Name: {{ retailer }}</p>
+  <p> Retailer Type: {{ retailerType }}</p>
 </ion-content>
