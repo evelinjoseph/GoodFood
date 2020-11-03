@@ -53,6 +53,10 @@ const routes: Routes = [
   {
     path: 'retailertab3',
     loadChildren: () => import('./retailertab3/retailertab3.module').then( m => m.Retailertab3PageModule)
+  },
+  {
+    path: 'user-listing',
+    loadChildren: () => import('./user-listing/user-listing.module').then( m => m.UserListingPageModule)
   }
 
 ];
