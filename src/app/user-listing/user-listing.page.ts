@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { ActivatedRoute } from '@angular/router';
+import { AngularFireStorage } from '@angular/fire/storage';
+import { UserService } from '../user.service';
+import { firestore } from 'firebase/app';
+import * as firebase from 'firebase/app';
 
 @Component({
   selector: 'app-user-listing',
@@ -9,6 +13,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class UserListingPage implements OnInit {
   ID;
+  listing;
   name;
   description;
   location;
@@ -18,7 +23,7 @@ export class UserListingPage implements OnInit {
   retailerUID;
   retailer;
 
-  constructor(private activatedRoute: ActivatedRoute, private firestore: AngularFirestore) { }
+  constructor(private activatedRoute: ActivatedRoute, private firestore: AngularFirestore, public user: UserService, private afStorage: AngularFireStorage) { }
 
   async ngOnInit() {
     try{
@@ -26,7 +31,8 @@ export class UserListingPage implements OnInit {
     var self = this;
     //collection.doc.id  ??to add to db when we get to it
 
-    var listingRef = (await this.firestore.collection("listings").doc(this.ID).get().toPromise()).data()      
+    var listingRef = (await this.firestore.collection("listings").doc(this.ID).get().toPromise()).data()
+        this.listing = listingRef;   
         this.name = listingRef.name;
         this.description = listingRef.description;
         this.location = listingRef.location;
@@ -45,11 +51,28 @@ export class UserListingPage implements OnInit {
           }
       }).catch(function(error) {
           console.log("Error getting document:", error);
-      });  
+      });
+    
+    var storageRef =  this.afStorage.ref(`images/${this.retailerUID}.jpg`).getDownloadURL().toPromise().then(function(url) {        
+    document.querySelector('img').src = url;
+    }).catch(function(error) {
+      console.log("Error:", error);
+    });
+      
   }
   catch(error){
     console.log(error.message)
   }
 }
+
+  cart(listing){
+    this.firestore.doc(`users/${firebase.auth().currentUser.uid}`).update({
+      cart: firestore.FieldValue.arrayUnion({
+        name: listing.name,
+        description: listing.description,
+        listingID: listing.listingID
+      })
+    })
+  }
 }
 

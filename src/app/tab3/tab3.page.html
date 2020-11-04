@@ -7,6 +7,43 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <app-explore-container name="Tab 3 page"></app-explore-container>
+<ion-content padding>
+  <ion-item *ngFor="let item of ((userItems | async)?.cart)">
+   
+    <ion-card>
+     <ion-item class="ion-text-wrap">
+       <ion-icon name="book" slot="start"></ion-icon>
+       <ion-label class="ion-text-wrap">{{item.name}}</ion-label>
+           <ion-button  (click)="delete(item)" fill="outline" slot="end">Delete</ion-button>
+     </ion-item>     
+   
+     <ion-card-content>      
+      <p> Description: {{item.description}}</p>
+     </ion-card-content>
+   </ion-card>
+ </ion-item>
+
+ <ion-grid class="my-grid" *ngIf="((userItems | async)?.cart).length <= 0"> 
+  <ion-row justify-content-center align-items-center style="height: 50%; flex-direction: column">
+    <ion-col class="parent-row">      
+      <ion-icon class="large" color="primary" name="cart"></ion-icon>   
+  </ion-col>
+  </ion-row>  
+  
+  <ion-row justify-content-center align-items-center style="flex-direction: column"> 
+  <ion-col class="parent-row">
+    <ion-text color="primary">
+      <h2>There are no items in the cart!</h2>
+    </ion-text>
+  </ion-col>
+  </ion-row>
+</ion-grid>
 </ion-content>
+
+<ion-footer *ngIf="((userItems | async)?.cart).length > 0" no-shadow>
+  <!--*ngIf="((userItems | async)?.cart).length > 0"-->
+  <ion-toolbar *ngIf="userItems | async as cartData"  position="bottom" style="text-align: center"> 
+    
+    <ion-button (click)="checkOut(cartData.cart)">Checkout</ion-button>
+  </ion-toolbar>
+</ion-footer>

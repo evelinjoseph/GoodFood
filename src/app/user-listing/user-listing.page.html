@@ -10,11 +10,18 @@
 </ion-header>
 
 <ion-content>
-  <p> Name: {{ name }} </p>
+  <img src="url" style="width:100%;"> 
+  <h1> {{ name }} </h1>
+  <h2> Retailer: {{ retailer }}</h2>
   <p> Description: {{ description }} </p>
   <p> Price: ${{ price | number:'1.2-2' }}</p>
   <p> Location: {{ location }}</p>
-  <p> Quantity: {{ quantity }}</p>
-  <p> Retailer Name: {{ retailer }}</p>
+  <p> Quantity: {{ quantity }}</p>  
   <p> Retailer Type: {{ retailerType }}</p>
+  <div style="text-align: center"> 
+    <section >
+      <br>
+      <ion-button size ="large" (click)="cart(listing)">Add To Cart</ion-button>
+    </section>
+  </div>
 </ion-content>

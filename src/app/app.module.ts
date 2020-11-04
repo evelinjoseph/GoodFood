@@ -13,6 +13,7 @@ import { AngularFireModule } from '@angular/fire';
 import { environment } from 'src/environments/environment'
 import { AngularFirestoreModule} from '@angular/fire/firestore';
 import { AngularFireAuthModule } from '@angular/fire/auth';
+import { AngularFireStorageModule } from '@angular/fire/storage';
 
 import { UserService } from './user.service';
 import { EmailComposer } from '@ionic-native/email-composer/ngx';
@@ -23,7 +24,8 @@ import { EmailComposer } from '@ionic-native/email-composer/ngx';
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebase), 
     AngularFirestoreModule,
-    AngularFireAuthModule],
+    AngularFireAuthModule,
+    AngularFireStorageModule],
   providers: [
     StatusBar,
     SplashScreen,
