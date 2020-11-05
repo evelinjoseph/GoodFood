@@ -20,7 +20,7 @@ export class Retailertab3Page implements OnInit {
   email;
   password;
   url;
-  buttonText = "Edit";
+  buttonText: string = "Edit";
   isRead: boolean = true;
 
   constructor(private activatedRoute: ActivatedRoute, private firestore: AngularFirestore, public user: UserService, private afStorage: AngularFireStorage, public afAuth: AngularFireAuth) { }
@@ -63,15 +63,29 @@ isReadonly() {
   return this.isRead;
 }
 
-public edit() : void
+edit()
   {
-    if(this.buttonText == 'Edit'){
+    if(this.buttonText == "Edit"){
       this.isRead = false;
       this.buttonText = "Save";
-    }
+     }
     else{
       this.isRead = true;
       this.buttonText = "Edit";
+      
+      const { name } = this
+      if(name.trim().length != 0){
+        try{
+          this.firestore.doc(`users/${this.userUID}`).update({          
+            name               
+          })
+        }catch(error){  
+          console.log(error.message)
+        }   
+      }else {
+       alert("Please enter a value for name");       
+      }  
+      
     }   
   }
 }

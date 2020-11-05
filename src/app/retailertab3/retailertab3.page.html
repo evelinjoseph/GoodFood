@@ -1,18 +1,17 @@
 <ion-header style="text-align: center" [translucent]="true">
   <ion-toolbar color="primary" mode="ios">
-    <ion-buttons slot="start">
-      <ion-back-button [text]="Back" defaultHref="/tab1"></ion-back-button>
-    </ion-buttons>
     <ion-title>
       Good Food
     </ion-title>
+    <ion-buttons slot="start">
+      <ion-menu-button autoHide="true"></ion-menu-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <img [src]="url" style="width:100%;"> 
   <h1 style="text-align: center;"> {{ name }} </h1>
- 
  
   <ion-item >    
     <ion-label>
@@ -40,16 +39,12 @@
           Password:
         </ion-label>
         <ion-textarea placeholder="{{ password }}"  [readonly]=true ></ion-textarea>
-    </ion-item>
-
-    <ion-footer style="text-align: center;">      
-      <ion-button
-      type="button" 
-      color="primary" 
-      fill="solid" 
-      size="large" 
-      (click)="edit()">{{buttonText}}
-      </ion-button>
-    </ion-footer>
-
+    </ion-item>  
+    
+    <div style="text-align: center"> 
+      <section >
+        <br>
+        <ion-button size ="large" (click)="edit()">{{buttonText}}</ion-button>
+      </section>
+    </div>
 </ion-content>
