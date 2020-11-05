@@ -32,7 +32,7 @@
   
   <ion-row justify-content-center align-items-center style="flex-direction: column"> 
   <ion-col class="parent-row">
-    <ion-text color="primary">
+    <ion-text color="primary" style="text-align: center">
       <h2>There are no items in the cart!</h2>
     </ion-text>
   </ion-col>
@@ -41,9 +41,7 @@
 </ion-content>
 
 <ion-footer *ngIf="((userItems | async)?.cart).length > 0" no-shadow>
-  <!--*ngIf="((userItems | async)?.cart).length > 0"-->
-  <ion-toolbar *ngIf="userItems | async as cartData"  position="bottom" style="text-align: center"> 
-    
+  <ion-toolbar *ngIf="userItems | async as cartData"  position="bottom" style="text-align: center">     
     <ion-button (click)="checkOut(cartData.cart)">Checkout</ion-button>
   </ion-toolbar>
 </ion-footer>

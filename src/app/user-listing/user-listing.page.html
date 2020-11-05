@@ -10,14 +10,23 @@
 </ion-header>
 
 <ion-content>
-  <img src="url" style="width:100%;"> 
-  <h1> {{ name }} </h1>
-  <h2> Retailer: {{ retailer }}</h2>
-  <p> Description: {{ description }} </p>
-  <p> Price: ${{ price | number:'1.2-2' }}</p>
-  <p> Location: {{ location }}</p>
-  <p> Quantity: {{ quantity }}</p>  
-  <p> Retailer Type: {{ retailerType }}</p>
+  <img [src]="url" style="width:100%;"> 
+
+  <h1 style="text-align: center; font-weight: bold"> {{ retailer }}: {{ name }}</h1>
+  <hr>
+  <ion-text color="primary">
+  <h3 style="text-align: center; font-weight: bold;" > ${{ price | number:'1.2-2' }}</h3>
+  </ion-text> 
+
+  <div style="text-align: center; font-size: large;">
+    <ion-icon name="location-outline"></ion-icon> 
+    {{ location }}
+  </div>
+
+  <p style="text-align: center"> {{ quantity }} meals left</p>  
+  <hr> 
+  <p style="text-align: center; font-size: large;"> {{ description }} </p>  
+  
   <div style="text-align: center"> 
     <section >
       <br>

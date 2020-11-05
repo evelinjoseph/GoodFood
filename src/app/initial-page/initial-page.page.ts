@@ -17,7 +17,6 @@ export class InitialPagePage implements OnInit {
      afAuth.onAuthStateChanged(async function(users) {
       if (users) {
          var docRef = (await afstore.collection("users").doc(users.uid).get().toPromise()).data()
-         console.log(docRef)
          if(docRef.isRetailer == false){
             nacCtrl.navigateRoot(['./tabs'])
           }

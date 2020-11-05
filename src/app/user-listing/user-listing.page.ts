@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { ActivatedRoute } from '@angular/router';
 import { AngularFireStorage } from '@angular/fire/storage';
@@ -22,8 +22,9 @@ export class UserListingPage implements OnInit {
   retailerType;
   retailerUID;
   retailer;
+  url;
 
-  constructor(private activatedRoute: ActivatedRoute, private firestore: AngularFirestore, public user: UserService, private afStorage: AngularFireStorage) { }
+  constructor(private activatedRoute: ActivatedRoute, private firestore: AngularFirestore, public user: UserService, private afStorage: AngularFireStorage, private changeDetection: ChangeDetectorRef) { }
 
   async ngOnInit() {
     try{
@@ -54,9 +55,9 @@ export class UserListingPage implements OnInit {
       });
     
     var storageRef =  this.afStorage.ref(`images/${this.retailerUID}.jpg`).getDownloadURL().toPromise().then(function(url) {        
-    document.querySelector('img').src = url;
+       self.url = url; 
     }).catch(function(error) {
-      console.log("Error:", error);
+      self.url = 'assets/images/default.png';
     });
       
   }
@@ -74,5 +75,7 @@ export class UserListingPage implements OnInit {
       })
     })
   }
+
+  
 }
 
