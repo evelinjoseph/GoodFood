@@ -10,10 +10,46 @@
 </ion-header>
 
 <ion-content>
-  <img src="assets/images/restaurant.jpg" style="width:100%;"> 
+  <img [src]="url" style="width:100%;"> 
   <h1 style="text-align: center;"> {{ name }} </h1>
-  <h2 style="text-align: center;">{{ retailer }}</h2>
-  <p>Retailer Email: {{ email }}</p>
-  <p> Retailer UID: {{ retailerUID }} </p>
+ 
+ 
+  <ion-item >    
+    <ion-label>
+      Retailer Name:
+    </ion-label>
+    <ion-textarea placeholder="{{ name }}" [readonly]="isReadonly()" [(ngModel)]="name" ></ion-textarea>
+  </ion-item>
+
+   <ion-item >    
+        <ion-label>
+          Retailer UID:
+        </ion-label>
+        <ion-textarea placeholder="{{ retailerUID }}" [readonly]=true  ></ion-textarea>
+    </ion-item>
+
+     <ion-item >    
+        <ion-label>
+          Retailer Email Address:
+        </ion-label>
+        <ion-textarea placeholder="{{ email }}" [readonly]=true  ></ion-textarea>
+    </ion-item>
+
+    <ion-item>
+        <ion-label>
+          Password:
+        </ion-label>
+        <ion-textarea placeholder="{{ password }}"  [readonly]=true ></ion-textarea>
+    </ion-item>
+
+    <ion-footer style="text-align: center;">      
+      <ion-button
+      type="button" 
+      color="primary" 
+      fill="solid" 
+      size="large" 
+      (click)="edit()">{{buttonText}}
+      </ion-button>
+    </ion-footer>
 
 </ion-content>

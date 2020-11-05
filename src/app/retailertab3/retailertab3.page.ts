@@ -13,43 +13,65 @@ import * as firebase from 'firebase/app';
   styleUrls: ['./retailertab3.page.scss'],
 })
 export class Retailertab3Page implements OnInit {
-  ID;
-  quantity;
+  userUID;
   retailerType;
   retailerUID;
-  retailer;
+  name;
   email;
+  password;
+  url;
+  buttonText = "Edit";
+  isRead: boolean = true;
 
   constructor(private activatedRoute: ActivatedRoute, private firestore: AngularFirestore, public user: UserService, private afStorage: AngularFireStorage, public afAuth: AngularFireAuth) { }
-
+  
   async ngOnInit() {
     try{
     var self = this;
+    await (firebase.auth().onAuthStateChanged(async function(user) {  
+      
+      if (user) {        
+        self.userUID = user.uid
 
-    var u = firebase.auth().currentUser;
+          var userRef = (await self.firestore.collection("users").doc(self.userUID).get().toPromise()).data()
+          console.log(userRef)
+              self.retailerType = userRef.retailerType;
+              self.retailerUID = userRef.retailerUID;    
+              self.email = userRef.email;
+              self.password = userRef.password;
+              self.name = userRef.name;
 
-    //collection.doc.id  ??to add to db when we get to it
-
-    var listingRef = (await this.firestore.collection("users").doc(u.uid).get().toPromise()).data()
-        this.retailerType = listingRef.retailerType;
-        this.retailerUID = listingRef.retailerUID;    
-        this.email = listingRef.email;
-
-    var retailerRef = this.firestore.doc(`users/${this.retailerUID}`);    
-      retailerRef.get().toPromise().then(function(doc) {        
-          if (doc.exists) {               
-               self.retailer = doc.data().name;
-          } else {
-              // doc.data() will be undefined in this case
-              console.log("No such document!");
-          }
-      }).catch(function(error) {
-          console.log("Error getting document:", error);
-      });
+          var storageRef =  self.afStorage.ref(`images/${self.userUID}.jpg`).getDownloadURL().toPromise().then(function(url) {        
+              self.url = url; 
+          }).catch(function(error) {
+            self.url = 'assets/images/default.png';
+          });
+           
+      }
+      else{
+        console.log('no user signed in');
+      }
+    }));    
       
   }
   catch(error){
     console.log(error.message)
   }
 }
+
+isReadonly() {
+  return this.isRead;
+}
+
+public edit() : void
+  {
+    if(this.buttonText == 'Edit'){
+      this.isRead = false;
+      this.buttonText = "Save";
+    }
+    else{
+      this.isRead = true;
+      this.buttonText = "Edit";
+    }   
+  }
 }
