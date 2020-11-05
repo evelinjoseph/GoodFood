@@ -42,6 +42,6 @@
 
 <ion-footer *ngIf="((userItems | async)?.cart).length > 0" no-shadow>
   <ion-toolbar *ngIf="userItems | async as cartData"  position="bottom" style="text-align: center">     
-    <ion-button (click)="checkOut(cartData.cart)">Checkout</ion-button>
+    <ion-button (click)="checkOut(cartData.cart)">Checkout</ion-button>    
   </ion-toolbar>
 </ion-footer>
