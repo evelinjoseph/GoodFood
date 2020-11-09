@@ -22,32 +22,29 @@ export class Tab3Page {
   retailerType;
   retailerUID;
 
-  constructor(public afstore: AngularFirestore, private changeDetection: ChangeDetectorRef, private user: UserService) { 
+  constructor(public afstore: AngularFirestore, private changeDetection: ChangeDetectorRef, private user: UserService) {}
 
-       
-  }
-
-  async ngOnInit() {    
-    var self = this    
-    await (firebase.auth().onAuthStateChanged(function(user) {  
-      
+  ngOnInit() {    
+    var self = this
+    firebase.auth().onAuthStateChanged(function(user) {        
       if (user) {        
         self.userUID = user.uid
         self.items = self.afstore.doc(`users/${self.userUID}`);
         self.userItems = self.items.valueChanges(); 
         self.changeDetection.detectChanges();   
-        self.getListingID();    
+        //self.getListingID();    
       }
       else{
-
         console.log('no user signed in');
       }
-    }));  
-           
+    });
+     
   }
 
   getListingID(){
     var self = this;
+
+    console.log(this.userItems)
 
     this.afstore.doc(`users/${this.userUID}`).get().toPromise().then(function(querySnapshot) {
       var cart1 = querySnapshot.get("cart");
