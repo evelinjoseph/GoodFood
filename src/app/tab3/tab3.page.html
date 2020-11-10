@@ -7,21 +7,20 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
-  <ion-item *ngFor="let item of ((userItems | async)?.cart)">
-    <!-- <ion-item *ngFor="let item of cart"> -->
+<ion-content fullscreen >
+  <div *ngFor="let item of ((userItems | async)?.cart)">
     <ion-card>
-     <ion-item class="ion-text-wrap">
-       <ion-icon name="book" slot="start"></ion-icon>
-       <ion-label class="ion-text-wrap">{{item.name}}</ion-label>
-           <ion-button  (click)="delete(item)" fill="outline" slot="end">Delete</ion-button>
-     </ion-item>     
+
+     <ion-item>
+      <ion-card-title class="ion-text-wrap">{{item.name}}</ion-card-title>
+      <ion-button  (click)="delete(item)" fill="outline" slot="end">Delete</ion-button> 
+    </ion-item>
    
-     <ion-card-content>      
-      <p> Description: {{item.description}}</p>
+     <ion-card-content> 
+        <p> Description: {{item.description}}</p>
      </ion-card-content>
    </ion-card>
- </ion-item>
+  </div>
 
  <ion-grid class="my-grid" *ngIf="((userItems | async)?.cart).length <= 0"> 
   <ion-row justify-content-center align-items-center style="height: 50%; flex-direction: column">
@@ -40,8 +39,8 @@
 </ion-grid>
 </ion-content>
 
-<ion-footer *ngIf="((userItems | async)?.cart).length > 0" no-shadow>
-  <ion-toolbar *ngIf="userItems | async as cartData"  position="bottom" style="text-align: center">     
-    <ion-button (click)="checkOut(cartData.cart)">Checkout</ion-button>    
+<ion-footer *ngIf="((userItems | async)?.cart).length > 0" class="ion-no-border">
+  <ion-toolbar *ngIf="userItems | async as cartData"  position="bottom" style="text-align: center;">     
+    <ion-button (click)="checkOut(cartData.cart)" size="large">Checkout</ion-button>    
   </ion-toolbar>
 </ion-footer>

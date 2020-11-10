@@ -36,8 +36,6 @@ export class Tab1Page implements OnInit{
   async initializeItems(): Promise<any> {
     const listing = await this.firestore.collection('listings')
     .valueChanges().pipe(first()).toPromise();
-
-    console.log("reading db")
     this.listingsBackup = listing;
     return listing;
   }
@@ -82,8 +80,7 @@ export class Tab1Page implements OnInit{
           return (currentListing.retailerType.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1);
         }
       });
-    }
-    console.log(this.listings)     
+    }     
     this.changeDetection.detectChanges(); 
   }
 

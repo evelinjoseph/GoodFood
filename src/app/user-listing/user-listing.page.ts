@@ -5,6 +5,7 @@ import { AngularFireStorage } from '@angular/fire/storage';
 import { UserService } from '../user.service';
 import { firestore } from 'firebase/app';
 import * as firebase from 'firebase/app';
+import { LoadingController } from '@ionic/angular';
 
 @Component({
   selector: 'app-user-listing',
@@ -23,10 +24,12 @@ export class UserListingPage implements OnInit {
   retailerUID;
   retailer;
   url;
+  isReady: Boolean = false;
 
-  constructor(private activatedRoute: ActivatedRoute, private firestore: AngularFirestore, public user: UserService, private afStorage: AngularFireStorage, private changeDetection: ChangeDetectorRef) { }
+  constructor(private activatedRoute: ActivatedRoute, private firestore: AngularFirestore, public user: UserService, private afStorage: AngularFireStorage, private changeDetection: ChangeDetectorRef, public loadingController: LoadingController) { }
 
   async ngOnInit() {
+    this.presentLoading();
     try{
     this.ID = this.activatedRoute.snapshot.queryParamMap.get('id'); 
     var self = this;
@@ -40,25 +43,26 @@ export class UserListingPage implements OnInit {
         this.price = listingRef.price;
         this.quantity = listingRef.quantity;
         this.retailerType = listingRef.retailerType;
-        this.retailerUID = listingRef.retailerUID;    
+        this.retailerUID = listingRef.retailerUID; 
+        
+    var storageRef =  this.afStorage.ref(`images/${this.retailerUID}.jpg`).getDownloadURL().toPromise().then(function(url) {        
+          self.url = url;
+       }).catch(function(error) {
+         self.url = 'assets/images/default.png';
+       });
 
     var retailerRef = this.firestore.doc(`users/${this.retailerUID}`);    
       retailerRef.get().toPromise().then(function(doc) {        
           if (doc.exists) {               
-               self.retailer = doc.data().name;
+               self.retailer = doc.data().name;   
           } else {
               // doc.data() will be undefined in this case
               console.log("No such document!");
+               
           }
       }).catch(function(error) {
           console.log("Error getting document:", error);
-      });
-    
-    var storageRef =  this.afStorage.ref(`images/${this.retailerUID}.jpg`).getDownloadURL().toPromise().then(function(url) {        
-       self.url = url; 
-    }).catch(function(error) {
-      self.url = 'assets/images/default.png';
-    });
+      });  
       
   }
   catch(error){
@@ -74,6 +78,21 @@ export class UserListingPage implements OnInit {
         listingID: listing.listingID
       })
     })
+  }
+
+
+  async presentLoading() {
+    const loading = await this.loadingController.create({
+      duration: 900,
+      translucent: true,
+      cssClass: 'transparent',
+      backdropDismiss: false
+    });
+    await loading.present();
+
+    const { role, data } = await loading.onDidDismiss();
+    this.isReady = true;
+    this.changeDetection.detectChanges(); 
   }
 
   

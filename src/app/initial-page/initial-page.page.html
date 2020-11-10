@@ -1,5 +1,4 @@
-<body>  
-<ion-header style="text-align: center" [translucent]="true">
+<ion-header style="text-align: center" [translucent]="true" [hidden]="!isReady">
   <ion-toolbar color="primary" mode="ios">
     <ion-title>
       Good Food
@@ -7,7 +6,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content color = "white">  
+<ion-content color = "white" [hidden]="!isReady">  
   <img class="displayed"  height="250 px" width="250 px" src="assets/images/GoodFoodLogo.png" alt="logo">
          
  <div style="text-align: center"> 
@@ -31,5 +30,4 @@
 </div>
   
 </ion-content>
-</body>
 

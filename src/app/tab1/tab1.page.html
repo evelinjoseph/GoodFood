@@ -26,12 +26,17 @@
         <ion-label slot="end">100</ion-label>
       </ion-range>
     </ion-item> -->
-  <ion-item *ngFor="let item of listings">   
+  <div *ngFor="let item of listings">   
     <ion-card [routerLink]="['/user-listing']" [queryParams]="{ id: item.listingID }" routerDirection="forward">
-     <ion-item>
+     <!-- <ion-item> 
        <ion-icon name="restaurant" slot="start"></ion-icon>
-       <ion-label class="ion-text-wrap">{{item.name}}</ion-label>
-     </ion-item>    
+       <ion-label class="ion-text-wrap">{{item.name}}</ion-label>   
+      </ion-item> 
+       <ion-card> -->
+        <!-- <img src="./madison.jpg" /> -->
+        <ion-card-header>
+          <ion-card-title class="ion-text-wrap">{{item.name}}</ion-card-title>
+        </ion-card-header>
    
      <ion-card-content>
        <p> Price: ${{item.price | number:'1.2-2'}}</p>
@@ -40,5 +45,5 @@
        <p> Retailer Type: {{item.retailerType}}</p>
      </ion-card-content>
    </ion-card>
- </ion-item>
+  </div>
 </ion-content>
