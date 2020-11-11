@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { ActivatedRoute } from '@angular/router';
 import { AngularFireStorage } from '@angular/fire/storage';
@@ -6,6 +6,7 @@ import { UserService } from '../user.service';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { firestore } from 'firebase/app';
 import * as firebase from 'firebase/app';
+import { LoadingController } from '@ionic/angular';
 
 @Component({
   selector: 'app-retailertab3',
@@ -22,10 +23,12 @@ export class Retailertab3Page implements OnInit {
   url;
   buttonText: string = "Edit";
   isRead: boolean = true;
+  isReady: boolean = false;
 
-  constructor(private activatedRoute: ActivatedRoute, private firestore: AngularFirestore, public user: UserService, private afStorage: AngularFireStorage, public afAuth: AngularFireAuth) { }
+  constructor(private activatedRoute: ActivatedRoute, private firestore: AngularFirestore, public user: UserService, private afStorage: AngularFireStorage, public afAuth: AngularFireAuth, public loadingController: LoadingController, private changeDetection: ChangeDetectorRef) { }
   
   async ngOnInit() {
+    this.presentLoading()
     try{
     var self = this;
     await (firebase.auth().onAuthStateChanged(async function(user) {  
@@ -87,5 +90,19 @@ edit()
       }  
       
     }   
+  }
+
+  async presentLoading() {
+    const loading = await this.loadingController.create({
+      duration: 900,
+      translucent: true,
+      cssClass: 'transparent',
+      backdropDismiss: false
+    });
+    await loading.present();
+
+    const { role, data } = await loading.onDidDismiss();
+    this.isReady = true;
+    this.changeDetection.detectChanges(); 
   }
 }
