@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { AlertController } from '@ionic/angular';
 import * as firebase from 'firebase/app';
 import { UserService } from '../user.service'
 
@@ -22,7 +23,7 @@ export class Tab3Page {
   retailerType;
   retailerUID;
 
-  constructor(public afstore: AngularFirestore, private changeDetection: ChangeDetectorRef, private user: UserService) {}
+  constructor(public afstore: AngularFirestore, private changeDetection: ChangeDetectorRef, private user: UserService, public alertCtrl: AlertController) {}
 
   ngOnInit() {    
     var self = this
@@ -34,11 +35,15 @@ export class Tab3Page {
         self.changeDetection.detectChanges();   
         //self.getListingID();    
       }
-      else{
-        console.log('no user signed in');
-      }
     });
      
+  }
+
+  ionViewWillEnter(){
+    if(this.items){
+      this.userItems = this.items.valueChanges();
+      this.changeDetection.detectChanges(); 
+    }    
   }
 
   getListingID(){
@@ -68,5 +73,93 @@ export class Tab3Page {
         this.quantity = listingRef.quantity;
         this.retailerType = listingRef.retailerType;
         this.retailerUID = listingRef.retailerUID; 
+  }
+
+  async delete(item){
+
+    const confirm = await this.presentAlertDelete();
+    if (confirm) {
+    this.afstore.doc(`users/${this.userUID}`).update({
+      cart: firebase.firestore.FieldValue.arrayRemove({
+        name: item.name,
+        description: item.description,
+        listingID: item.listingID
+      })
+    })
+  }
+  }
+
+  async presentAlertDelete() : Promise<boolean> {
+    let resolveFunction: (confirm: boolean) => void;
+    const promise = new Promise<boolean>(resolve => {
+      resolveFunction = resolve;
+    });
+    const alert = await this.alertCtrl.create({
+      header: 'Confirm Delete',
+      message: 'Are you sure you want to delete this item from your cart?',
+      buttons: [
+        {
+          text: 'Yes',
+            handler: () => resolveFunction(true)
+        }, {
+          text: 'No',
+          handler: () => resolveFunction(false)
+        }
+      ]
+    });
+
+    await alert.present();
+    return promise;
+  }
+
+  async checkOut(cart){
+    const confirm = await this.presentAlertCheck();
+    if (confirm) {
+      for(var item of cart){       
+        this.afstore.doc(`users/${this.userUID}`).update({
+          checkedOut: firebase.firestore.FieldValue.arrayUnion({
+            name: item.name,
+            description: item.description,
+            listingID: item.listingID,
+            isCurrent: true,
+            date: new Date()
+          })
+        })
+
+        this.afstore.doc(`users/${this.userUID}`).update({
+          cart: firebase.firestore.FieldValue.arrayRemove({
+            name: item.name,
+            description: item.description,
+            listingID: item.listingID
+          })
+        })      
+  
+      }
+      console.log("checkout complete!")
+    }   
+
+  }
+
+  public async presentAlertCheck() : Promise<boolean> {
+    let resolveFunction: (confirm: boolean) => void;
+    const promise = new Promise<boolean>(resolve => {
+      resolveFunction = resolve;
+    });
+    const alert = await this.alertCtrl.create({
+      header: 'Confirm Check-Out',
+      message: 'Are you sure you want to check out these items from your cart?',
+      buttons: [
+        {
+          text: 'Yes',
+            handler: () => resolveFunction(true)
+        }, {
+          text: 'No',
+          handler: () => resolveFunction(false)
+        }
+      ]
+    });
+
+    await alert.present();
+    return promise;
   }
 }

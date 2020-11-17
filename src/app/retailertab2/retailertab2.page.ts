@@ -19,12 +19,6 @@ export class Retailertab2Page implements OnInit {
 
   constructor(private nacCtrl: NavController, public afAuth: AngularFireAuth, public user: UserService, private firestore: AngularFirestore, private changeDetection: ChangeDetectorRef, public alertController: AlertController) {}
 
-  async logout() {
-    this.afAuth.signOut();
-    this.nacCtrl.navigateRoot(['./login'])
-
-  }
-
   async ngOnInit() {
     this.listings = await this.initializeItems();  
   }

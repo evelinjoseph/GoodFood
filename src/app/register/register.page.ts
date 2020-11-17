@@ -41,7 +41,9 @@ export class RegisterPage implements OnInit {
         firstname,
         lastname,
         password,
-        isRetailer: false
+        isRetailer: false,
+        cart: [],
+        checkedOut: [],
       })
 
       this.user.setUser({

@@ -7,6 +7,25 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <app-explore-container name="Tab 4 page"></app-explore-container>
+<ion-content fullscreen >
+  <div *ngFor="let item of ((userItems | async)?.checkedOut)">
+    <ion-card>
+
+     <ion-item>
+      <ion-card-title class="ion-text-wrap">{{item.name}}</ion-card-title>
+    </ion-item>
+   
+     <ion-card-content> 
+        <p> Description: {{item.description}}</p>
+        <p> Ordered: {{item.date.toDate()}}</p>
+     </ion-card-content>
+   </ion-card>
+  </div>
+
+  
+  
+    <ion-text *ngIf="((userItems | async)?.checkedOut).length <= 0" class="centerText" color="primary" style="text-align: center">
+      <h2>There are no orders currently.</h2>
+    </ion-text>
+  
 </ion-content>
