@@ -38,6 +38,7 @@ export class RetailerRegisterPage implements OnInit {
           isVerified: false,
           isRetailer: true,
           retailerUID: res.user.uid,
+          listings: [],
           orders: []
         })
 

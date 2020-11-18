@@ -145,9 +145,16 @@ export class Tab3Page {
             description: item.description,
             listingID: item.listingID,
             retailerUID: item.retailerUID,
+            userUID: this.userUID,
             isCurrent: true,
             date: this.date
           })
+        })
+
+        const decrement = firebase.firestore.FieldValue.increment(-1);
+
+        this.afstore.doc(`listings/${item.listingID}`).update({
+          quantity: decrement
         })
   
       }

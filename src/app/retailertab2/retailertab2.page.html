@@ -7,9 +7,9 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <br>
-  <ion-item *ngFor="let item of listings" >
+<ion-content fullscreen>
+  
+  <!-- <ion-item *ngFor="let item of listings" >
     <ion-card>
      <ion-item>
        <ion-icon name="restaurant" slot="start"></ion-icon>
@@ -23,9 +23,13 @@
        <p> Retailer Type: {{item.retailerType}}</p>
      </ion-card-content>
    </ion-card>
-  </ion-item>
-  <br>
-  <section style="text-align: center;">
-    <ion-button>Add Listing</ion-button>
-  </section>
+  </ion-item> -->
+  
 </ion-content>
+
+<ion-footer class="ion-no-border">
+  <ion-toolbar position="bottom" style="text-align: center;">     
+    <ion-button (click)="addListing()" size="large">Add Listing</ion-button>    
+  </ion-toolbar>
+</ion-footer>
+

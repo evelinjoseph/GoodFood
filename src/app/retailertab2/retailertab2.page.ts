@@ -20,15 +20,18 @@ export class Retailertab2Page implements OnInit {
   constructor(private nacCtrl: NavController, public afAuth: AngularFireAuth, public user: UserService, private firestore: AngularFirestore, private changeDetection: ChangeDetectorRef, public alertController: AlertController) {}
 
   async ngOnInit() {
-    this.listings = await this.initializeItems();  
+    //this.listings = await this.initializeItems();  
   }
 
-  async initializeItems(): Promise<any> {
-    const listing = await this.firestore.collection('listings')
-    .valueChanges().pipe(first()).toPromise();
+  // async initializeItems(): Promise<any> {
+  //   const listing = await this.firestore.collection('listings')
+  //   .valueChanges().pipe(first()).toPromise();
 
-    console.log("reading db")
-    this.listingsBackup = listing;
-    return listing;
+  //   console.log("reading db")
+  //   this.listingsBackup = listing;
+  //   return listing;
+  // }
+
+  addListing(){
   }
 }

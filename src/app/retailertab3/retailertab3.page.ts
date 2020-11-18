@@ -37,7 +37,6 @@ export class Retailertab3Page implements OnInit {
         self.userUID = user.uid
 
           var userRef = (await self.firestore.collection("users").doc(self.userUID).get().toPromise()).data()
-          console.log(userRef)
               self.retailerType = userRef.retailerType;
               self.retailerUID = userRef.retailerUID;    
               self.email = userRef.email;

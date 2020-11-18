@@ -39,4 +39,8 @@ export class Retailertab1Page implements OnInit {
     }    
   }
 
+  getUser(uid) : String{     
+    return uid;
+  }
+
 }
