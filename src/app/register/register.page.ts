@@ -43,7 +43,7 @@ export class RegisterPage implements OnInit {
         password,
         isRetailer: false,
         cart: [],
-        checkedOut: [],
+        orders: [],
       })
 
       this.user.setUser({

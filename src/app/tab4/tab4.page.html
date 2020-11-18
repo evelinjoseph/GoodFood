@@ -8,7 +8,7 @@
 </ion-header>
 
 <ion-content fullscreen >
-  <div *ngFor="let item of ((userItems | async)?.checkedOut)">
+  <div *ngFor="let item of ((userItems | async)?.orders)">
     <ion-card>
 
      <ion-item>
@@ -26,7 +26,7 @@
 
   
   
-    <ion-text *ngIf="((userItems | async)?.checkedOut).length <= 0" class="centerText" color="primary" style="text-align: center">
+    <ion-text *ngIf="((userItems | async)?.orders).length <= 0" class="centerText" color="primary" style="text-align: center">
       <p>There are no orders currently.</p>
     </ion-text>
   

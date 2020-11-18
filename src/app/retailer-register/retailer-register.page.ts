@@ -37,7 +37,8 @@ export class RetailerRegisterPage implements OnInit {
           password,
           isVerified: false,
           isRetailer: true,
-          retailerUID: res.user.uid
+          retailerUID: res.user.uid,
+          orders: []
         })
 
         this.user.setUser({

@@ -22,6 +22,7 @@ export class Tab3Page {
   quantity;
   retailerType;
   retailerUID;
+  date: Date;
 
   constructor(public afstore: AngularFirestore, private changeDetection: ChangeDetectorRef, private user: UserService, public alertCtrl: AlertController) {}
 
@@ -116,15 +117,16 @@ export class Tab3Page {
   async checkOut(cart){
     const confirm = await this.presentAlertCheck();
     if (confirm) {
-      for(var item of cart){       
+      for(var item of cart){ 
+        this.date = new Date();     
         this.afstore.doc(`users/${this.userUID}`).update({
-          checkedOut: firebase.firestore.FieldValue.arrayUnion({
+          orders: firebase.firestore.FieldValue.arrayUnion({
             name: item.name,
             description: item.description,
             listingID: item.listingID,
             retailerUID: item.retailerUID,
             isCurrent: true,
-            date: new Date()
+            date: this.date
           })
         })
 
@@ -135,7 +137,18 @@ export class Tab3Page {
             listingID: item.listingID,
             retailerUID: item.retailerUID
           })
-        })      
+        })  
+        
+        this.afstore.doc(`users/${item.retailerUID}`).update({
+          orders: firebase.firestore.FieldValue.arrayUnion({
+            name: item.name,
+            description: item.description,
+            listingID: item.listingID,
+            retailerUID: item.retailerUID,
+            isCurrent: true,
+            date: this.date
+          })
+        })
   
       }
       console.log("checkout complete!")
