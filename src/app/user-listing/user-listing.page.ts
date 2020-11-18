@@ -75,7 +75,8 @@ export class UserListingPage implements OnInit {
       cart: firestore.FieldValue.arrayUnion({
         name: listing.name,
         description: listing.description,
-        listingID: listing.listingID
+        listingID: listing.listingID,
+        retailerUID: listing.retailerUID
       })
     })
   }

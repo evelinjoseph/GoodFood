@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AlertController } from '@ionic/angular';
 import * as firebase from 'firebase/app';
@@ -13,8 +14,9 @@ export class Tab4Page implements OnInit {
   userUID;
   userItems;
   items;
+  retailerName;
 
-  constructor(public afstore: AngularFirestore, private changeDetection: ChangeDetectorRef, private user: UserService, public alertCtrl: AlertController) { }
+  constructor(public afstore: AngularFirestore, public afAuth: AngularFireAuth, private changeDetection: ChangeDetectorRef, private user: UserService, public alertCtrl: AlertController) { }
 
   ngOnInit() {
     var self = this
@@ -24,7 +26,7 @@ export class Tab4Page implements OnInit {
         self.items = self.afstore.doc(`users/${self.userUID}`);
         self.userItems = self.items.valueChanges(); 
         self.changeDetection.detectChanges();   
-        //self.getListingID();    
+        //self.getRetailer();    
       }
       else{
         console.log('no user signed in');
@@ -38,5 +40,13 @@ export class Tab4Page implements OnInit {
       this.changeDetection.detectChanges(); 
     }    
   }
+
+   getRetailer(uid) : String{
+     
+      return uid;
+  }
+  
+  
+
 
 }

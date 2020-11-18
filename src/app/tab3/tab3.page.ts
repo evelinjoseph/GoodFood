@@ -83,7 +83,8 @@ export class Tab3Page {
       cart: firebase.firestore.FieldValue.arrayRemove({
         name: item.name,
         description: item.description,
-        listingID: item.listingID
+        listingID: item.listingID,
+        retailerUID: item.retailerUID
       })
     })
   }
@@ -121,6 +122,7 @@ export class Tab3Page {
             name: item.name,
             description: item.description,
             listingID: item.listingID,
+            retailerUID: item.retailerUID,
             isCurrent: true,
             date: new Date()
           })
@@ -130,7 +132,8 @@ export class Tab3Page {
           cart: firebase.firestore.FieldValue.arrayRemove({
             name: item.name,
             description: item.description,
-            listingID: item.listingID
+            listingID: item.listingID,
+            retailerUID: item.retailerUID
           })
         })      
   
