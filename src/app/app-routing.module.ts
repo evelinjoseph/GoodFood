@@ -61,6 +61,10 @@ const routes: Routes = [
   {
     path: 'account',
     loadChildren: () => import('./account/account.module').then( m => m.AccountPageModule)
+  },
+  {
+    path: 'new-listing',
+    loadChildren: () => import('./new-listing/new-listing.module').then( m => m.NewListingPageModule)
   }
 
 ];

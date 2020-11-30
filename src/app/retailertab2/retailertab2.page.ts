@@ -41,9 +41,5 @@ export class Retailertab2Page implements OnInit {
       this.changeDetection.detectChanges(); 
     }    
   }
-
-
-
-  addListing(){
-  }
+ 
 }
