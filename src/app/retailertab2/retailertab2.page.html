@@ -17,7 +17,10 @@
     </ion-item>
    
      <ion-card-content> 
-        <p> Description: {{item.description}}</p>      
+      <p> Price: ${{item.price | number:'1.2-2'}}</p>
+      <p> Description: {{item.description}}</p>
+      <p> Location: {{location}}</p>
+      <p> Retailer Type: {{retailerType}}</p>     
      </ion-card-content>
    </ion-card>
   </div>  
