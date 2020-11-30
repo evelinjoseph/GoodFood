@@ -4,6 +4,7 @@ import { UserService } from '../user.service';
 import { AlertController, NavController } from '@ionic/angular';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { first } from 'rxjs/operators';
+import * as firebase from 'firebase/app';
 
 @Component({
   selector: 'app-retailertab2',
@@ -13,24 +14,35 @@ import { first } from 'rxjs/operators';
 export class Retailertab2Page implements OnInit {
 
   public listings: any[];
-  public listingsBackup: any[];
-  public retailers: any[];
-  public retailersBackup: any[];
+  retailerUID;
+  retailerItems;
+  items;
 
-  constructor(private nacCtrl: NavController, public afAuth: AngularFireAuth, public user: UserService, private firestore: AngularFirestore, private changeDetection: ChangeDetectorRef, public alertController: AlertController) {}
+  constructor(private nacCtrl: NavController, public afAuth: AngularFireAuth, public user: UserService, private afstore: AngularFirestore, private changeDetection: ChangeDetectorRef, public alertController: AlertController) {}
 
   async ngOnInit() {
-    //this.listings = await this.initializeItems();  
+    var self = this
+    firebase.auth().onAuthStateChanged(function(user) {        
+      if (user) {        
+        self.retailerUID = user.uid
+        self.items = self.afstore.doc(`users/${self.retailerUID}`);
+        self.retailerItems = self.items.valueChanges(); 
+        self.changeDetection.detectChanges();   
+      }
+      else{
+        console.log('no user signed in');
+      }
+    });
   }
 
-  // async initializeItems(): Promise<any> {
-  //   const listing = await this.firestore.collection('listings')
-  //   .valueChanges().pipe(first()).toPromise();
+  ionViewWillEnter(){
+    if(this.items){
+      this.retailerItems = this.items.valueChanges();
+      this.changeDetection.detectChanges(); 
+    }    
+  }
 
-  //   console.log("reading db")
-  //   this.listingsBackup = listing;
-  //   return listing;
-  // }
+
 
   addListing(){
   }

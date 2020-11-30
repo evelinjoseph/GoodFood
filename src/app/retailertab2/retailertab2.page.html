@@ -9,21 +9,22 @@
 
 <ion-content fullscreen>
   
-  <!-- <ion-item *ngFor="let item of listings" >
+  <div *ngFor="let item of ((retailerItems | async)?.listings)">
     <ion-card>
+
      <ion-item>
-       <ion-icon name="restaurant" slot="start"></ion-icon>
-       <ion-label class="ion-text-wrap">{{item.name}}</ion-label>
-     </ion-item>    
+      <ion-card-title class="ion-text-wrap">{{item.name}}</ion-card-title>
+    </ion-item>
    
-     <ion-card-content>
-       <p> Price: ${{item.price | number:'1.2-2'}}</p>
-       <p> Description: {{item.description}}</p>
-       <p> Location: {{item.location}}</p>
-       <p> Retailer Type: {{item.retailerType}}</p>
+     <ion-card-content> 
+        <p> Description: {{item.description}}</p>      
      </ion-card-content>
    </ion-card>
-  </ion-item> -->
+  </div>  
+  
+    <ion-text *ngIf="((retailerItems | async)?.listings).length <= 0" class="centerText" color="primary" style="text-align: center">
+      <p>There are no listings currently.</p>
+    </ion-text>
   
 </ion-content>
 
