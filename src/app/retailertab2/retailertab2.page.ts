@@ -19,7 +19,7 @@ export class Retailertab2Page implements OnInit {
   retailerType;
   location;
 
-  constructor(public afAuth: AngularFireAuth, private afstore: AngularFirestore, private changeDetection: ChangeDetectorRef, public alertController: AlertController) {}
+  constructor(public afAuth: AngularFireAuth, private afstore: AngularFirestore, private changeDetection: ChangeDetectorRef, public alertCtrl: AlertController) {}
 
   async ngOnInit() {
     var self = this
@@ -45,6 +45,50 @@ export class Retailertab2Page implements OnInit {
       this.retailerItems = this.items.valueChanges();
       this.changeDetection.detectChanges(); 
     }    
+  }
+
+
+  async delete(listing){
+
+    const confirm = await this.presentAlertDelete();
+    if (confirm) {
+    this.afstore.doc(`users/${this.retailerUID}`).update({
+      listings: firebase.firestore.FieldValue.arrayRemove({
+        name: listing.name,
+        description: listing.description,
+        listingID: listing.listingID,
+        price: listing.price,
+        quantity:listing.quantity
+      })
+    })
+    
+    this.afstore.collection('listings').doc(listing.listingID).delete();
+
+    // TODO: may need to delete from carts?
+  }
+  }
+
+  async presentAlertDelete() : Promise<boolean> {
+    let resolveFunction: (confirm: boolean) => void;
+    const promise = new Promise<boolean>(resolve => {
+      resolveFunction = resolve;
+    });
+    const alert = await this.alertCtrl.create({
+      header: 'Confirm Delete',
+      message: 'Are you sure you want to delete this listing?',
+      buttons: [
+        {
+          text: 'Yes',
+            handler: () => resolveFunction(true)
+        }, {
+          text: 'No',
+          handler: () => resolveFunction(false)
+        }
+      ]
+    });
+
+    await alert.present();
+    return promise;
   }
  
 }

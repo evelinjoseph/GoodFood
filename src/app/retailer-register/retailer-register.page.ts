@@ -40,7 +40,7 @@ export class RetailerRegisterPage implements OnInit {
           retailerUID: res.user.uid,
           listings: [],
           orders: []
-          //add location, retailerType
+          // TODO: add location, retailerType, picture
         })
 
         this.user.setUser({

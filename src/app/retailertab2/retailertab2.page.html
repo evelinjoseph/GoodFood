@@ -14,9 +14,10 @@
 
      <ion-item>
       <ion-card-title class="ion-text-wrap">{{item.name}}</ion-card-title>
+      <ion-button  (click)="delete(item)" fill="outline" slot="end">Delete</ion-button> 
     </ion-item>
    
-     <ion-card-content> 
+     <ion-card-content [routerLink]="['/retailer-listing']" [queryParams]="{ id: item.listingID }" routerDirection="forward"> 
       <p> Price: ${{item.price | number:'1.2-2'}}</p>
       <p> Description: {{item.description}}</p>
       <p> Location: {{location}}</p>

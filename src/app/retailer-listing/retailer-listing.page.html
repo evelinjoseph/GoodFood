@@ -1,0 +1,36 @@
+<ion-header style="text-align: center" [translucent]="true">
+  <ion-toolbar color="primary" mode="ios">
+    <ion-buttons slot="start">
+      <ion-back-button [text]="Back" defaultHref="/retailertabs/retailertabs/retailertab2"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      Good Food
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [hidden]="!isReady" fullscreen >
+  <div *ngFor="let item of listing"> 
+  <img [src]="url" style="width:100%;"> 
+
+  <h1 style="text-align: center; font-weight: bold"> {{ retailer }}: {{ item.name }}</h1>
+  <hr>
+  <ion-text color="primary">
+  <h3 style="text-align: center; font-weight: bold;" > ${{ item.price | number:'1.2-2' }}</h3>
+  </ion-text> 
+
+  <div style="text-align: center; font-size: large;">
+    <ion-icon name="location-outline"></ion-icon> 
+    {{ location }}
+  </div>
+
+  <p style="text-align: center"> {{ item.quantity }} meals left</p>  
+  <hr> 
+  <p style="text-align: center; font-size: large;"> {{ item.description }} </p>
+</div>
+</ion-content>
+
+<ion-toolbar [hidden]="!isReady" position="bottom" style="text-align: center;" color="translucent" *ngFor="let item of listing"> 
+  <ion-button size ="large" (click)="publish(item)">Publish</ion-button>
+</ion-toolbar>
+

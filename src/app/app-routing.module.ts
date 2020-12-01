@@ -65,6 +65,10 @@ const routes: Routes = [
   {
     path: 'new-listing',
     loadChildren: () => import('./new-listing/new-listing.module').then( m => m.NewListingPageModule)
+  },
+  {
+    path: 'retailer-listing',
+    loadChildren: () => import('./retailer-listing/retailer-listing.module').then( m => m.RetailerListingPageModule)
   }
 
 ];
