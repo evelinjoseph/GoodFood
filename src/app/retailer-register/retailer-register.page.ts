@@ -15,6 +15,8 @@ export class RetailerRegisterPage implements OnInit {
   email: string = "";
   password: string = "";
   cpassword: string = "";
+  location: string = "";
+  retailerType: string = "";
 
   constructor(private nacCtrl: NavController, public afAuth: AngularFireAuth, public afstore: AngularFirestore, public user:UserService, public alertController: AlertController, public emailComposer: EmailComposer) { }
 
@@ -23,13 +25,14 @@ export class RetailerRegisterPage implements OnInit {
 
   async register() {
     try{
-      const { name, email, password, cpassword} = this
+      const { name, email, password, cpassword, location, retailerType} = this
       if(password !== cpassword){      
         throw new Error('Passwords Do Not Match');
       } 
       if(name.length==0){
         throw new Error('Please Enter a Name');
-      }     
+      }  
+      // TODO: add location and type checks   
         const res = await this.afAuth.createUserWithEmailAndPassword(email, password)
         this.afstore.doc(`users/${res.user.uid}`).set({
           email,
@@ -38,6 +41,8 @@ export class RetailerRegisterPage implements OnInit {
           isVerified: false,
           isRetailer: true,
           retailerUID: res.user.uid,
+          location,
+          retailerType,
           listings: [],
           orders: []
           // TODO: add location, retailerType, picture
