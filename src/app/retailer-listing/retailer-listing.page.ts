@@ -3,7 +3,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { ActivatedRoute } from '@angular/router';
-import { LoadingController } from '@ionic/angular';
+import { AlertController, LoadingController } from '@ionic/angular';
 import * as firebase from 'firebase/app';
 
 @Component({
@@ -22,7 +22,7 @@ export class RetailerListingPage implements OnInit {
   url;
   isReady: Boolean = false;
 
-  constructor(private activatedRoute: ActivatedRoute, public afAuth: AngularFireAuth, private afstore: AngularFirestore, private afStorage: AngularFireStorage, private changeDetection: ChangeDetectorRef,public loadingController: LoadingController) { }
+  constructor(private activatedRoute: ActivatedRoute, public afAuth: AngularFireAuth, private afstore: AngularFirestore, private afStorage: AngularFireStorage, private changeDetection: ChangeDetectorRef,public loadingController: LoadingController, public alertController: AlertController) { }
 
   ngOnInit() {
     this.presentLoading();
@@ -86,6 +86,29 @@ export class RetailerListingPage implements OnInit {
 
     this.afstore.collection("listings").doc(this.listingID).set(data)
 
+    this.presentAlert();
+
+
+  }
+
+  public async presentAlert() : Promise<boolean> {
+    let resolveFunction: (confirm: boolean) => void;
+    const promise = new Promise<boolean>(resolve => {
+      resolveFunction = resolve;
+    });
+    
+    const alert = await this.alertController.create({
+      header: 'Listing successfully published!',
+      buttons: [
+        {
+          text: 'OK',
+            handler: () => resolveFunction(true)
+        }
+      ]
+    });
+
+    await alert.present();
+    return promise;
   }
 
 }

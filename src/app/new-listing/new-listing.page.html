@@ -18,20 +18,20 @@
       <br>
 
         <ion-item>
-          <ion-label>Name:</ion-label>
-          <ion-input placeholder="{{ name }}" [(ngModel)]="name"></ion-input>
+          <ion-label position="floating">Name</ion-label>
+          <ion-input [(ngModel)]="name"></ion-input>
         </ion-item>
         <ion-item>
-          <ion-label>Description:</ion-label>
-          <ion-input placeholder="{{ description }}" [(ngModel)]="description"></ion-input>
+          <ion-label position="floating">Description</ion-label>
+          <ion-input [(ngModel)]="description"></ion-input>
         </ion-item>
         <ion-item>
-          <ion-label>Price:</ion-label>
-          <ion-input type="number" step="0.01" placeholder="{{ price }}" [(ngModel)]="price"></ion-input>
+          <ion-label position="floating">Price</ion-label>
+          <ion-input type="number" step="0.01" [(ngModel)]="price"></ion-input>
         </ion-item>
         <ion-item>
-          <ion-label>Quantity:</ion-label>
-          <ion-input type="number" placeholder="{{ quantity }}" [(ngModel)]="quantity"></ion-input>
+          <ion-label position="floating">Quantity</ion-label>
+          <ion-input type="number"  [(ngModel)]="quantity"></ion-input>
         </ion-item>
 
         <ion-footer class="ion-no-border">

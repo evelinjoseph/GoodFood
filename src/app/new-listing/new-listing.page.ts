@@ -9,6 +9,7 @@ import { firestore } from 'firebase/app';
 import * as firebase from 'firebase/app';
 import { LoadingController } from '@ionic/angular';
 import { AlertController } from '@ionic/angular';
+import { Guid } from "ez-guid";
 
 @Component({
   selector: 'app-new-listing',
@@ -16,8 +17,9 @@ import { AlertController } from '@ionic/angular';
   styleUrls: ['./new-listing.page.scss'],
 })
 export class NewListingPage implements OnInit {
-  userUID;
+
   retailerType;
+  location;
   retailerUID;
   name;
   description;
@@ -25,50 +27,45 @@ export class NewListingPage implements OnInit {
   quantity;
   email;
   password;
-  url;
   listingID;
-  buttonText: string = "save";
-  isRead: boolean = true;
-  isReady: boolean = false;
-
+  
   constructor(public afstore: AngularFirestore, public alertController: AlertController, private activatedRoute: ActivatedRoute, private firestore: AngularFirestore, public user: UserService, private afStorage: AngularFireStorage, public afAuth: AngularFireAuth, public loadingController: LoadingController, private changeDetection: ChangeDetectorRef) { }
   
   async ngOnInit() {
       var self = this
-      firebase.auth().onAuthStateChanged(function(user) {        
+      firebase.auth().onAuthStateChanged(async function(user) {        
         if (user) {        
-          self.retailerUID = user.uid
-          self.changeDetection.detectChanges();   
-          //self.getListingID();    
-          console.log(self.retailerUID)
+          self.retailerUID = user.uid;
+          var userRef = (await self.afstore.collection("users").doc(self.retailerUID).get().toPromise()).data()
+          self.retailerType = userRef.retailerType;
+          self.location = userRef.location;  
+          self.changeDetection.detectChanges(); 
         }
 
       });
     };          
 
-isReadonly() {
-  return this.isRead;
-}
 
 save()
-  {
-    
-    const name = this
+  {    
     try{
       
-      this.afstore.collection(`listings`).add({
-      quantity: this.quantity,
-      price: this.price,
-      description: this.description,
-      name: this.name
-    })
+    //   this.afstore.collection(`listings`).add({
+    //   quantity: this.quantity,
+    //   price: this.price,
+    //   description: this.description,
+    //   name: this.name
+    // })
 
+    this.listingID = Guid.create().toShortString();
+    console.log(this.listingID);
     this.afstore.doc(`users/${this.retailerUID}`).update({
       listings: firebase.firestore.FieldValue.arrayUnion({
         quantity: this.quantity,
         price: this.price,
         description: this.description,
-        name: this.name  
+        name: this.name,
+        listingID: this.listingID      
       })
     })
 

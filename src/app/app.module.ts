@@ -17,6 +17,7 @@ import { AngularFireStorageModule } from '@angular/fire/storage';
 
 import { UserService } from './user.service';
 import { EmailComposer } from '@ionic-native/email-composer/ngx';
+import { Guid } from 'ez-guid';
 
 @NgModule({
   declarations: [AppComponent],
