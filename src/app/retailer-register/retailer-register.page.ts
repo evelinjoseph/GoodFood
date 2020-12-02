@@ -32,6 +32,12 @@ export class RetailerRegisterPage implements OnInit {
       if(name.length==0){
         throw new Error('Please Enter a Name');
       }  
+      if(location.length==0){
+        throw new Error('Please Enter an Address');
+      } 
+      if(retailerType.length==0){
+        throw new Error('Please Enter Retailer Type (Restaurant, Food Truck, Cafe)');
+      } 
       // TODO: add location and type checks   
         const res = await this.afAuth.createUserWithEmailAndPassword(email, password)
         this.afstore.doc(`users/${res.user.uid}`).set({

@@ -9,17 +9,11 @@
   </ion-toolbar>
 </ion-header>
 
-<body>
-  <ion-app>
-    <ion-content fullscreen>
+<ion-content fullscreen>
       <br>
-      <br>
-      <br>
-      <br>
-
         <ion-item>
           <ion-label position="floating">Name</ion-label>
-          <ion-input [(ngModel)]="name"></ion-input>
+          <ion-input autocapitalize='sentences' type="text" [(ngModel)]="name"></ion-input>
         </ion-item>
         <ion-item>
           <ion-label position="floating">Description</ion-label>
@@ -27,19 +21,18 @@
         </ion-item>
         <ion-item>
           <ion-label position="floating">Price</ion-label>
-          <ion-input type="number" step="0.01" [(ngModel)]="price"></ion-input>
+          <ion-input type="number" [(ngModel)]="price"></ion-input>
         </ion-item>
         <ion-item>
           <ion-label position="floating">Quantity</ion-label>
-          <ion-input type="number"  [(ngModel)]="quantity"></ion-input>
+          <ion-input type="number" [(ngModel)]="quantity"></ion-input>
         </ion-item>
-
+<br>
         <ion-footer class="ion-no-border">
           <ion-toolbar position="bottom" style="text-align: center;">     
-            <ion-button (click)="save()">Add Listing</ion-button>    
+            <ion-button size ="large" (click)="save()">Add Listing</ion-button>    
           </ion-toolbar>
         </ion-footer>
         
-      </ion-content>
-  </ion-app>
-  </body>
+</ion-content>
+

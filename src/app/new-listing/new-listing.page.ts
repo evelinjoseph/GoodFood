@@ -21,17 +21,15 @@ export class NewListingPage implements OnInit {
   retailerType;
   location;
   retailerUID;
-  name;
-  description;
-  price;
-  quantity;
-  email;
-  password;
+  name: String = "";
+  description: String = "";
+  price: Number = 0;
+  quantity: Number = 0;  
   listingID;
   
   constructor(public afstore: AngularFirestore, public alertController: AlertController, private activatedRoute: ActivatedRoute, private firestore: AngularFirestore, public user: UserService, private afStorage: AngularFireStorage, public afAuth: AngularFireAuth, public loadingController: LoadingController, private changeDetection: ChangeDetectorRef) { }
   
-  async ngOnInit() {
+  ngOnInit() {
       var self = this
       firebase.auth().onAuthStateChanged(async function(user) {        
         if (user) {        
@@ -49,6 +47,19 @@ export class NewListingPage implements OnInit {
 save()
   {    
     try{
+      
+      if(this.name.length==0){
+        throw new Error('Please Enter a Name');
+      }  
+      if(this.description.length==0){
+        throw new Error('Please Enter a Description');
+      } 
+      if(this.price==0){
+        throw new Error('Please Enter Price');
+      } 
+      if(this.quantity==0){
+        throw new Error('Please Enter Quantity');
+      }
       
     //   this.afstore.collection(`listings`).add({
     //   quantity: this.quantity,
@@ -73,7 +84,7 @@ save()
     
   }
   catch(error){
-    console.log(error.message)
+    this.presentError(error.message);
   }
     
   }
@@ -94,6 +105,27 @@ save()
         ]
       });
   
+      await alert.present();
+      return promise;
+    }
+
+    public async presentError(errorMessage) : Promise<boolean> {
+      let resolveFunction: (confirm: boolean) => void;
+      const promise = new Promise<boolean>(resolve => {
+        resolveFunction = resolve;
+      });
+      
+      const alert = await this.alertController.create({
+        header: 'New Listing Error',
+        message: errorMessage,
+        buttons: [
+          {
+            text: 'OK',
+              handler: () => resolveFunction(true)
+          }
+        ]
+      });
+    
       await alert.present();
       return promise;
     }
