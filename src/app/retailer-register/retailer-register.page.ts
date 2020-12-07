@@ -17,10 +17,12 @@ export class RetailerRegisterPage implements OnInit {
   cpassword: string = "";
   location: string = "";
   retailerType: string = "";
+  pickupTime = "01:00Z";
 
   constructor(private nacCtrl: NavController, public afAuth: AngularFireAuth, public afstore: AngularFirestore, public user:UserService, public alertController: AlertController, public emailComposer: EmailComposer) { }
 
   ngOnInit() {
+    
   }
 
   async register() {
@@ -51,7 +53,7 @@ export class RetailerRegisterPage implements OnInit {
           retailerType,
           listings: [],
           orders: []
-          // TODO: add location, retailerType, picture
+          // TODO: add location, retailerType, picture, pick-up time
         })
 
         this.user.setUser({
@@ -123,5 +125,10 @@ public async presentAlertCheck() : Promise<boolean> {
 
   await alert.present();
   return promise;
+}
+
+setPickupTime(pickupTime){
+ 
+  console.log(pickupTime);
 }
 }

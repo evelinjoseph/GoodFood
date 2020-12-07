@@ -21,6 +21,7 @@ export class RetailerListingPage implements OnInit {
   retailerType;
   url;
   isReady: Boolean = false;
+  date;
 
   constructor(private activatedRoute: ActivatedRoute, public afAuth: AngularFireAuth, private afstore: AngularFirestore, private afStorage: AngularFireStorage, private changeDetection: ChangeDetectorRef,public loadingController: LoadingController, public alertController: AlertController) { }
 
@@ -72,6 +73,8 @@ export class RetailerListingPage implements OnInit {
   }
 
   publish(listing) {
+    
+    this.date = new Date();
 
     const data = {
       description: listing.description,
@@ -81,7 +84,8 @@ export class RetailerListingPage implements OnInit {
       quantity: listing.quantity,
       retailerType: this.retailerType,
       location: this.location,
-      retailerUID: this.retailerUID
+      retailerUID: this.retailerUID,
+      dateAdded: this.date
     }
 
     this.afstore.collection("listings").doc(this.listingID).set(data)
@@ -98,7 +102,7 @@ export class RetailerListingPage implements OnInit {
     });
     
     const alert = await this.alertController.create({
-      header: 'Listing successfully published!',
+      header: 'Listing Successfully Published!',
       buttons: [
         {
           text: 'OK',

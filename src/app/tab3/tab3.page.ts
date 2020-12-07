@@ -156,6 +156,7 @@ export class Tab3Page {
         this.afstore.doc(`listings/${item.listingID}`).update({
           quantity: decrement
         })
+        // TODO: make sure there is enough quantity to check-out
   
       }
       console.log("checkout complete!")

@@ -26,6 +26,7 @@ export class NewListingPage implements OnInit {
   price: Number = 0;
   quantity: Number = 0;  
   listingID;
+  date;
   
   constructor(public afstore: AngularFirestore, public alertController: AlertController, private activatedRoute: ActivatedRoute, private firestore: AngularFirestore, public user: UserService, private afStorage: AngularFireStorage, public afAuth: AngularFireAuth, public loadingController: LoadingController, private changeDetection: ChangeDetectorRef) { }
   
@@ -54,20 +55,15 @@ save()
       if(this.description.length==0){
         throw new Error('Please Enter a Description');
       } 
-      if(this.price==0){
+      if(this.price<=0){
         throw new Error('Please Enter Price');
       } 
-      if(this.quantity==0){
+      if(this.quantity<=0){
         throw new Error('Please Enter Quantity');
       }
-      
-    //   this.afstore.collection(`listings`).add({
-    //   quantity: this.quantity,
-    //   price: this.price,
-    //   description: this.description,
-    //   name: this.name
-    // })
 
+      //TODO: make error checks better
+      
     this.listingID = Guid.create().toShortString();
     console.log(this.listingID);
     this.afstore.doc(`users/${this.retailerUID}`).update({
@@ -80,7 +76,7 @@ save()
       })
     })
 
-    this.presentAlert();
+    this.presentAlert("Listing Added Successfully");
     
   }
   catch(error){
@@ -89,14 +85,69 @@ save()
     
   }
 
-  public async presentAlert() : Promise<boolean> {
+  publish()
+  {    
+    try{
+      
+      if(this.name.length==0){
+        throw new Error('Please Enter a Name');
+      }  
+      if(this.description.length==0){
+        throw new Error('Please Enter a Description');
+      } 
+      if(this.price==0){
+        throw new Error('Please Enter Price');
+      } 
+      if(this.quantity==0){
+        throw new Error('Please Enter Quantity');
+      }
+
+      //TODO: make error checks better
+      this.listingID = Guid.create().toShortString();
+      this.date = new Date();
+      
+      const data = {
+        description: this.description,
+        listingID: this.listingID,
+        name: this.name,
+        price: this.price,
+        quantity: this.quantity,
+        retailerType: this.retailerType,
+        location: this.location,
+        retailerUID: this.retailerUID,
+        dateAdded: this.date
+      }     
+  
+      this.afstore.collection("listings").doc(this.listingID).set(data)
+    
+    
+      this.afstore.doc(`users/${this.retailerUID}`).update({
+        listings: firebase.firestore.FieldValue.arrayUnion({
+          quantity: this.quantity,
+          price: this.price,
+          description: this.description,
+          name: this.name,
+          listingID: this.listingID      
+        })
+      })
+
+    this.presentAlert("Listing Added and Published Successfully");
+    
+  }
+  catch(error){
+    this.presentError(error.message);
+  }
+    
+  }
+
+  public async presentAlert(message) : Promise<boolean> {
       let resolveFunction: (confirm: boolean) => void;
       const promise = new Promise<boolean>(resolve => {
         resolveFunction = resolve;
       });
       
       const alert = await this.alertController.create({
-        header: 'Listing Added Successfully',
+        header: message,
         buttons: [
           {
             text: 'OK',
