@@ -18,6 +18,7 @@ export class RetailerRegisterPage implements OnInit {
   location: string = "";
   retailerType: string = "";
   pickupTime = "01:00Z";
+  pickupDate: Date;
 
   constructor(private nacCtrl: NavController, public afAuth: AngularFireAuth, public afstore: AngularFirestore, public user:UserService, public alertController: AlertController, public emailComposer: EmailComposer) { }
 
@@ -41,6 +42,8 @@ export class RetailerRegisterPage implements OnInit {
         throw new Error('Please Enter Retailer Type (Restaurant, Food Truck, Cafe)');
       } 
       // TODO: add location and type checks   
+      this.pickupDate = new Date();
+      //this.pickupDate.setHours(this.pickupTime.split(":"))
         const res = await this.afAuth.createUserWithEmailAndPassword(email, password)
         this.afstore.doc(`users/${res.user.uid}`).set({
           email,
@@ -52,7 +55,8 @@ export class RetailerRegisterPage implements OnInit {
           location,
           retailerType,
           listings: [],
-          orders: []
+          orders: [],
+          pickupTime: this.pickupTime
           // TODO: add location, retailerType, picture, pick-up time
         })
 
@@ -127,8 +131,9 @@ public async presentAlertCheck() : Promise<boolean> {
   return promise;
 }
 
-setPickupTime(pickupTime){
- 
-  console.log(pickupTime);
-}
+  setPickupTime(pickupTime){
+  
+    this.pickupTime = pickupTime;
+    console.log(pickupTime);
+  }
 }

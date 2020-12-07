@@ -76,7 +76,9 @@ export class UserListingPage implements OnInit {
         name: listing.name,
         description: listing.description,
         listingID: listing.listingID,
-        retailerUID: listing.retailerUID
+        retailerUID: listing.retailerUID,
+        quantity: listing.quantity,
+        quantityCart: 1
       })
     })
   }
