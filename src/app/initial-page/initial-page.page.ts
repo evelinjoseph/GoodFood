@@ -1,11 +1,8 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { LoadingController, NavController } from '@ionic/angular';
-import { TabsPage } from '../tabs/tabs.page';
 import { UserService } from '../user.service';
-import * as firebase from 'firebase/app';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { LoginPage } from '../login/login.page';
 
 @Component({
   selector: 'app-initial-page',

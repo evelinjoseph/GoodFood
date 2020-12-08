@@ -16,8 +16,10 @@ export class Tab1Page implements OnInit{
   public listingsBackup: any[];
   public retailers: any[];
   public retailersBackup: any[];
+  deleteListings: any[];
   searchText = "Search By Food";
   searchBy = "Food";
+  dateNow;
 
   constructor(private nacCtrl: NavController, public afAuth: AngularFireAuth, public user: UserService, private firestore: AngularFirestore, private changeDetection: ChangeDetectorRef, public alertController: AlertController) {}
 
@@ -29,21 +31,36 @@ export class Tab1Page implements OnInit{
 
   async ngOnInit() {
     this.listings = await this.initializeItems();
-    this.retailers = await this.initializeRetailers();
-  
+    this.retailers = await this.initializeRetailers(); //do we need this?? 
   }
 
+
   async initializeItems(): Promise<any> {
-    const listing = await this.firestore.collection('listings')
-    .valueChanges().pipe(first()).toPromise();
+    let listing: any[] = await this.firestore.collection('listings').valueChanges().pipe(first()).toPromise();
+    this.dateNow = new Date(Date.now());
+    this.deleteListings = listing.filter(currentListing => {
+      if (currentListing.deleteDate && this.dateNow.toUTCString()) {
+        return (currentListing.deleteDate.toDate().toUTCString() <= this.dateNow.toUTCString());
+      }
+    });
+
+    this.deleteListings.forEach(element => {
+      this.firestore.collection('listings').doc(element.listingID).delete()  
+    });
+
+    listing = listing.filter(currentListing => {
+      if (currentListing.deleteDate && this.dateNow.toUTCString()) {
+        return (currentListing.deleteDate.toDate().toUTCString() > this.dateNow.toUTCString());
+      }
+    });    
+    
     this.listingsBackup = listing;
     return listing;
   }
 
   async initializeRetailers(): Promise<any> {
-    const retailers = await this.firestore.collection('users')
+    var retailers = await this.firestore.collection('users')
     .valueChanges().pipe(first()).toPromise();
-
     this.retailersBackup = retailers;
     return retailers;
   }

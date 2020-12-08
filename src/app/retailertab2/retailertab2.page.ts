@@ -3,6 +3,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { AlertController } from '@ionic/angular';
 import { AngularFirestore } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-retailertab2',
@@ -39,14 +40,13 @@ export class Retailertab2Page implements OnInit {
     });
   }
 
-  ionViewWillEnter(){
+  async ionViewWillEnter(){
     if(this.items){
       this.retailerItems = this.items.valueChanges();
-      this.changeDetection.detectChanges(); 
+      this.changeDetection.detectChanges();
     }    
   }
-
-
+  
   async delete(listing){
 
     const confirm = await this.presentAlertDelete();

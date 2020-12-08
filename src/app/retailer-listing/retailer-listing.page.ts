@@ -14,14 +14,18 @@ import * as firebase from 'firebase/app';
 export class RetailerListingPage implements OnInit {
 
   listingID;
-  listing;  
+  listing: any[];  
   location;
   retailerUID;
   retailer;
   retailerType;
   url;
   isReady: Boolean = false;
+  pickupTime;
   date;
+  pickupDate: Date;
+
+  // TODO: add the option to remove the listing that is currently published from the user view without deleting it for the retailer
 
   constructor(private activatedRoute: ActivatedRoute, public afAuth: AngularFireAuth, private afstore: AngularFirestore, private afStorage: AngularFireStorage, private changeDetection: ChangeDetectorRef,public loadingController: LoadingController, public alertController: AlertController) { }
 
@@ -36,7 +40,8 @@ export class RetailerListingPage implements OnInit {
         self.retailer = userRef.name;
         self.location = userRef.location;
         self.retailerType = userRef.retailerType;        
-        self.listing = userRef.listings;
+        self.listing = userRef.listings;        
+        self.pickupTime = userRef.pickupTime; 
 
         self.listing = self.listing.filter(currentListing => {
           if (currentListing.listingID && self.listingID) {
@@ -75,6 +80,7 @@ export class RetailerListingPage implements OnInit {
   publish(listing) {
     
     this.date = new Date();
+    this.pickupDate = new Date(this.pickupTime.toDate());
 
     const data = {
       description: listing.description,
@@ -85,7 +91,7 @@ export class RetailerListingPage implements OnInit {
       retailerType: this.retailerType,
       location: this.location,
       retailerUID: this.retailerUID,
-      dateAdded: this.date
+      deleteDate: new Date(this.date.getFullYear(), this.date.getMonth(), this.date.getDate(), this.pickupDate.getHours(), this.pickupDate.getMinutes(), this.pickupDate.getSeconds(), this.pickupDate.getMilliseconds())
     }
 
     this.afstore.collection("listings").doc(this.listingID).set(data)

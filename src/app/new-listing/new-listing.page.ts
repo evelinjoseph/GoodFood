@@ -5,7 +5,6 @@ import { ActivatedRoute } from '@angular/router';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { UserService } from '../user.service';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { firestore } from 'firebase/app';
 import * as firebase from 'firebase/app';
 import { LoadingController } from '@ionic/angular';
 import { AlertController } from '@ionic/angular';
@@ -26,7 +25,9 @@ export class NewListingPage implements OnInit {
   price: Number = 0;
   quantity: Number = 0;  
   listingID;
+  pickupTime;
   date;
+  pickupDate: Date;
   
   constructor(public afstore: AngularFirestore, public alertController: AlertController, private activatedRoute: ActivatedRoute, private firestore: AngularFirestore, public user: UserService, private afStorage: AngularFireStorage, public afAuth: AngularFireAuth, public loadingController: LoadingController, private changeDetection: ChangeDetectorRef) { }
   
@@ -37,14 +38,14 @@ export class NewListingPage implements OnInit {
           self.retailerUID = user.uid;
           var userRef = (await self.afstore.collection("users").doc(self.retailerUID).get().toPromise()).data()
           self.retailerType = userRef.retailerType;
-          self.location = userRef.location;  
+          self.location = userRef.location; 
+          self.pickupTime = userRef.pickupTime;
           self.changeDetection.detectChanges(); 
         }
-
       });
-    };          
-
-
+    };
+    
+   
 save()
   {    
     try{
@@ -65,7 +66,6 @@ save()
       //TODO: make error checks better
       
     this.listingID = Guid.create().toShortString();
-    console.log(this.listingID);
     this.afstore.doc(`users/${this.retailerUID}`).update({
       listings: firebase.firestore.FieldValue.arrayUnion({
         quantity: this.quantity,
@@ -105,6 +105,10 @@ save()
       //TODO: make error checks better
       this.listingID = Guid.create().toShortString();
       this.date = new Date();
+      this.pickupDate = new Date(this.pickupTime.toDate());
+      
+
+      // TODO: if adding after the pickuptime then increase the date to tomorrow (add one to todays date)
       
       const data = {
         description: this.description,
@@ -115,7 +119,7 @@ save()
         retailerType: this.retailerType,
         location: this.location,
         retailerUID: this.retailerUID,
-        dateAdded: this.date
+        deleteDate: new Date(this.date.getFullYear(), this.date.getMonth(), this.date.getDate(), this.pickupDate.getHours(), this.pickupDate.getMinutes(), this.pickupDate.getSeconds(), this.pickupDate.getMilliseconds())
       }     
   
       this.afstore.collection("listings").doc(this.listingID).set(data)
