@@ -40,17 +40,19 @@ export class Tab1Page implements OnInit{
     this.dateNow = new Date(Date.now());
     this.deleteListings = listing.filter(currentListing => {
       if (currentListing.deleteDate && this.dateNow.toUTCString()) {
-        return (currentListing.deleteDate.toDate().toUTCString() <= this.dateNow.toUTCString());
+        return (currentListing.deleteDate.toDate().getTime() <= this.dateNow.getTime());
       }
     });
+    console.log(this.deleteListings)
 
     this.deleteListings.forEach(element => {
       this.firestore.collection('listings').doc(element.listingID).delete()  
     });
+    
 
     listing = listing.filter(currentListing => {
       if (currentListing.deleteDate && this.dateNow.toUTCString()) {
-        return (currentListing.deleteDate.toDate().toUTCString() > this.dateNow.toUTCString());
+        return (currentListing.deleteDate.toDate().getTime() > this.dateNow.getTime());
       }
     });    
     
