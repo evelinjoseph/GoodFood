@@ -10,7 +10,6 @@
 <ion-content fullscreen >
   <div *ngFor="let item of cart">
     <ion-card>
-
      <ion-item>
       <ion-card-title class="ion-text-wrap">{{item.name}}</ion-card-title>
       <ion-button  (click)="delete(item)" fill="outline" slot="end">Delete</ion-button> 
@@ -31,8 +30,7 @@
   </div>
   <ion-text class="centerText" *ngIf="((userItems | async)?.cart).length <= 0" color="primary" style="text-align: center">
       <p>There are no items in the cart.</p>
-    </ion-text>
-  
+    </ion-text>  
 </ion-content>
 
 <ion-footer *ngIf="((userItems | async)?.cart).length > 0" class="ion-no-border">

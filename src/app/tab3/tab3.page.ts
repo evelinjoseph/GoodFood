@@ -23,12 +23,12 @@ export class Tab3Page {
   retailerType;
   retailerUID;
   date: Date;
-  quantityCart = 1;
 
   constructor(public afstore: AngularFirestore, private changeDetection: ChangeDetectorRef, private user: UserService, public alertCtrl: AlertController) {}
 
-  ngOnInit() {    
+  ngOnInit() { 
     var self = this
+    this.cart = []
     firebase.auth().onAuthStateChanged(function(user) {        
       if (user) {        
         self.userUID = user.uid
@@ -37,12 +37,11 @@ export class Tab3Page {
         self.changeDetection.detectChanges();   
         self.getCart();    
       }
-    });
-
-    
+    });    
   }
 
   ionViewWillEnter(){
+    this.cart = []
     if(this.items){
       this.userItems = this.items.valueChanges();
       this.getCart();
@@ -50,40 +49,20 @@ export class Tab3Page {
     }    
   }
 
-  getCart(){
-    this.cart = []
+  getCart(){    
     var self = this;
     this.afstore.doc(`users/${this.userUID}`).get().toPromise().then(function(querySnapshot) {
+      self.cart = []
       var cart1 = querySnapshot.get("cart");
+      self.changeDetection.detectChanges(); 
       cart1.forEach(element => {
         self.cart.push(element);              
-        });
-                  
+        });            
     })
     .catch(function(error) {
-        console.log("Error getting documents: ", error);
-    }); //this needs to be done in the initialization
-     console.log(this.cart)
-  }
-
-  getListingID(item){
-    
-       
-
-    
-  }
-
-  async getItems(cartItem){
-    
-      var listingRef = (await this.afstore.collection("listings").doc(cartItem).get().toPromise()).data()
-        this.listing = listingRef;   
-        this.name = listingRef.name;
-        this.description = listingRef.description;
-        this.location = listingRef.location;
-        this.price = listingRef.price;
-        this.quantity = listingRef.quantity;
-        this.retailerType = listingRef.retailerType;
-        this.retailerUID = listingRef.retailerUID; 
+        console.log("Error getting documents");
+    }); 
+    this.changeDetection.detectChanges();     
   }
 
   async delete(item){
@@ -102,7 +81,6 @@ export class Tab3Page {
     })
     this.cart = this.cart.filter(currentListing => {
       if (currentListing.listingID && item.listingID) {
-        console.log(!(currentListing.listingID.toLowerCase() === item.listingID.toLowerCase()))
         return (!(currentListing.listingID.toLowerCase() === item.listingID.toLowerCase()));
       }
     });  
@@ -132,47 +110,66 @@ export class Tab3Page {
     return promise;
   }
 
-  inc(item){
-    // const increment = firebase.firestore.FieldValue.increment(1)
-    // //  this.afstore.doc(`users/${this.userUID}`).update({ 
-    // //    cart: firebase.firestore.FieldValue.delete}
-    // // ) 
+  inc(item){   
+    if(item.quantityCart + 1 <= item.quantity){
 
-    var self = this;
-    var quantityValue = item.quantityCart + 1;     
+      var quantityValue = item.quantityCart + 1;     
 
-    this.afstore.doc(`users/${this.userUID}`).update({
-      cart: firebase.firestore.FieldValue.arrayUnion({
-        name: item.name,
-        description: item.description,
-        listingID: item.listingID,
-        retailerUID: item.retailerUID,
-        quantity: item.quantity,
-        quantityCart: quantityValue
+      this.afstore.doc(`users/${this.userUID}`).update({
+        cart: firebase.firestore.FieldValue.arrayUnion({
+          name: item.name,
+          description: item.description,
+          listingID: item.listingID,
+          retailerUID: item.retailerUID,
+          quantity: item.quantity,
+          quantityCart: quantityValue
+        })
       })
-    })
-
-    this.afstore.doc(`users/${this.userUID}`).update({
-      cart: firebase.firestore.FieldValue.arrayRemove({
-        name: item.name,
-        description: item.description,
-        listingID: item.listingID,
-        retailerUID: item.retailerUID,
-        quantity: item.quantity,
-        quantityCart: item.quantityCart
+  
+      this.afstore.doc(`users/${this.userUID}`).update({
+        cart: firebase.firestore.FieldValue.arrayRemove({
+          name: item.name,
+          description: item.description,
+          listingID: item.listingID,
+          retailerUID: item.retailerUID,
+          quantity: item.quantity,
+          quantityCart: item.quantityCart
+        })
       })
-    })
-    item.quantityCart++;
-    console.log("updated")
-
+      item.quantityCart++;
+    }  
   }
 
-  dec(item){
-    item.quantityCart--;
+  dec(item){    
+    if(item.quantityCart - 1 > 0){
+      var quantityValue = item.quantityCart - 1;   
+
+      this.afstore.doc(`users/${this.userUID}`).update({
+        cart: firebase.firestore.FieldValue.arrayUnion({
+          name: item.name,
+          description: item.description,
+          listingID: item.listingID,
+          retailerUID: item.retailerUID,
+          quantity: item.quantity,
+          quantityCart: quantityValue
+        })
+      })
+  
+      this.afstore.doc(`users/${this.userUID}`).update({
+        cart: firebase.firestore.FieldValue.arrayRemove({
+          name: item.name,
+          description: item.description,
+          listingID: item.listingID,
+          retailerUID: item.retailerUID,
+          quantity: item.quantity,
+          quantityCart: item.quantityCart
+        })
+      })
+      item.quantityCart--;
+    }
   }
 
   async checkOut(cart){
-    console.log(cart);
     const confirm = await this.presentAlertCheck();
     if (confirm) {
       for(var item of cart){ 
