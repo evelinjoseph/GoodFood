@@ -23,6 +23,7 @@ export class Tab3Page {
   retailerType;
   retailerUID;
   date: Date;
+  quantityCart = 1;
 
   constructor(public afstore: AngularFirestore, private changeDetection: ChangeDetectorRef, private user: UserService, public alertCtrl: AlertController) {}
 
@@ -34,33 +35,42 @@ export class Tab3Page {
         self.items = self.afstore.doc(`users/${self.userUID}`);
         self.userItems = self.items.valueChanges(); 
         self.changeDetection.detectChanges();   
-        //self.getListingID();    
+        self.getCart();    
       }
     });
-     
+
+    
   }
 
   ionViewWillEnter(){
     if(this.items){
       this.userItems = this.items.valueChanges();
+      this.getCart();
       this.changeDetection.detectChanges(); 
     }    
   }
 
-  getListingID(){
+  getCart(){
+    this.cart = []
     var self = this;
-
-    console.log(this.userItems)
-
     this.afstore.doc(`users/${this.userUID}`).get().toPromise().then(function(querySnapshot) {
       var cart1 = querySnapshot.get("cart");
       cart1.forEach(element => {
-        self.cart.push(element.listingID);              
-        });           
+        self.cart.push(element);              
+        });
+                  
     })
     .catch(function(error) {
         console.log("Error getting documents: ", error);
-    });
+    }); //this needs to be done in the initialization
+     console.log(this.cart)
+  }
+
+  getListingID(item){
+    
+       
+
+    
   }
 
   async getItems(cartItem){
@@ -90,6 +100,12 @@ export class Tab3Page {
         quantityCart: item.quantityCart
       })
     })
+    this.cart = this.cart.filter(currentListing => {
+      if (currentListing.listingID && item.listingID) {
+        console.log(!(currentListing.listingID.toLowerCase() === item.listingID.toLowerCase()))
+        return (!(currentListing.listingID.toLowerCase() === item.listingID.toLowerCase()));
+      }
+    });  
   }
   }
 
@@ -116,7 +132,47 @@ export class Tab3Page {
     return promise;
   }
 
+  inc(item){
+    // const increment = firebase.firestore.FieldValue.increment(1)
+    // //  this.afstore.doc(`users/${this.userUID}`).update({ 
+    // //    cart: firebase.firestore.FieldValue.delete}
+    // // ) 
+
+    var self = this;
+    var quantityValue = item.quantityCart + 1;     
+
+    this.afstore.doc(`users/${this.userUID}`).update({
+      cart: firebase.firestore.FieldValue.arrayUnion({
+        name: item.name,
+        description: item.description,
+        listingID: item.listingID,
+        retailerUID: item.retailerUID,
+        quantity: item.quantity,
+        quantityCart: quantityValue
+      })
+    })
+
+    this.afstore.doc(`users/${this.userUID}`).update({
+      cart: firebase.firestore.FieldValue.arrayRemove({
+        name: item.name,
+        description: item.description,
+        listingID: item.listingID,
+        retailerUID: item.retailerUID,
+        quantity: item.quantity,
+        quantityCart: item.quantityCart
+      })
+    })
+    item.quantityCart++;
+    console.log("updated")
+
+  }
+
+  dec(item){
+    item.quantityCart--;
+  }
+
   async checkOut(cart){
+    console.log(cart);
     const confirm = await this.presentAlertCheck();
     if (confirm) {
       for(var item of cart){ 
@@ -155,13 +211,15 @@ export class Tab3Page {
           })
         })
 
-        const decrement = firebase.firestore.FieldValue.increment(-1);
+        const decrement = firebase.firestore.FieldValue.increment(-item.quantityCart);
 
         this.afstore.doc(`listings/${item.listingID}`).update({
           quantity: decrement
         })
-        // TODO: make sure there is enough quantity to check-out        
-  
+        // TODO: make sure there is enough quantity to check-out   
+        
+        this.cart = []
+
       }
       console.log("checkout complete!")
     }   
