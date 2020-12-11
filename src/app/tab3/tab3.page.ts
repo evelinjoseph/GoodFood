@@ -2,7 +2,6 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AlertController } from '@ionic/angular';
 import * as firebase from 'firebase/app';
-import { UserService } from '../user.service'
 
 @Component({
   selector: 'app-tab3',
@@ -24,7 +23,7 @@ export class Tab3Page {
   retailerUID;
   date: Date;
 
-  constructor(public afstore: AngularFirestore, private changeDetection: ChangeDetectorRef, private user: UserService, public alertCtrl: AlertController) {}
+  constructor(public afstore: AngularFirestore, private changeDetection: ChangeDetectorRef, public alertCtrl: AlertController) {}
 
   ngOnInit() { 
     var self = this
