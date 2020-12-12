@@ -29,6 +29,7 @@
     "ez-guid": "^1.2.3",
     "firebase": "^7.21.1",
     "guid-typescript": "^1.0.9",
+    "leaflet": "^1.7.1",
     "rxjs": "~6.5.5",
     "rxjs-compat": "^6.6.3",
     "tslib": "^2.0.0",
