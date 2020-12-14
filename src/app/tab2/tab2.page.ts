@@ -22,17 +22,14 @@ export class Tab2Page {
   }
 
   loadMap(){
-    this.map = Leaflet.map('mapId').setView([29.42412, -98.49363], 10);
-
-   
+    this.map = Leaflet.map('mapId').setView([29.42412, -98.49363], 10);   
     Leaflet.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors'
-  }).addTo(this.map);
-
-    
-
-       
+      attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  }).addTo(this.map); 
+  
   }
+
+  
 
   ngOnDestroy() {
     this.map.remove();
