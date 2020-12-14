@@ -1,7 +1,7 @@
 <ion-header style="text-align: center" [translucent]="true">
   <ion-toolbar color="primary" mode="ios">
     <ion-buttons slot="start">
-      <ion-back-button [text]="Back" defaultHref="/tabs"></ion-back-button>
+      <ion-back-button [text]="Back" defaultHref="/tabs/tabs/tab3"></ion-back-button>
     </ion-buttons>
     <ion-title>
       Good Food
@@ -9,7 +9,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content fullscreen>
   <ion-card class="welcome-card">
     <ion-img src="/assets/paypal.jpg"></ion-img>
     <ion-card-header>
@@ -20,7 +20,7 @@
           Total Payment
         </ion-col>
         <ion-col>
-          {{currencyIcon}}{{paymentAmount}}
+          {{currencyIcon}}{{paymentAmount | number:'1.2-2'}}
         </ion-col>
       </ion-row>
     </ion-card-header>

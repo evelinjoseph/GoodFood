@@ -82,7 +82,8 @@ export class UserListingPage implements OnInit {
         listingID: listing.listingID,
         retailerUID: listing.retailerUID,
         quantity: listing.quantity,
-        quantityCart: 1
+        quantityCart: 1,
+        price: listing.price
       })
     })
 

@@ -75,7 +75,8 @@ export class Tab3Page {
         listingID: item.listingID,
         retailerUID: item.retailerUID,
         quantity: item.quantity,
-        quantityCart: item.quantityCart
+        quantityCart: item.quantityCart,
+        price: item.price
       })
     })
     this.cart = this.cart.filter(currentListing => {
@@ -121,7 +122,8 @@ export class Tab3Page {
           listingID: item.listingID,
           retailerUID: item.retailerUID,
           quantity: item.quantity,
-          quantityCart: quantityValue
+          quantityCart: quantityValue,
+          price: item.price
         })
       })
   
@@ -132,7 +134,8 @@ export class Tab3Page {
           listingID: item.listingID,
           retailerUID: item.retailerUID,
           quantity: item.quantity,
-          quantityCart: item.quantityCart
+          quantityCart: item.quantityCart,
+          price: item.price
         })
       })
       item.quantityCart++;
@@ -150,7 +153,8 @@ export class Tab3Page {
           listingID: item.listingID,
           retailerUID: item.retailerUID,
           quantity: item.quantity,
-          quantityCart: quantityValue
+          quantityCart: quantityValue,
+          price: item.price
         })
       })
   
@@ -161,7 +165,8 @@ export class Tab3Page {
           listingID: item.listingID,
           retailerUID: item.retailerUID,
           quantity: item.quantity,
-          quantityCart: item.quantityCart
+          quantityCart: item.quantityCart,
+          price: item.price
         })
       })
       item.quantityCart--;
@@ -176,53 +181,53 @@ export class Tab3Page {
 
       // NEED TO WAIT FOR PAYPAL CONFIRMATION BEFORE UPDATING DB
 
-      for(var item of cart){ 
-        this.date = new Date();     
-        this.afstore.doc(`users/${this.userUID}`).update({
-          orders: firebase.firestore.FieldValue.arrayUnion({
-            name: item.name,
-            description: item.description,
-            listingID: item.listingID,
-            retailerUID: item.retailerUID,
-            isCurrent: true,
-            date: this.date
-          })
-        })
+      // for(var item of cart){ 
+      //   this.date = new Date();     
+      //   this.afstore.doc(`users/${this.userUID}`).update({
+      //     orders: firebase.firestore.FieldValue.arrayUnion({
+      //       name: item.name,
+      //       description: item.description,
+      //       listingID: item.listingID,
+      //       retailerUID: item.retailerUID,
+      //       isCurrent: true,
+      //       date: this.date
+      //     })
+      //   })
 
-        this.afstore.doc(`users/${this.userUID}`).update({
-          cart: firebase.firestore.FieldValue.arrayRemove({
-            name: item.name,
-            description: item.description,
-            listingID: item.listingID,
-            retailerUID: item.retailerUID,
-            quantity: item.quantity,
-            quantityCart: item.quantityCart
-          })
-        })  
+      //   this.afstore.doc(`users/${this.userUID}`).update({
+      //     cart: firebase.firestore.FieldValue.arrayRemove({
+      //       name: item.name,
+      //       description: item.description,
+      //       listingID: item.listingID,
+      //       retailerUID: item.retailerUID,
+      //       quantity: item.quantity,
+      //       quantityCart: item.quantityCart
+      //     })
+      //   })  
         
-        this.afstore.doc(`users/${item.retailerUID}`).update({
-          orders: firebase.firestore.FieldValue.arrayUnion({
-            name: item.name,
-            description: item.description,
-            listingID: item.listingID,
-            retailerUID: item.retailerUID,
-            userUID: this.userUID,
-            isCurrent: true,
-            date: this.date
-          })
-        })
+      //   this.afstore.doc(`users/${item.retailerUID}`).update({
+      //     orders: firebase.firestore.FieldValue.arrayUnion({
+      //       name: item.name,
+      //       description: item.description,
+      //       listingID: item.listingID,
+      //       retailerUID: item.retailerUID,
+      //       userUID: this.userUID,
+      //       isCurrent: true,
+      //       date: this.date
+      //     })
+      //   })
 
-        const decrement = firebase.firestore.FieldValue.increment(-item.quantityCart);
+      //   const decrement = firebase.firestore.FieldValue.increment(-item.quantityCart);
 
-        this.afstore.doc(`listings/${item.listingID}`).update({
-          quantity: decrement
-        })
-        // TODO: make sure there is enough quantity to check-out   
-        
-        this.cart = []
+      //   this.afstore.doc(`listings/${item.listingID}`).update({
+      //     quantity: decrement
+      //   })
+      //   // TODO: make sure there is enough quantity to check-out         
+      //   
 
-      }
-      console.log("checkout complete!")
+      // }
+      //this.cart = []
+      // console.log("checkout complete!")
 
     }   
 

@@ -87,7 +87,8 @@
       "cordova-plugin-ionic-keyboard": {},
       "cordova-plugin-email-composer": {
         "ANDROID_SUPPORT_V4_VERSION": "27.+"
-      }
+      },
+      "com.paypal.cordova.mobilesdk": {}
     },
     "platforms": [
       "android",
