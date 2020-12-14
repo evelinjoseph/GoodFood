@@ -69,6 +69,10 @@ const routes: Routes = [
   {
     path: 'retailer-listing',
     loadChildren: () => import('./retailer-listing/retailer-listing.module').then( m => m.RetailerListingPageModule)
+  },
+  {
+    path: 'paypal',
+    loadChildren: () => import('./paypal/paypal.module').then( m => m.PaypalPageModule)
   }
 
 ];

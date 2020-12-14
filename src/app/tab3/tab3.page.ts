@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { AlertController } from '@ionic/angular';
+import { AlertController, NavController } from '@ionic/angular';
 import * as firebase from 'firebase/app';
 
 @Component({
@@ -23,7 +23,7 @@ export class Tab3Page {
   retailerUID;
   date: Date;
 
-  constructor(public afstore: AngularFirestore, private changeDetection: ChangeDetectorRef, public alertCtrl: AlertController) {}
+  constructor(private nacCtrl: NavController, public afstore: AngularFirestore, private changeDetection: ChangeDetectorRef, public alertCtrl: AlertController) {}
 
   ngOnInit() { 
     var self = this
@@ -170,7 +170,12 @@ export class Tab3Page {
 
   async checkOut(cart){
     const confirm = await this.presentAlertCheck();
+
     if (confirm) {
+      this.nacCtrl.navigateRoot(['./paypal']);
+
+      // NEED TO WAIT FOR PAYPAL CONFIRMATION BEFORE UPDATING DB
+
       for(var item of cart){ 
         this.date = new Date();     
         this.afstore.doc(`users/${this.userUID}`).update({
@@ -218,6 +223,7 @@ export class Tab3Page {
 
       }
       console.log("checkout complete!")
+
     }   
 
   }

@@ -5,7 +5,7 @@ import { AngularFireStorage } from '@angular/fire/storage';
 import { UserService } from '../user.service';
 import { firestore } from 'firebase/app';
 import * as firebase from 'firebase/app';
-import { LoadingController } from '@ionic/angular';
+import { AlertController, LoadingController, NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-user-listing',
@@ -24,9 +24,10 @@ export class UserListingPage implements OnInit {
   retailerUID;
   retailer;
   url;
+  //disabled: Boolean = false; 
   isReady: Boolean = false;
 
-  constructor(private activatedRoute: ActivatedRoute, private firestore: AngularFirestore, public user: UserService, private afStorage: AngularFireStorage, private changeDetection: ChangeDetectorRef, public loadingController: LoadingController) { }
+  constructor(private nacCtrl: NavController, public alertController: AlertController, private activatedRoute: ActivatedRoute, private firestore: AngularFirestore, public user: UserService, private afStorage: AngularFireStorage, private changeDetection: ChangeDetectorRef, public loadingController: LoadingController) { }
 
   async ngOnInit() {
     this.presentLoading();
@@ -70,7 +71,10 @@ export class UserListingPage implements OnInit {
   }
 }
 
-  cart(listing){
+  async cart(listing){
+    
+    //this.disabled = true; 
+
     this.firestore.doc(`users/${firebase.auth().currentUser.uid}`).update({
       cart: firestore.FieldValue.arrayUnion({
         name: listing.name,
@@ -81,6 +85,11 @@ export class UserListingPage implements OnInit {
         quantityCart: 1
       })
     })
+
+    const confirm = await this.presentAlert()
+
+    this.nacCtrl.navigateRoot(['tabs/tabs/tab3']);
+
   }
 
 
@@ -96,6 +105,26 @@ export class UserListingPage implements OnInit {
     const { role, data } = await loading.onDidDismiss();
     this.isReady = true;
     this.changeDetection.detectChanges(); 
+  }
+
+  public async presentAlert() : Promise<boolean> {
+    let resolveFunction: (confirm: boolean) => void;
+    const promise = new Promise<boolean>(resolve => {
+      resolveFunction = resolve;
+    });
+    
+    const alert = await this.alertController.create({
+      header: 'Successfully Added to Cart!',
+      buttons: [
+        {
+          text: 'OK',
+            handler: () => resolveFunction(true)
+        }
+      ]
+    });
+
+    await alert.present();
+    return promise;
   }
 
   
