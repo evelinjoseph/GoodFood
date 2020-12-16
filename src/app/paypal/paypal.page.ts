@@ -20,8 +20,8 @@ export class PaypalPage {
   date;
   listing: any[];
 
-  constructor(private nacCtrl: NavController, public alertController: AlertController, private firestore: AngularFirestore, public afstore: AngularFirestore, private payPal: PayPal, public loadingController: LoadingController, public changeDetection: ChangeDetectorRef) { }
-  
+  constructor(private nacCtrl: NavController, public alertController: AlertController, private firestore: AngularFirestore, public afstore: AngularFirestore, private payPal: PayPal, public loadingController: LoadingController, public changeDetection: ChangeDetectorRef){}
+
   ngOnInit() { 
     var self = this
     this.cart = []
@@ -70,7 +70,7 @@ export class PaypalPage {
         });
         thisListing.forEach(element => {
           if(item.quantityCart>element.quantity){
-            throw new Error("Sorry, unfortuntely there is not enough quantity to complete this order. Please edit the quantity.");
+            throw new Error("Sorry, unfortunately there is not enough quantity to complete the " + element.name + " order. Please edit the quantity to be less than or equal to " + element.quantity +".");
           }           
         });
     } 
