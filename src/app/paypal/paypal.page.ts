@@ -1,8 +1,9 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { PayPal, PayPalPayment, PayPalConfiguration } from '@ionic-native/paypal/ngx'
-import { LoadingController, NavController } from '@ionic/angular';
+import { AlertController, LoadingController, NavController } from '@ionic/angular';
 import { AngularFirestore } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
+import { first } from 'rxjs/operators';
 
 
 @Component({
@@ -17,8 +18,9 @@ export class PaypalPage {
   cart: any[];
   userUID: string;
   date;
+  listing: any[];
 
-  constructor(private nacCtrl: NavController, public afstore: AngularFirestore, private payPal: PayPal, public loadingController: LoadingController, public changeDetection: ChangeDetectorRef) { }
+  constructor(private nacCtrl: NavController, public alertController: AlertController, private firestore: AngularFirestore, public afstore: AngularFirestore, private payPal: PayPal, public loadingController: LoadingController, public changeDetection: ChangeDetectorRef) { }
   
   ngOnInit() { 
     var self = this
@@ -57,8 +59,22 @@ export class PaypalPage {
     this.changeDetection.detectChanges();     
   }
 
-  payWithPayPal() {
-    console.log("Pay ?")
+  async payWithPayPal() {
+    try{
+      for(var item of this.cart){ 
+        this.listing = await this.firestore.collection('listings').valueChanges().pipe(first()).toPromise();
+        let thisListing: any[] = this.listing.filter(currentListing => {
+          if (currentListing.listingID && item.listingID) {
+            return (currentListing.listingID.toLowerCase().indexOf(item.listingID.toLowerCase()) > -1);
+          }
+        });
+        thisListing.forEach(element => {
+          if(item.quantityCart>element.quantity){
+            throw new Error("Sorry, unfortuntely there is not enough quantity to complete this order. Please edit the quantity.");
+          }           
+        });
+    } 
+      
     this.payPal.init({
       PayPalEnvironmentProduction: 'AZdLLjUn69oERT3rIneIeL6pYWh7iFidUWTrDRfpPDh7F9zcETzH9lYNMbRbnWoRwCX506xQJX0sDoQa',
       PayPalEnvironmentSandbox: 'AZdLLjUn69oERT3rIneIeL6pYWh7iFidUWTrDRfpPDh7F9zcETzH9lYNMbRbnWoRwCX506xQJX0sDoQa'
@@ -68,6 +84,8 @@ export class PaypalPage {
         // Only needed if you get an "Internal Service Error" after PayPal login!
 //payPalShippingAddressOption: 2 // PayPalShippingAddressOptionPayPal
 })).then(() => {
+
+
   console.log(this.paymentAmount.toString())
   let payment = new PayPalPayment(this.paymentAmount.toString(), this.currency, 'Description', 'sale');
   this.payPal.renderSinglePaymentUI(payment).then((res) => {
@@ -129,13 +147,25 @@ export class PaypalPage {
         })
       })
 
-      const decrement = firebase.firestore.FieldValue.increment(-item.quantityCart);
+      if(item.quantityCart>0){
+        const decrement = firebase.firestore.FieldValue.increment(-item.quantityCart);
+        let thisListing: any[] = this.listing.filter(currentListing => {
+        if (currentListing.listingID && item.listingID) {
+          return (currentListing.listingID.toLowerCase().indexOf(item.listingID.toLowerCase()) > -1);
+        }
+        });
 
-      this.afstore.doc(`listings/${item.listingID}`).update({
-        quantity: decrement
-      })
-      // TODO: make sure there is enough quantity to check-out
-
+        thisListing.forEach(element => {
+          if(item.quantityCart==element.quantity){
+            this.firestore.collection('listings').doc(item.listingID).delete()
+          }
+          else{           
+          this.afstore.doc(`listings/${item.listingID}`).update({
+            quantity: decrement
+          })
+        }
+        });
+      }
     }
     this.nacCtrl.navigateRoot(['/tabs/tabs/tab4']);
     this.cart = []
@@ -144,12 +174,44 @@ export class PaypalPage {
 
   }, () => {
     // Error or render dialog closed without being successful
+   
   });
-}, () => {
+  }, () => {
         // Error in configuration
+        
       });
     }, () => {
       // Error in initialization, maybe PayPal isn't supported or something else
+     
     });
+
   }
+  catch(error){
+    this.presentAlert(error.message)
+    this.nacCtrl.navigateRoot(['/tabs/tabs/tab3']);
+  }  
+
+  }
+  
+  public async presentAlert(errorMessage) : Promise<boolean> {
+    let resolveFunction: (confirm: boolean) => void;
+    const promise = new Promise<boolean>(resolve => {
+      resolveFunction = resolve;
+    });
+    
+    const alert = await this.alertController.create({
+      header: 'Order Error',
+      message: errorMessage,
+      buttons: [
+        {
+          text: 'OK',
+            handler: () => resolveFunction(true)
+        }
+      ]
+    });
+  
+    await alert.present();
+    return promise;
+  }  
+  
 }
