@@ -113,7 +113,8 @@ export class Tab3Page {
   inc(item){   
     if(item.quantityCart + 1 <= item.quantity){
 
-      var quantityValue = item.quantityCart + 1;     
+      var quantityValue = item.quantityCart + 1; 
+      //var priceValue = item.price + item.price;
 
       this.afstore.doc(`users/${this.userUID}`).update({
         cart: firebase.firestore.FieldValue.arrayUnion({
@@ -124,6 +125,7 @@ export class Tab3Page {
           quantity: item.quantity,
           quantityCart: quantityValue,
           price: item.price
+          //price: priceValue
         })
       })
   
@@ -139,12 +141,15 @@ export class Tab3Page {
         })
       })
       item.quantityCart++;
+      //item.price += item.price;
+      
     }  
   }
 
   dec(item){    
     if(item.quantityCart - 1 > 0){
-      var quantityValue = item.quantityCart - 1;   
+      var quantityValue = item.quantityCart - 1;  
+      //var priceValue = item.price - item.price; 
 
       this.afstore.doc(`users/${this.userUID}`).update({
         cart: firebase.firestore.FieldValue.arrayUnion({
@@ -154,6 +159,7 @@ export class Tab3Page {
           retailerUID: item.retailerUID,
           quantity: item.quantity,
           quantityCart: quantityValue,
+          //price: priceValue
           price: item.price
         })
       })
@@ -170,6 +176,7 @@ export class Tab3Page {
         })
       })
       item.quantityCart--;
+      //item.price -= item.price;
     }
   }
 

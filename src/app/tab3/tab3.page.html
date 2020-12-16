@@ -24,6 +24,7 @@
           <ion-button (click)="inc(item)" size="small" fill="clear"> 
             <ion-icon name="add-circle-outline"></ion-icon> 
           </ion-button></p>
+          <p style="font-size: large;"> Price: ${{item.price | number:'1.2-2'}}</p>
         <p style="font-size: large;"> Description: {{item.description}}</p>
      </ion-card-content>
    </ion-card>
