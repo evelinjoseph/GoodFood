@@ -10,6 +10,7 @@ import * as Leaflet from 'leaflet';
 })
 export class Tab2Page {
   map: Leaflet.Map;
+  locationMarker;
 
   constructor(public plt: Platform) {}
 
@@ -18,14 +19,28 @@ export class Tab2Page {
   }
 
    ionViewDidEnter(){
+    if (this.map != undefined || this.map != null) { this.map.remove(); }
     this.loadMap();
   }
 
   loadMap(){
-    this.map = Leaflet.map('mapId').setView([29.42412, -98.49363], 10);   
+    this.map = Leaflet.map('mapId', {
+      zoomDelta: 0.25,
+      zoomSnap: 0
+  }).setView([29.42412, -98.49363], 10);   
     Leaflet.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-  }).addTo(this.map);   
+      
+    }).addTo(this.map); 
+
+    this.map.locate({ setView: true }).on("locationfound", (event: any) => {     
+      
+      this.locationMarker = Leaflet.marker([event.latitude, event.longitude], {
+          draggable: false
+      }).addTo(this.map);
+  
+      this.locationMarker.bindPopup("You are here!").openPopup();
+  });
   }  
 
   ngOnDestroy() {
