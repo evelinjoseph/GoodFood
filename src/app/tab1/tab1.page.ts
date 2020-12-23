@@ -43,7 +43,6 @@ export class Tab1Page implements OnInit{
         return (currentListing.deleteDate.toDate().getTime() <= this.dateNow.getTime());
       }
     });
-    console.log(this.deleteListings)
 
     this.deleteListings.forEach(element => {
       this.firestore.collection('listings').doc(element.listingID).delete()  

@@ -23,8 +23,7 @@ export class UserListingPage implements OnInit {
   retailerType;
   retailerUID;
   retailer;
-  url;
-  //disabled: Boolean = false; 
+  url; 
   isReady: Boolean = false;
 
   constructor(private nacCtrl: NavController, public alertController: AlertController, private activatedRoute: ActivatedRoute, private firestore: AngularFirestore, public user: UserService, private afStorage: AngularFireStorage, private changeDetection: ChangeDetectorRef, public loadingController: LoadingController) { }
@@ -72,9 +71,6 @@ export class UserListingPage implements OnInit {
 }
 
   async cart(listing){
-    
-    //this.disabled = true; 
-
     this.firestore.doc(`users/${firebase.auth().currentUser.uid}`).update({
       cart: firestore.FieldValue.arrayUnion({
         name: listing.name,
@@ -83,7 +79,8 @@ export class UserListingPage implements OnInit {
         retailerUID: listing.retailerUID,
         quantity: listing.quantity,
         quantityCart: 1,
-        price: listing.price
+        price: listing.price,
+        totalPrice: listing.price
       })
     })
 

@@ -4,7 +4,6 @@ import { ActivatedRoute } from '@angular/router';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { UserService } from '../user.service';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { firestore } from 'firebase/app';
 import * as firebase from 'firebase/app';
 import { LoadingController } from '@ionic/angular';
 

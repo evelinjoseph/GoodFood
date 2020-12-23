@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AlertController, NavController } from '@ionic/angular';
 import * as firebase from 'firebase/app';
@@ -8,7 +8,7 @@ import * as firebase from 'firebase/app';
   templateUrl: 'tab3.page.html',
   styleUrls: ['tab3.page.scss']
 })
-export class Tab3Page {
+export class Tab3Page implements OnInit{
   userUID;
   userItems;
   items;
@@ -22,12 +22,14 @@ export class Tab3Page {
   retailerType;
   retailerUID;
   date: Date;
+  subtotal = 0;
 
   constructor(private nacCtrl: NavController, public afstore: AngularFirestore, private changeDetection: ChangeDetectorRef, public alertCtrl: AlertController) {}
 
   ngOnInit() { 
     var self = this
     this.cart = []
+    this.subtotal = 0;
     firebase.auth().onAuthStateChanged(function(user) {        
       if (user) {        
         self.userUID = user.uid
@@ -41,6 +43,7 @@ export class Tab3Page {
 
   ionViewWillEnter(){
     this.cart = []
+    this.subtotal = 0;
     if(this.items){
       this.userItems = this.items.valueChanges();
       this.getCart();
@@ -48,14 +51,16 @@ export class Tab3Page {
     }    
   }
 
-  getCart(){    
+  async getCart(){    
     var self = this;
-    this.afstore.doc(`users/${this.userUID}`).get().toPromise().then(function(querySnapshot) {
+    await this.afstore.doc(`users/${this.userUID}`).get().toPromise().then(function(querySnapshot) {
       self.cart = []
+      self.subtotal = 0
       var cart1 = querySnapshot.get("cart");
       self.changeDetection.detectChanges(); 
       cart1.forEach(element => {
-        self.cart.push(element);              
+        self.cart.push(element);  
+        self.subtotal += element.totalPrice          
         });            
     })
     .catch(function(error) {
@@ -76,14 +81,16 @@ export class Tab3Page {
         retailerUID: item.retailerUID,
         quantity: item.quantity,
         quantityCart: item.quantityCart,
-        price: item.price
+        price: item.price,
+        totalPrice: item.totalPrice
       })
     })
     this.cart = this.cart.filter(currentListing => {
       if (currentListing.listingID && item.listingID) {
         return (!(currentListing.listingID.toLowerCase() === item.listingID.toLowerCase()));
       }
-    });  
+    }); 
+    this.subtotal -= item.totalPrice; 
   }
   }
 
@@ -114,7 +121,7 @@ export class Tab3Page {
     if(item.quantityCart + 1 <= item.quantity){
 
       var quantityValue = item.quantityCart + 1; 
-      //var priceValue = item.price + item.price;
+      var priceValue = item.totalPrice + item.price;
 
       this.afstore.doc(`users/${this.userUID}`).update({
         cart: firebase.firestore.FieldValue.arrayUnion({
@@ -124,8 +131,8 @@ export class Tab3Page {
           retailerUID: item.retailerUID,
           quantity: item.quantity,
           quantityCart: quantityValue,
-          price: item.price
-          //price: priceValue
+          price: item.price,
+          totalPrice: priceValue
         })
       })
   
@@ -137,11 +144,13 @@ export class Tab3Page {
           retailerUID: item.retailerUID,
           quantity: item.quantity,
           quantityCart: item.quantityCart,
-          price: item.price
+          price: item.price,
+          totalPrice: item.totalPrice
         })
       })
       item.quantityCart++;
-      //item.price += item.price;
+      item.totalPrice += item.price;
+      this.subtotal += item.price;
       
     }  
   }
@@ -149,7 +158,7 @@ export class Tab3Page {
   dec(item){    
     if(item.quantityCart - 1 > 0){
       var quantityValue = item.quantityCart - 1;  
-      //var priceValue = item.price - item.price; 
+      var priceValue = item.totalPrice - item.price;
 
       this.afstore.doc(`users/${this.userUID}`).update({
         cart: firebase.firestore.FieldValue.arrayUnion({
@@ -159,7 +168,7 @@ export class Tab3Page {
           retailerUID: item.retailerUID,
           quantity: item.quantity,
           quantityCart: quantityValue,
-          //price: priceValue
+          totalPrice: priceValue,
           price: item.price
         })
       })
@@ -172,72 +181,21 @@ export class Tab3Page {
           retailerUID: item.retailerUID,
           quantity: item.quantity,
           quantityCart: item.quantityCart,
-          price: item.price
+          price: item.price,
+          totalPrice: item.totalPrice
         })
       })
       item.quantityCart--;
-      //item.price -= item.price;
+      item.totalPrice -= item.price;
+      this.subtotal -= item.price;
     }
   }
 
   async checkOut(cart){
     const confirm = await this.presentAlertCheck();
-
     if (confirm) {
       this.nacCtrl.navigateRoot(['./paypal']);
-
-      // NEED TO WAIT FOR PAYPAL CONFIRMATION BEFORE UPDATING DB
-
-      // for(var item of cart){ 
-      //   this.date = new Date();     
-      //   this.afstore.doc(`users/${this.userUID}`).update({
-      //     orders: firebase.firestore.FieldValue.arrayUnion({
-      //       name: item.name,
-      //       description: item.description,
-      //       listingID: item.listingID,
-      //       retailerUID: item.retailerUID,
-      //       isCurrent: true,
-      //       date: this.date
-      //     })
-      //   })
-
-      //   this.afstore.doc(`users/${this.userUID}`).update({
-      //     cart: firebase.firestore.FieldValue.arrayRemove({
-      //       name: item.name,
-      //       description: item.description,
-      //       listingID: item.listingID,
-      //       retailerUID: item.retailerUID,
-      //       quantity: item.quantity,
-      //       quantityCart: item.quantityCart
-      //     })
-      //   })  
-        
-      //   this.afstore.doc(`users/${item.retailerUID}`).update({
-      //     orders: firebase.firestore.FieldValue.arrayUnion({
-      //       name: item.name,
-      //       description: item.description,
-      //       listingID: item.listingID,
-      //       retailerUID: item.retailerUID,
-      //       userUID: this.userUID,
-      //       isCurrent: true,
-      //       date: this.date
-      //     })
-      //   })
-
-      //   const decrement = firebase.firestore.FieldValue.increment(-item.quantityCart);
-
-      //   this.afstore.doc(`listings/${item.listingID}`).update({
-      //     quantity: decrement
-      //   })
-      //   // TODO: make sure there is enough quantity to check-out         
-      //   
-
-      // }
-      //this.cart = []
-      // console.log("checkout complete!")
-
     }   
-
   }
 
   public async presentAlertCheck() : Promise<boolean> {

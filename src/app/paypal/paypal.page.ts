@@ -11,46 +11,48 @@ import { first } from 'rxjs/operators';
   templateUrl: './paypal.page.html',
   styleUrls: ['./paypal.page.scss'],
 })
-export class PaypalPage {
+export class PaypalPage implements OnInit {
   paymentAmount = 0;
   currency: string = 'USD';
-  currencyIcon: string = '$';
-  cart: any[];
-  userUID: string;
+  cart = [];
+  userUID;
   date;
-  listing: any[];
+  listing;
 
   constructor(private nacCtrl: NavController, public alertController: AlertController, private firestore: AngularFirestore, public afstore: AngularFirestore, private payPal: PayPal, public loadingController: LoadingController, public changeDetection: ChangeDetectorRef){}
 
   ngOnInit() { 
     var self = this
     this.cart = []
+    this.paymentAmount = 0;
     firebase.auth().onAuthStateChanged(function(user) {        
       if (user) {        
-        self.userUID = user.uid
-        self.changeDetection.detectChanges();   
+        self.userUID = user.uid        
         self.getCart();    
+        self.changeDetection.detectChanges();
       }
     });    
   }
   
   ionViewWillEnter(){
     this.cart = []
-    this.getCart();
-    this.changeDetection.detectChanges();       
+    this.paymentAmount = 0;
+    if(this.userUID){      
+      this.getCart();
+      this.changeDetection.detectChanges();   
+    }      
   }
 
-  getCart(){    
+  async getCart(){    
     var self = this;
-    this.afstore.doc(`users/${this.userUID}`).get().toPromise().then(function(querySnapshot) {
+    await this.afstore.doc(`users/${this.userUID}`).get().toPromise().then(function(querySnapshot) {
       self.cart = []
       self.paymentAmount = 0;
       var cart1 = querySnapshot.get("cart");
       self.changeDetection.detectChanges(); 
       cart1.forEach(element => {
         self.cart.push(element);
-        self.paymentAmount += element.price * element.quantityCart
-        console.log(self.paymentAmount)             
+        self.paymentAmount += element.totalPrice           
         });            
     })
     .catch(function(error) {
@@ -131,7 +133,8 @@ export class PaypalPage {
           retailerUID: item.retailerUID,
           quantity: item.quantity,
           quantityCart: item.quantityCart,
-          price: item.price
+          price: item.price,
+          totalPrice: item.totalPrice
         })
       })  
       
