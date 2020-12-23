@@ -19,7 +19,7 @@ export class PaypalPage implements OnInit {
   date;
   listing;
 
-  constructor(private nacCtrl: NavController, public alertController: AlertController, private firestore: AngularFirestore, public afstore: AngularFirestore, private payPal: PayPal, public loadingController: LoadingController, public changeDetection: ChangeDetectorRef){}
+  constructor(private nacCtrl: NavController, public alertController: AlertController, public afstore: AngularFirestore, private payPal: PayPal, public loadingController: LoadingController, public changeDetection: ChangeDetectorRef){}
 
   ngOnInit() { 
     var self = this
@@ -64,7 +64,7 @@ export class PaypalPage implements OnInit {
   async payWithPayPal() {
     try{
       for(var item of this.cart){ 
-        this.listing = await this.firestore.collection('listings').valueChanges().pipe(first()).toPromise();
+        this.listing = await this.afstore.collection('listings').valueChanges().pipe(first()).toPromise();
         let thisListing: any[] = this.listing.filter(currentListing => {
           if (currentListing.listingID && item.listingID) {
             return (currentListing.listingID.toLowerCase().indexOf(item.listingID.toLowerCase()) > -1);
@@ -160,7 +160,7 @@ export class PaypalPage implements OnInit {
 
         thisListing.forEach(element => {
           if(item.quantityCart==element.quantity){
-            this.firestore.collection('listings').doc(item.listingID).delete()
+            this.afstore.collection('listings').doc(item.listingID).delete()
           }
           else{           
           this.afstore.doc(`listings/${item.listingID}`).update({

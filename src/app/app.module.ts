@@ -19,6 +19,7 @@ import { UserService } from './user.service';
 import { EmailComposer } from '@ionic-native/email-composer/ngx';
 import { Guid } from 'ez-guid';
 import { PayPal } from '@ionic-native/paypal/ngx';
+import { NativeGeocoder } from '@ionic-native/native-geocoder/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -34,7 +35,9 @@ import { PayPal } from '@ionic-native/paypal/ngx';
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     UserService,
     EmailComposer,
-    PayPal
+    PayPal,
+    NativeGeocoder
+
   ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

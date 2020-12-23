@@ -1,7 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Platform } from '@ionic/angular';
 //import { Map, tileLayer, marker, icon } from 'leaflet';
 import * as Leaflet from 'leaflet';
+import * as firebase from 'firebase/app';
+import { first } from 'rxjs/operators';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { NativeGeocoder, NativeGeocoderResult, NativeGeocoderOptions } from '@ionic-native/native-geocoder/ngx';
 
 @Component({
   selector: 'app-tab2',
@@ -11,19 +15,43 @@ import * as Leaflet from 'leaflet';
 export class Tab2Page implements OnInit{
   map: Leaflet.Map;
   locationMarker;
+  marker: Leaflet.marker;
+  restaurants = [];
+  mapResult = [];
 
-  constructor(public plt: Platform) {}
+  constructor(public plt: Platform, private firestore: AngularFirestore, public changeDetection: ChangeDetectorRef, private nativeGeocoder: NativeGeocoder) {}
 
   ngOnInit() {
-    
+    this.getRestaurants(); 
   }
 
-   ionViewDidEnter(){
+  ionViewDidEnter(){
+    
+    this.getRestaurants();
+    this.changeDetection.detectChanges();
     if (this.map != undefined || this.map != null) { this.map.remove(); }
-    this.loadMap();
+    if(this.restaurants){
+      this.loadMap();
+    }  
+  }
+
+  async getRestaurants(){    
+    this.restaurants = await this.firestore.collection('users').valueChanges().pipe(first()).toPromise();
+    this.restaurants = this.restaurants.filter(currentListing => {
+     if(currentListing.isRetailer){
+      return (currentListing.isRetailer);
+     }    
+    });
+    this.changeDetection.detectChanges();   
   }
 
   loadMap(){
+
+    let options: NativeGeocoderOptions = {
+      useLocale: true,
+      maxResults: 5
+  };
+
     this.map = Leaflet.map('mapId', {
       zoomDelta: 0.25,
       zoomSnap: 0
@@ -33,14 +61,35 @@ export class Tab2Page implements OnInit{
       
     }).addTo(this.map); 
 
-    this.map.locate({ setView: true }).on("locationfound", (event: any) => {     
+    this.map.locate({ setView: true }).on("locationfound", (event: any) => { 
       
       this.locationMarker = Leaflet.marker([event.latitude, event.longitude], {
           draggable: false
       }).addTo(this.map);
   
-      this.locationMarker.bindPopup("You are here!").openPopup();
+      this.locationMarker.bindPopup("You are here!").openPopup();      
   });
+
+  console.log(this.restaurants)
+  this.restaurants.forEach((restaurant) => {
+    console.log(restaurant.location)
+    this.nativeGeocoder.forwardGeocode(restaurant.location, options)
+  .then((result: NativeGeocoderResult[]) => this.mapResult = result)  
+  .catch((error: any) => console.log(error));
+  console.log(this.mapResult)
+
+  this.mapResult.forEach((result) => {
+    Leaflet.marker([result.latitude, result.longitude], {draggable: false})
+    .bindPopup(`<b>${restaurant.name}</b>`, { autoClose: false })
+    .on('click', () => console.log(restaurant.name))
+    .addTo(this.map).openPopup();
+  });   
+
+
+  });
+
+
+   
   }  
 
   ngOnDestroy() {
