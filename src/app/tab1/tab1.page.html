@@ -7,7 +7,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content> 
   <br>
   <ion-toolbar> 
     <ion-row>
@@ -39,6 +39,7 @@
         </ion-card-header>
    
      <ion-card-content>
+      <img [src]="url" style="width:100%;"> 
        <p> Price: ${{item.price | number:'1.2-2'}}</p>
        <p> Description: {{item.description}}</p>
        <p> Location: {{item.location}}</p>

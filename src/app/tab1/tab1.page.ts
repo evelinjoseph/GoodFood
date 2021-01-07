@@ -4,6 +4,9 @@ import { UserService } from '../user.service';
 import { AlertController, NavController } from '@ionic/angular';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { first } from 'rxjs/operators';
+import { AngularFireStorage } from '@angular/fire/storage';
+import { ActivatedRoute } from '@angular/router';
+
 
 @Component({
   selector: 'app-tab1',
@@ -20,8 +23,12 @@ export class Tab1Page implements OnInit{
   searchText = "Search By Food";
   searchBy = "Food";
   dateNow;
+  url; 
+  retailerUID;
+  ID;
 
-  constructor(private nacCtrl: NavController, public afAuth: AngularFireAuth, public user: UserService, private firestore: AngularFirestore, private changeDetection: ChangeDetectorRef, public alertController: AlertController) {}
+
+  constructor(private afStorage: AngularFireStorage, private activatedRoute: ActivatedRoute, private nacCtrl: NavController, public afAuth: AngularFireAuth, public user: UserService, private firestore: AngularFirestore, private changeDetection: ChangeDetectorRef, public alertController: AlertController) {}
 
   async logout() {
     this.afAuth.signOut();
@@ -32,7 +39,27 @@ export class Tab1Page implements OnInit{
   async ngOnInit() {
     this.listings = await this.initializeItems();
     this.retailers = await this.initializeRetailers(); //do we need this?? 
+
+    try{
+    this.ID = this.activatedRoute.snapshot.queryParamMap.get('id'); 
+    var self = this;
+    //collection.doc.id  ??to add to db when we get to it
+
+    var listingRef = (await this.firestore.collection("listings").doc(this.ID).get().toPromise()).data()
+        this.retailerUID = listingRef.retailerUID; 
+        
+    var storageRef =  this.afStorage.ref(`images/${this.retailerUID}.jpg`).getDownloadURL().toPromise().then(function(url) {        
+          self.url = url;
+       }).catch(function(error) {
+         self.url = 'assets/images/default.png';
+       });      
   }
+  catch(error){
+    self.url = 'assets/images/food.png'
+    console.log(error.message)
+    console.log("hello")
+  }
+}
 
 
   async initializeItems(): Promise<any> {
