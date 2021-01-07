@@ -7,7 +7,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content> 
+<ion-content fullscreen [hidden]="!isReady"> 
   <br>
   <ion-toolbar> 
     <ion-row>
@@ -34,12 +34,14 @@
       </ion-item> 
        <ion-card> -->
         <!-- <img src="./madison.jpg" /> -->
-        <ion-card-header>
+        
+        <img src={{item.url}} style="width:100%;"> 
+        <ion-card-header> 
           <ion-card-title class="ion-text-wrap">{{item.name}}</ion-card-title>
         </ion-card-header>
    
-     <ion-card-content>
-      <img [src]="url" style="width:100%;"> 
+     <ion-card-content> 
+     
        <p> Price: ${{item.price | number:'1.2-2'}}</p>
        <p> Description: {{item.description}}</p>
        <p> Location: {{item.location}}</p>

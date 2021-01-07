@@ -63,14 +63,14 @@ export class Tab2Page implements OnInit{
       
     }).addTo(this.map); 
 
-  //   this.map.locate({ setView: true }).on("locationfound", (event: any) => { 
+    this.map.locate({ setView: true }).on("locationfound", (event: any) => { 
       
-  //     this.locationMarker = Leaflet.marker([event.latitude, event.longitude], {
-  //         draggable: false
-  //     }).addTo(this.map);
+      this.locationMarker = Leaflet.marker([event.latitude, event.longitude], {
+          draggable: false
+      }).addTo(this.map);
   
-  //     this.locationMarker.bindPopup("You are here!").openPopup();      
-  // });
+      this.locationMarker.bindPopup("You are here!").openPopup();      
+  });
 
   // this.restaurants.forEach((restaurant) => {
   //   console.log(restaurant.location)
