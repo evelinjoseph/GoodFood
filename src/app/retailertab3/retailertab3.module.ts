@@ -7,13 +7,11 @@ import { IonicModule } from '@ionic/angular';
 import { Retailertab3PageRoutingModule } from './retailertab3-routing.module';
 
 import { Retailertab3Page } from './retailertab3.page';
-import { ExploreContainerComponentModule } from '../explore-container/explore-container.module';
 
 @NgModule({
   imports: [
     CommonModule,
-    FormsModule,    
-    ExploreContainerComponentModule,
+    FormsModule,
     IonicModule,
     Retailertab3PageRoutingModule
   ],

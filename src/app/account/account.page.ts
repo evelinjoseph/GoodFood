@@ -2,7 +2,6 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { ActivatedRoute } from '@angular/router';
-import { UserService } from '../user.service';
 import * as firebase from 'firebase/app';
 
 @Component({
@@ -20,12 +19,12 @@ export class AccountPage implements OnInit {
   buttonText: string = "Edit";
   isRead: boolean = true;
 
-  constructor(private activatedRoute: ActivatedRoute, private firestore: AngularFirestore, private changeDetection: ChangeDetectorRef, public user: UserService, public afAuth: AngularFireAuth) { }
+  constructor(private activatedRoute: ActivatedRoute, private firestore: AngularFirestore, private changeDetection: ChangeDetectorRef, public afAuth: AngularFireAuth) { }
 
   async ngOnInit() {
     try{
     var self = this;
-    await (firebase.auth().onAuthStateChanged(async function(user) {  
+    await (this.afAuth.onAuthStateChanged(async function(user) {  
       
       if (user) {        
         self.userUID = user.uid

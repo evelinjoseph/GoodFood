@@ -1,7 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { LoadingController, NavController } from '@ionic/angular';
-import { UserService } from '../user.service';
 import { AngularFirestore } from '@angular/fire/firestore';
 
 @Component({
@@ -12,7 +11,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 export class InitialPagePage implements OnInit {
   isReady: Boolean = false;
 
-  constructor(public nacCtrl: NavController, public afAuth: AngularFireAuth, public afstore: AngularFirestore, public user: UserService, public loadingController: LoadingController,  public changeDetection: ChangeDetectorRef) {
+  constructor(public nacCtrl: NavController, public afAuth: AngularFireAuth, public afstore: AngularFirestore, public loadingController: LoadingController,  public changeDetection: ChangeDetectorRef) {
     //this.presentLoading();
     var self = this;
     afAuth.onAuthStateChanged(async function(users) {

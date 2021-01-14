@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AlertController, NavController } from '@ionic/angular';
-import { TabsPage } from '../tabs/tabs.page';
-import { UserService } from '../user.service';
 import * as firebase from 'firebase/app';
 import { AngularFirestore } from '@angular/fire/firestore';
 
@@ -16,7 +14,7 @@ export class LoginPage implements OnInit {
   email: string = ""
   password: string = ""
 
-  constructor(private nacCtrl: NavController, public afAuth: AngularFireAuth, public user: UserService, public afstore: AngularFirestore,public alertController: AlertController) { }
+  constructor(private nacCtrl: NavController, public afAuth: AngularFireAuth, public afstore: AngularFirestore,public alertController: AlertController) { }
 
   ngOnInit() {
   }
@@ -40,12 +38,7 @@ export class LoginPage implements OnInit {
         self.presentAlert(error.message)
       });
       
-      if(firebase.auth().currentUser){
-        this.user.setUser({
-          email: firebase.auth().currentUser.email,
-          uid:firebase.auth().currentUser.uid
-        })
-
+      if(firebase.auth().currentUser){        
        var docRef = (await this.afstore.collection("users").doc(firebase.auth().currentUser.uid).get().toPromise()).data()
         if(docRef.isRetailer == false){
           this.nacCtrl.navigateRoot(['./tabs'])

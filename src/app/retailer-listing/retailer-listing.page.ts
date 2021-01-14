@@ -33,7 +33,7 @@ export class RetailerListingPage implements OnInit {
     this.presentLoading();
     this.listingID = this.activatedRoute.snapshot.queryParamMap.get('id'); 
     var self = this
-    firebase.auth().onAuthStateChanged(async function(user) {        
+    this.afAuth.onAuthStateChanged(async function(user) {        
       if (user) {        
         self.retailerUID = user.uid
         var userRef = (await self.afstore.collection("users").doc(self.retailerUID).get().toPromise()).data()

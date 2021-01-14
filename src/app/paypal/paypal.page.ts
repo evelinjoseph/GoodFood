@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { PayPal, PayPalPayment, PayPalConfiguration } from '@ionic-native/paypal/ngx'
 import { AlertController, LoadingController, NavController } from '@ionic/angular';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
 import { first } from 'rxjs/operators';
 
@@ -19,13 +20,13 @@ export class PaypalPage implements OnInit {
   date;
   listing;
 
-  constructor(private nacCtrl: NavController, public alertController: AlertController, public afstore: AngularFirestore, private payPal: PayPal, public loadingController: LoadingController, public changeDetection: ChangeDetectorRef){}
+  constructor(public afAuth: AngularFireAuth, private nacCtrl: NavController, public alertController: AlertController, public afstore: AngularFirestore, private payPal: PayPal, public loadingController: LoadingController, public changeDetection: ChangeDetectorRef){}
 
   ngOnInit() { 
     var self = this
     this.cart = []
     this.paymentAmount = 0;
-    firebase.auth().onAuthStateChanged(function(user) {        
+    this.afAuth.onAuthStateChanged(function(user) {        
       if (user) {        
         self.userUID = user.uid        
         self.getCart();    

@@ -1,6 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { UserService } from '../user.service';
 import { LoadingController, AlertController, NavController } from '@ionic/angular';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { first } from 'rxjs/operators';
@@ -28,7 +27,7 @@ export class Tab1Page implements OnInit{
   isReady: Boolean = false;
 
 
-  constructor(private afStorage: AngularFireStorage, private activatedRoute: ActivatedRoute, private nacCtrl: NavController, public afAuth: AngularFireAuth, public user: UserService, private firestore: AngularFirestore, private changeDetection: ChangeDetectorRef, public loadingController: LoadingController, public alertController: AlertController) {}
+  constructor(private afStorage: AngularFireStorage, private activatedRoute: ActivatedRoute, private nacCtrl: NavController, public afAuth: AngularFireAuth, private firestore: AngularFirestore, private changeDetection: ChangeDetectorRef, public loadingController: LoadingController, public alertController: AlertController) {}
 
 
   async ngOnInit() {

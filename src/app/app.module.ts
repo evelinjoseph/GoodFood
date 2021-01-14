@@ -15,7 +15,6 @@ import { AngularFirestoreModule} from '@angular/fire/firestore';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 
-import { UserService } from './user.service';
 import { EmailComposer } from '@ionic-native/email-composer/ngx';
 import { Guid } from 'ez-guid';
 import { PayPal } from '@ionic-native/paypal/ngx';
@@ -33,7 +32,6 @@ import { NativeGeocoder } from '@ionic-native/native-geocoder/ngx';
     StatusBar,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    UserService,
     EmailComposer,
     PayPal,
     NativeGeocoder

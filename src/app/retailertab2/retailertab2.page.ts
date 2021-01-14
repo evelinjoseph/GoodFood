@@ -23,7 +23,7 @@ export class Retailertab2Page implements OnInit {
 
   async ngOnInit() {
     var self = this
-    firebase.auth().onAuthStateChanged(async function(user) {        
+    this.afAuth.onAuthStateChanged(async function(user) {        
       if (user) {        
         self.retailerUID = user.uid
         self.items = self.afstore.doc(`users/${self.retailerUID}`);

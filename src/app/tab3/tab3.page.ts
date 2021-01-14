@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFireAuth } from '@angular/fire/auth';
 import { AlertController, NavController } from '@ionic/angular';
 import * as firebase from 'firebase/app';
 
@@ -24,13 +25,13 @@ export class Tab3Page implements OnInit{
   date: Date;
   subtotal = 0;
 
-  constructor(private nacCtrl: NavController, public afstore: AngularFirestore, private changeDetection: ChangeDetectorRef, public alertCtrl: AlertController) {}
+  constructor(public afauth: AngularFireAuth, private nacCtrl: NavController, public afstore: AngularFirestore, private changeDetection: ChangeDetectorRef, public alertCtrl: AlertController) {}
 
   ngOnInit() { 
     var self = this
     this.cart = []
     this.subtotal = 0;
-    firebase.auth().onAuthStateChanged(function(user) {        
+    this.afauth.onAuthStateChanged(function(user) {        
       if (user) {        
         self.userUID = user.uid
         self.items = self.afstore.doc(`users/${self.userUID}`);

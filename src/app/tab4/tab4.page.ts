@@ -2,8 +2,6 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AlertController } from '@ionic/angular';
-import * as firebase from 'firebase/app';
-import { UserService } from '../user.service'
 
 @Component({
   selector: 'app-tab4',
@@ -16,11 +14,11 @@ export class Tab4Page implements OnInit {
   items;
   retailerName;
 
-  constructor(public afstore: AngularFirestore, public afAuth: AngularFireAuth, private changeDetection: ChangeDetectorRef, private user: UserService, public alertCtrl: AlertController) { }
+  constructor(public afstore: AngularFirestore, public afAuth: AngularFireAuth, private changeDetection: ChangeDetectorRef, public alertCtrl: AlertController) { }
 
   ngOnInit() {
     var self = this
-    firebase.auth().onAuthStateChanged(function(user) {        
+    this.afAuth.onAuthStateChanged(function(user) {        
       if (user) {        
         self.userUID = user.uid
         self.items = self.afstore.doc(`users/${self.userUID}`);

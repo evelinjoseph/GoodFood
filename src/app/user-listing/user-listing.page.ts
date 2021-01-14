@@ -2,8 +2,6 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { ActivatedRoute } from '@angular/router';
 import { AngularFireStorage } from '@angular/fire/storage';
-import { UserService } from '../user.service';
-import { firestore } from 'firebase/app';
 import * as firebase from 'firebase/app';
 import { AlertController, LoadingController, NavController } from '@ionic/angular';
 
@@ -26,7 +24,7 @@ export class UserListingPage implements OnInit {
   url; 
   isReady: Boolean = false;
 
-  constructor(private nacCtrl: NavController, public alertController: AlertController, private activatedRoute: ActivatedRoute, private firestore: AngularFirestore, public user: UserService, private afStorage: AngularFireStorage, private changeDetection: ChangeDetectorRef, public loadingController: LoadingController) { }
+  constructor(private nacCtrl: NavController, public alertController: AlertController, private activatedRoute: ActivatedRoute, private firestore: AngularFirestore, private afStorage: AngularFireStorage, private changeDetection: ChangeDetectorRef, public loadingController: LoadingController) { }
 
   async ngOnInit() {
     this.presentLoading();
@@ -72,7 +70,7 @@ export class UserListingPage implements OnInit {
 
   async cart(listing){
     this.firestore.doc(`users/${firebase.auth().currentUser.uid}`).update({
-      cart: firestore.FieldValue.arrayUnion({
+      cart: firebase.firestore.FieldValue.arrayUnion({
         name: listing.name,
         description: listing.description,
         listingID: listing.listingID,

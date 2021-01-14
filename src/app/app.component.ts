@@ -15,7 +15,7 @@ export class AppComponent {
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
-    private statusBar: StatusBar,private nacCtrl: NavController, public afAuth: AngularFireAuth, public afstore: AngularFirestore) {
+    private statusBar: StatusBar, private nacCtrl: NavController, public afAuth: AngularFireAuth, public afstore: AngularFirestore) {
    
     this.initializeApp();
   }

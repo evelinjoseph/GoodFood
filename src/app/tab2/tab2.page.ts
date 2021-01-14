@@ -2,7 +2,6 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Platform } from '@ionic/angular';
 //import { Map, tileLayer, marker, icon } from 'leaflet';
 import * as Leaflet from 'leaflet';
-import * as firebase from 'firebase/app';
 import { first } from 'rxjs/operators';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { NativeGeocoder, NativeGeocoderResult, NativeGeocoderOptions } from '@ionic-native/native-geocoder/ngx';

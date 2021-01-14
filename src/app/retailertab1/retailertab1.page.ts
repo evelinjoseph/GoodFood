@@ -2,7 +2,6 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AlertController } from '@ionic/angular';
-import * as firebase from 'firebase/app';
 
 @Component({
   selector: 'app-retailertab1',
@@ -19,7 +18,7 @@ export class Retailertab1Page implements OnInit {
 
   ngOnInit() {
     var self = this
-    firebase.auth().onAuthStateChanged(function(user) {        
+    this.afAuth.onAuthStateChanged(function(user) {        
       if (user) {        
         self.retailerUID = user.uid
         self.items = self.afstore.doc(`users/${self.retailerUID}`);

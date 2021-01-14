@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AlertController, NavController } from '@ionic/angular';
-import { UserService } from '../user.service';
 import { EmailComposer } from '@ionic-native/email-composer/ngx';
 
 @Component({
@@ -17,10 +16,9 @@ export class RetailerRegisterPage implements OnInit {
   cpassword: string = "";
   location: string = "";
   retailerType: string = "";
-  pickupTime;
- 
+  pickupTime; 
 
-  constructor(private nacCtrl: NavController, public afAuth: AngularFireAuth, public afstore: AngularFirestore, public user:UserService, public alertController: AlertController, public emailComposer: EmailComposer) { }
+  constructor(private nacCtrl: NavController, public afAuth: AngularFireAuth, public afstore: AngularFirestore, public alertController: AlertController, public emailComposer: EmailComposer) { }
 
   ngOnInit() {
     
@@ -57,11 +55,6 @@ export class RetailerRegisterPage implements OnInit {
           pickupTime: new Date(this.pickupTime)
           // TODO: add location, retailerType, picture, pick-up time
           // TODO: make sure that 12 AM is not an option in pickuptime
-        })
-
-        this.user.setUser({
-          email,
-          uid: res.user.uid
         })
 
         const emailConfirmation = await this.presentAlertCheck();

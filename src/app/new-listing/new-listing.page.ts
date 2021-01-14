@@ -3,7 +3,6 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { ActivatedRoute } from '@angular/router';
 import { AngularFireStorage } from '@angular/fire/storage';
-import { UserService } from '../user.service';
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
 import { LoadingController } from '@ionic/angular';
@@ -29,11 +28,11 @@ export class NewListingPage implements OnInit {
   date;
   pickupDate: Date;
   
-  constructor(public afstore: AngularFirestore, public alertController: AlertController, private activatedRoute: ActivatedRoute, private firestore: AngularFirestore, public user: UserService, private afStorage: AngularFireStorage, public afAuth: AngularFireAuth, public loadingController: LoadingController, private changeDetection: ChangeDetectorRef) { }
+  constructor(public afstore: AngularFirestore, public alertController: AlertController, private activatedRoute: ActivatedRoute, private firestore: AngularFirestore, private afStorage: AngularFireStorage, public afAuth: AngularFireAuth, public loadingController: LoadingController, private changeDetection: ChangeDetectorRef) { }
   
   ngOnInit() {
       var self = this
-      firebase.auth().onAuthStateChanged(async function(user) {        
+      this.afAuth.onAuthStateChanged(async function(user) {        
         if (user) {        
           self.retailerUID = user.uid;
           var userRef = (await self.afstore.collection("users").doc(self.retailerUID).get().toPromise()).data()
