@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { LoadingController, AlertController, NavController } from '@ionic/angular';
@@ -14,10 +14,10 @@ import { RouterTestingModule } from '@angular/router/testing';
 describe('Tab1Page', () => {
   let component: Tab1Page;
   let fixture: ComponentFixture<Tab1Page>;
-
+  
   const FirestoreStub = {
     collection: (name: string) => ({   
-      valueChanges: () => of({ foo: 'bar' }), 
+      valueChanges: () => of({ foo: 'bar' }),
       doc: (_id: string) => ({
         valueChanges: () => of({ foo: 'bar' }),
         set: (_d: any) => Promise.resolve(),
@@ -32,7 +32,7 @@ describe('Tab1Page', () => {
         return Promise.resolve();
       }
     }
-  };
+  };  
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
