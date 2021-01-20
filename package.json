@@ -24,6 +24,7 @@
     "@capacitor/core": "2.4.2",
     "@ionic-native/core": "^5.0.0",
     "@ionic-native/email-composer": "^5.28.0",
+    "@ionic-native/geolocation": "^5.30.0",
     "@ionic-native/native-geocoder": "^5.30.0",
     "@ionic-native/paypal": "^5.30.0",
     "@ionic-native/splash-screen": "^5.0.0",
@@ -60,6 +61,7 @@
     "cordova-plugin-add-swift-support": "^2.0.2",
     "cordova-plugin-device": "^2.0.2",
     "cordova-plugin-email-composer": "^0.9.2",
+    "cordova-plugin-geolocation": "^4.1.0",
     "cordova-plugin-ionic-keyboard": "^2.2.0",
     "cordova-plugin-ionic-webview": "^4.2.1",
     "cordova-plugin-splashscreen": "^5.0.2",
@@ -94,6 +96,9 @@
       "com.paypal.cordova.mobilesdk": {},
       "cordova-plugin-nativegeocoder": {
         "LOCATION_WHEN_IN_USE_DESCRIPTION": "Use geocoder service"
+      },
+      "cordova-plugin-geolocation": {
+        "GPS_REQUIRED": "true"
       }
     },
     "platforms": [

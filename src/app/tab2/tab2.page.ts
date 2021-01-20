@@ -1,5 +1,5 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { Platform } from '@ionic/angular';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { Platform, IonSlides } from '@ionic/angular';
 //import { Map, tileLayer, marker, icon } from 'leaflet';
 import * as Leaflet from 'leaflet';
 import { first } from 'rxjs/operators';
@@ -18,6 +18,8 @@ export class Tab2Page implements OnInit{
   restaurants = [];
   mapResult;
 
+  @ViewChild(IonSlides) slides: IonSlides;
+
   constructor(public plt: Platform, private firestore: AngularFirestore, public changeDetection: ChangeDetectorRef, private nativeGeocoder: NativeGeocoder) {}
 
   async ngOnInit() {
@@ -29,15 +31,15 @@ export class Tab2Page implements OnInit{
     }  
   }
 
-  async ionViewWillEnter(){
+  // async ionViewWillEnter(){
     
-    await this.getRestaurants();
-    this.changeDetection.detectChanges();
-    if (this.map != undefined || this.map != null) { this.map.remove(); }
-    if(this.restaurants){
-      this.loadMap();
-    }  
-  }
+  //   await this.getRestaurants();
+  //   this.changeDetection.detectChanges();
+  //   if (this.map != undefined || this.map != null) { this.map.remove(); }
+  //   if(this.restaurants){
+  //     this.loadMap();
+  //   }  
+  // }
 
   async getRestaurants(){    
     this.restaurants = await this.firestore.collection('users').valueChanges().pipe(first()).toPromise();
@@ -62,48 +64,51 @@ export class Tab2Page implements OnInit{
       
     }).addTo(this.map); 
 
-    this.map.locate({ setView: true }).on("locationfound", (event: any) => { 
-      
+    this.map.locate().on("locationfound", (event: any) => { 
+      console.log("got current loc")
+      this.map.flyTo(new Leaflet.LatLng(event.latitude, event.longitude), 11);           
       this.locationMarker = Leaflet.marker([event.latitude, event.longitude], {
           draggable: false
-      }).addTo(this.map);
+      }).addTo(this.map);    
   
       this.locationMarker.bindPopup("You are here!").openPopup();      
   });
 
-  // this.restaurants.forEach((restaurant) => {
-  //   console.log(restaurant.location)
-  //   this.nativeGeocoder.forwardGeocode(restaurant.location, options)
-  // .then((result: NativeGeocoderResult[]) => this.mapResult.push(result[0]))  
-  // .catch((error: any) => console.log(error));
-  // console.log(this.mapResult)
-
-  // this.mapResult.forEach((result) => {
-  //   Leaflet.marker([result.latitude, result.longitude], {draggable: false})
-  //   .bindPopup(`<b>${restaurant.name}</b>`, { autoClose: false })
-  //   .on('click', () => console.log(restaurant.name))
-  //   .addTo(this.map).openPopup();
-  // }); 
-  // });
-  // this.mapResult = []
-  this.changeDetection.detectChanges();
-
   console.log(this.restaurants)
 
-  this.restaurants.forEach((restaurant) => {
+  this.restaurants.forEach((restaurant, index) => {
     console.log(restaurant.location)
     this.nativeGeocoder.forwardGeocode(restaurant.location, options)
   .then((result: NativeGeocoderResult[]) => { 
       Leaflet.marker([result[0].latitude, result[0].longitude], {draggable: false})
       .bindPopup(`<b>${restaurant.name}</b>`, { autoClose: false })
-      .on('click', () => console.log(restaurant.name))
+      .on('click', (event: any) => {
+        this.map.flyTo(event.latlng, 16); 
+        this.slides.slideTo(index);        
+        console.log(restaurant.name)
+      })
       .addTo(this.map).openPopup();
     }).catch((error: any) => console.log(error));       
   });
 
   this.changeDetection.detectChanges();
    
-  }  
+  }
+  
+  slideChanged(event) {
+    let options: NativeGeocoderOptions = {
+      useLocale: true,
+      maxResults: 5
+    };
+
+    this.slides.getActiveIndex().then(index => {
+      this.nativeGeocoder.forwardGeocode(this.restaurants[index].location, options)
+      .then((result: NativeGeocoderResult[]) => { 
+        this.map.flyTo(new Leaflet.LatLng(result[0].latitude, result[0].longitude), 16)
+      }).catch((error: any) => console.log(error));   
+
+    });
+}
 
   ngOnDestroy() {
     this.map.remove();

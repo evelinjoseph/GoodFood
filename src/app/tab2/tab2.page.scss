@@ -1,8 +1,18 @@
-body {
-    padding: 0;
-    margin: 0;
-}
-html, body, #map {
+#mapId {
     height: 100%;
     width: 100vw;
 }
+
+.scroll-content {
+    margin-bottom: 0!important;
+  }
+
+ion-footer {
+    &.footer-md::before {
+        background-image: none;
+    }
+}
+
+
+    
+  
