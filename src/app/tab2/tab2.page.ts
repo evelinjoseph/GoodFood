@@ -110,6 +110,7 @@ export class Tab2Page implements OnInit{
     });
 }
 
+
   ngOnDestroy() {
     this.map.remove();
   }

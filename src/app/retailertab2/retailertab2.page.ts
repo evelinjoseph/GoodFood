@@ -130,7 +130,7 @@ export class Retailertab2Page implements OnInit {
       resolveFunction = resolve;
     });
     const alert = await this.alertCtrl.create({
-      header: 'Confirm Delete',
+      header: 'Confirm Unpublish',
       message: 'Are you sure you want to unpublish this listing?',
       buttons: [
         {
