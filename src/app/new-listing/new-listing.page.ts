@@ -71,7 +71,8 @@ save()
         price: this.price,
         description: this.description,
         name: this.name,
-        listingID: this.listingID      
+        listingID: this.listingID,
+        isListed: false      
       })
     })
 
@@ -121,8 +122,7 @@ save()
         deleteDate: new Date(this.date.getFullYear(), this.date.getMonth(), this.date.getDate(), this.pickupDate.getHours(), this.pickupDate.getMinutes(), this.pickupDate.getSeconds(), this.pickupDate.getMilliseconds())
       }     
   
-      this.afstore.collection("listings").doc(this.listingID).set(data)
-    
+      this.afstore.collection("listings").doc(this.listingID).set(data)    
     
       this.afstore.doc(`users/${this.retailerUID}`).update({
         listings: firebase.firestore.FieldValue.arrayUnion({
@@ -130,7 +130,8 @@ save()
           price: this.price,
           description: this.description,
           name: this.name,
-          listingID: this.listingID      
+          listingID: this.listingID,
+          isListed: true      
         })
       })
 

@@ -15,6 +15,7 @@
      <ion-item>
       <ion-card-title class="ion-text-wrap">{{item.name}}</ion-card-title>
       <ion-button  (click)="delete(item)" fill="outline" slot="end">Delete</ion-button> 
+      <ion-button  *ngIf="item.isListed" (click)="unpublish(item)" fill="outline" slot="end">Unpublish</ion-button> 
     </ion-item>
    
      <ion-card-content [routerLink]="['/retailer-listing']" [queryParams]="{ id: item.listingID }" routerDirection="forward"> 

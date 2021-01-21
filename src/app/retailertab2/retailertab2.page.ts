@@ -57,7 +57,41 @@ export class Retailertab2Page implements OnInit {
         description: listing.description,
         listingID: listing.listingID,
         price: listing.price,
-        quantity:listing.quantity
+        quantity:listing.quantity,
+        isListed: listing.isListed
+      })
+    })
+    
+    this.afstore.collection('listings').doc(listing.listingID).delete();
+
+    // TODO: may need to delete from carts?
+  }
+  }
+
+  async unpublish(listing){
+
+    const confirm = await this.presentAlertUnpublish();
+    if (confirm) {
+
+      this.afstore.doc(`users/${this.retailerUID}`).update({
+        listings: firebase.firestore.FieldValue.arrayUnion({
+          name: listing.name,
+          description: listing.description,
+          listingID: listing.listingID,
+          price: listing.price,
+          quantity:listing.quantity,
+          isListed: false
+        })
+      })
+
+    this.afstore.doc(`users/${this.retailerUID}`).update({
+      listings: firebase.firestore.FieldValue.arrayRemove({
+        name: listing.name,
+        description: listing.description,
+        listingID: listing.listingID,
+        price: listing.price,
+        quantity:listing.quantity,
+        isListed: listing.isListed
       })
     })
     
@@ -75,6 +109,29 @@ export class Retailertab2Page implements OnInit {
     const alert = await this.alertCtrl.create({
       header: 'Confirm Delete',
       message: 'Are you sure you want to delete this listing?',
+      buttons: [
+        {
+          text: 'Yes',
+            handler: () => resolveFunction(true)
+        }, {
+          text: 'No',
+          handler: () => resolveFunction(false)
+        }
+      ]
+    });
+
+    await alert.present();
+    return promise;
+  }
+
+  async presentAlertUnpublish() : Promise<boolean> {
+    let resolveFunction: (confirm: boolean) => void;
+    const promise = new Promise<boolean>(resolve => {
+      resolveFunction = resolve;
+    });
+    const alert = await this.alertCtrl.create({
+      header: 'Confirm Delete',
+      message: 'Are you sure you want to unpublish this listing?',
       buttons: [
         {
           text: 'Yes',

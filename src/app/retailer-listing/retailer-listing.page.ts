@@ -94,7 +94,30 @@ export class RetailerListingPage implements OnInit {
       deleteDate: new Date(this.date.getFullYear(), this.date.getMonth(), this.date.getDate(), this.pickupDate.getHours(), this.pickupDate.getMinutes(), this.pickupDate.getSeconds(), this.pickupDate.getMilliseconds())
     }
 
-    this.afstore.collection("listings").doc(this.listingID).set(data)
+    this.afstore.collection("listings").doc(this.listingID).set(data);
+    
+
+    this.afstore.doc(`users/${this.retailerUID}`).update({
+      listings: firebase.firestore.FieldValue.arrayUnion({
+        quantity: listing.quantity,
+        price: listing.price,
+        description: listing.description,
+        name: listing.name,
+        listingID: listing.listingID,
+        isListed: true      
+      })
+    })
+
+    this.afstore.doc(`users/${this.retailerUID}`).update({
+      listings: firebase.firestore.FieldValue.arrayRemove({
+        quantity: listing.quantity,
+        price: listing.price,
+        description: listing.description,
+        name: listing.name,
+        listingID: listing.listingID,
+        isListed: false      
+      })
+    })
 
     this.presentAlert();
 

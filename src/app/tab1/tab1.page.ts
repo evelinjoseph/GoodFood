@@ -5,6 +5,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { first } from 'rxjs/operators';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { ActivatedRoute } from '@angular/router';
+import * as firebase from 'firebase/app';
 
 @Component({
   selector: 'app-tab1',
@@ -45,10 +46,46 @@ async initializeItems(): Promise<any> {
     if (currentListing.deleteDate && this.dateNow.toUTCString()) {
       return (currentListing.deleteDate.toDate().getTime() <= this.dateNow.getTime());
     }
-  });
+  });  
 
-  this.deleteListings.forEach(element => {
-    this.firestore.collection('listings').doc(element.listingID).delete()  
+  this.deleteListings.forEach(async element => {
+    this.firestore.collection('listings').doc(element.listingID).delete()    
+    
+    let retailerListings: any[] = await this.firestore.collection('users').valueChanges().pipe(first()).toPromise();
+    retailerListings = retailerListings.filter(currentListing => {
+      if (currentListing.retailerUID && element.retailerUID) {
+        return (currentListing.retailerUID.toLowerCase().indexOf(element.retailerUID.toLowerCase()) > -1);
+      }
+    });    
+    retailerListings = retailerListings[0].listings;
+
+    retailerListings = retailerListings.filter(currentListing => {     
+        if (currentListing.listingID && element.listingID) {       
+          return (currentListing.listingID.toLowerCase().indexOf(element.listingID.toLowerCase()) > -1);
+        }        
+      });
+    
+    this.firestore.doc(`users/${element.retailerUID}`).update({
+      listings: firebase.firestore.FieldValue.arrayUnion({
+        name: element.name,
+        description: element.description,
+        listingID: element.listingID,
+        price: element.price,
+        quantity:retailerListings[0].quantity,
+        isListed: false
+      })
+    })
+
+    this.firestore.doc(`users/${element.retailerUID}`).update({
+      listings: firebase.firestore.FieldValue.arrayRemove({
+        name: element.name,
+        description: element.description,
+        listingID: element.listingID,
+        price: element.price,
+        quantity:retailerListings[0].quantity,
+        isListed: true
+      })
+    })
   });
   
 
