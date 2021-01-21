@@ -31,6 +31,7 @@
 </ion-content>
 
 <ion-toolbar [hidden]="!isReady" position="bottom" style="text-align: center;" color="translucent" *ngFor="let item of listing"> 
-  <ion-button size ="large" (click)="publish(item)">Publish</ion-button>
+  <ion-button *ngIf="!item.isListed" size ="large" (click)="publish(item)">Publish</ion-button>
+  <ion-button *ngIf="item.isListed" size ="large" (click)="unpublish(item)">Unpublish</ion-button>
 </ion-toolbar>
 

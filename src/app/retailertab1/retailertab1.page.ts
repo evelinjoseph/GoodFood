@@ -13,6 +13,7 @@ export class Retailertab1Page implements OnInit {
   retailerItems;
   items;
   retailerName;
+  isReady = false;
 
   constructor(public afstore: AngularFirestore, public afAuth: AngularFireAuth, private changeDetection: ChangeDetectorRef, public alertCtrl: AlertController) { }
 
@@ -24,6 +25,7 @@ export class Retailertab1Page implements OnInit {
         self.items = self.afstore.doc(`users/${self.retailerUID}`);
         self.retailerItems = self.items.valueChanges(); 
         self.changeDetection.detectChanges();   
+        self.isReady = true;
       }
       else{
         console.log('no user signed in');
@@ -35,6 +37,7 @@ export class Retailertab1Page implements OnInit {
     if(this.items){
       this.retailerItems = this.items.valueChanges();
       this.changeDetection.detectChanges(); 
+      this.isReady = true;
     }    
   }
 

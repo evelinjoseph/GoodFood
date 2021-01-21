@@ -24,6 +24,7 @@ export class Tab3Page implements OnInit{
   retailerUID;
   date: Date;
   subtotal = 0;
+  isReady = false;
 
   constructor(public afauth: AngularFireAuth, private nacCtrl: NavController, public afstore: AngularFirestore, private changeDetection: ChangeDetectorRef, public alertCtrl: AlertController) {}
 
@@ -67,7 +68,9 @@ export class Tab3Page implements OnInit{
     .catch(function(error) {
         console.log("Error getting documents");
     }); 
-    this.changeDetection.detectChanges();     
+
+    this.changeDetection.detectChanges();  
+    this.isReady = true;   
   }
 
   async delete(item){

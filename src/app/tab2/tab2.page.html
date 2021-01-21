@@ -20,7 +20,7 @@
       <ion-card-content> 
         <p>{{item.location}}</p> 
         <div *ngFor="let listing of item.listings" >
-        <ion-text *ngIf="listing.isListed" [routerLink]="['/user-listing']" [queryParams]="{ id: listing.listingID }" routerDirection="forward">{{listing.name}}</ion-text>
+        <ion-text style="font-weight: 600;" *ngIf="listing.isListed" [routerLink]="['/user-listing']" [queryParams]="{ id: listing.listingID }" routerDirection="forward">{{listing.name}}</ion-text>
       </div>
       </ion-card-content>
     </ion-card>

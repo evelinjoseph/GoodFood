@@ -229,4 +229,10 @@ async initializeItems(): Promise<any> {
     this.isReady = true; 
     this.changeDetection.detectChanges(); 
   }
+
+  async doRefresh(event) {
+    this.listings = await this.initializeItems();    
+    event.target.complete();
+  }
+
 }

@@ -3,7 +3,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { ActivatedRoute } from '@angular/router';
-import { AlertController, LoadingController } from '@ionic/angular';
+import { AlertController, LoadingController, NavController } from '@ionic/angular';
 import * as firebase from 'firebase/app';
 
 @Component({
@@ -27,7 +27,7 @@ export class RetailerListingPage implements OnInit {
 
   // TODO: add the option to remove the listing that is currently published from the user view without deleting it for the retailer
 
-  constructor(private activatedRoute: ActivatedRoute, public afAuth: AngularFireAuth, private afstore: AngularFirestore, private afStorage: AngularFireStorage, private changeDetection: ChangeDetectorRef,public loadingController: LoadingController, public alertController: AlertController) { }
+  constructor(private nacCtrl: NavController, private activatedRoute: ActivatedRoute, public afAuth: AngularFireAuth, private afstore: AngularFirestore, private afStorage: AngularFireStorage, private changeDetection: ChangeDetectorRef,public loadingController: LoadingController, public alertController: AlertController) { }
 
   ngOnInit() {
     this.presentLoading();
@@ -118,10 +118,10 @@ export class RetailerListingPage implements OnInit {
         isListed: false      
       })
     })
-
+    this.changeDetection.detectChanges(); 
     this.presentAlert();
-
-
+    this.nacCtrl.navigateRoot(["./retailertabs/retailertabs/retailertab2"]);
+    this.changeDetection.detectChanges(); 
   }
 
   public async presentAlert() : Promise<boolean> {
@@ -143,5 +143,65 @@ export class RetailerListingPage implements OnInit {
     await alert.present();
     return promise;
   }
+
+  
+  async unpublish(listing){
+
+    const confirm = await this.presentAlertUnpublish();
+    if (confirm) {
+
+      this.afstore.doc(`users/${this.retailerUID}`).update({
+        listings: firebase.firestore.FieldValue.arrayUnion({
+          name: listing.name,
+          description: listing.description,
+          listingID: listing.listingID,
+          price: listing.price,
+          quantity:listing.quantity,
+          isListed: false
+        })
+      })
+
+    this.afstore.doc(`users/${this.retailerUID}`).update({
+      listings: firebase.firestore.FieldValue.arrayRemove({
+        name: listing.name,
+        description: listing.description,
+        listingID: listing.listingID,
+        price: listing.price,
+        quantity:listing.quantity,
+        isListed: listing.isListed
+      })
+    })
+    
+    this.afstore.collection('listings').doc(listing.listingID).delete();
+    this.nacCtrl.navigateRoot(["./retailertabs/retailertabs/retailertab2"]);
+    this.changeDetection.detectChanges(); 
+   
+    // TODO: may need to delete from carts?
+  }
+  }
+
+  async presentAlertUnpublish() : Promise<boolean> {
+    let resolveFunction: (confirm: boolean) => void;
+    const promise = new Promise<boolean>(resolve => {
+      resolveFunction = resolve;
+    });
+    const alert = await this.alertController.create({
+      header: 'Confirm Unpublish',
+      message: 'Are you sure you want to unpublish this listing?',
+      buttons: [
+        {
+          text: 'Yes',
+            handler: () => resolveFunction(true)
+        }, {
+          text: 'No',
+          handler: () => resolveFunction(false)
+        }
+      ]
+    });
+
+    await alert.present();
+    return promise;
+  }
+ 
 
 }

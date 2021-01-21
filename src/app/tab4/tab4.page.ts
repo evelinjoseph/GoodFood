@@ -13,6 +13,7 @@ export class Tab4Page implements OnInit {
   userItems;
   items;
   retailerName;
+  isReady = false;
 
   constructor(public afstore: AngularFirestore, public afAuth: AngularFireAuth, private changeDetection: ChangeDetectorRef, public alertCtrl: AlertController) { }
 
@@ -24,7 +25,8 @@ export class Tab4Page implements OnInit {
         self.items = self.afstore.doc(`users/${self.userUID}`);
         self.userItems = self.items.valueChanges(); 
         self.changeDetection.detectChanges();   
-        //self.getRetailer();    
+        //self.getRetailer(); 
+        self.isReady = true;   
       }
       else{
         console.log('no user signed in');
@@ -36,11 +38,11 @@ export class Tab4Page implements OnInit {
     if(this.items){
       this.userItems = this.items.valueChanges();
       this.changeDetection.detectChanges(); 
+      this.isReady = true;
     }    
   }
 
-   getRetailer(uid) : String{
-     
+   getRetailer(uid) : String{     
       return uid;
   }
   
