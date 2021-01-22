@@ -20,7 +20,40 @@ export class PaypalPage implements OnInit {
   date;
   listing;
 
-  constructor(public afAuth: AngularFireAuth, private nacCtrl: NavController, public alertController: AlertController, public afstore: AngularFirestore, private payPal: PayPal, public loadingController: LoadingController, public changeDetection: ChangeDetectorRef){}
+  constructor(public afAuth: AngularFireAuth, private nacCtrl: NavController, public alertController: AlertController, public afstore: AngularFirestore, private payPal: PayPal, public loadingController: LoadingController, public changeDetection: ChangeDetectorRef){
+
+
+    let _this = this;
+    setTimeout(() => {
+      // Render the PayPal button into #paypal-button-container
+      <any>window['paypal'].Buttons({
+
+        // Set up the transaction
+        createOrder: function (data, actions) {
+          return actions.order.create({
+            purchase_units: [{
+              amount: {
+                value: _this.paymentAmount
+              }
+            }]
+          });
+        },
+
+        // Finalize the transaction
+        onApprove: function (data, actions) {
+          return actions.order.capture()
+            .then(function (details) {
+              // Show a success message to the buyer
+              alert('Transaction completed by ' + details.payer.name.given_name + '!');
+            })
+            .catch(err => {
+              console.log(err);
+            })
+        }
+      }).render('#paypal-button-container');
+    }, 500)
+  
+  }
 
   ngOnInit() { 
     var self = this
@@ -176,22 +209,25 @@ export class PaypalPage implements OnInit {
     console.log("checkout complete!")
 
 
-  }, () => {
+  }, (error) => {
     // Error or render dialog closed without being successful
+    console.log(error);
    
   });
-  }, () => {
+  }, (error) => {
         // Error in configuration
+        console.log(error)
         
       });
-    }, () => {
+    }, (error) => {
       // Error in initialization, maybe PayPal isn't supported or something else
-     
+      console.log(error)
     });
 
   }
   catch(error){
-    this.presentAlert(error.message)
+    console.log(error);
+    this.presentAlert(error);
     this.nacCtrl.navigateRoot(['/tabs/tabs/tab3']);
   }  
 

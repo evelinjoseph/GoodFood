@@ -22,18 +22,32 @@
       </ion-card-content>
     </ion-card>
   </div>
+
+  <ion-toolbar position="bottom" style="text-align: center;">
+    <div class="ion-text-end" id="subtotal">
+      <ion-text > <p style="font-size: large;"> Subtotal ${{paymentAmount | number:'1.2-2'}} </p></ion-text> 
+      <ion-text > <p style="font-size: large;"> Tax $-</p></ion-text> 
+      <ion-text > <p id="total"> TOTAL ${{paymentAmount | number:'1.2-2'}} </p></ion-text> 
+    </div>  
+    <div id="paypal-button-container"></div>   
+    <div class="paypal_div">
+    <!-- <ion-button class="paypal_button" expand="full" color="warning" (click)="payWithPayPal()">Pay with PayPal</ion-button> -->
+    <!-- <div id="paypal-button-container"></div> -->
+  </div> 
+ </ion-toolbar>
 </ion-content>
 
-<ion-footer class="ion-no-border">
+<!-- <ion-footer class="ion-no-border">
    <ion-toolbar position="bottom" style="text-align: center;">
     <div class="ion-text-end" id="subtotal">
       <ion-text > <p style="font-size: large;"> Subtotal ${{paymentAmount | number:'1.2-2'}} </p></ion-text> 
       <ion-text > <p style="font-size: large;"> Tax $-</p></ion-text> 
       <ion-text > <p id="total"> TOTAL ${{paymentAmount | number:'1.2-2'}} </p></ion-text> 
     </div>  
-    <!-- <div id="paypal-button-container"></div> -->   
+    <div id="paypal-button-container"></div>   
     <div class="paypal_div">
     <ion-button class="paypal_button" expand="full" color="warning" (click)="payWithPayPal()">Pay with PayPal</ion-button>
+    
   </div> 
  </ion-toolbar>
-</ion-footer>
+</ion-footer> -->
