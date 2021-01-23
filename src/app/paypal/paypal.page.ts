@@ -21,60 +21,157 @@ export class PaypalPage implements OnInit {
   listing;
 
   constructor(public afAuth: AngularFireAuth, private nacCtrl: NavController, public alertController: AlertController, public afstore: AngularFirestore, private payPal: PayPal, public loadingController: LoadingController, public changeDetection: ChangeDetectorRef){
+    let self = this
+    this.cart = []
+    this.paymentAmount = 0;
+    this.afAuth.onAuthStateChanged(async function(user) {        
+      if (user) {        
+        self.userUID = user.uid        
+        await self.getCart();  
+        self.changeDetection.detectChanges();
 
-
-    let _this = this;
-    setTimeout(() => {
-      // Render the PayPal button into #paypal-button-container
-      <any>window['paypal'].Buttons({
-
-        // Set up the transaction
-        createOrder: function (data, actions) {
-          return actions.order.create({
-            purchase_units: [{
-              amount: {
-                value: _this.paymentAmount
+        try{
+          for(var item of self.cart){ 
+            self.listing = await self.afstore.collection('listings').valueChanges().pipe(first()).toPromise();
+            let thisListing: any[] = self.listing.filter(currentListing => {
+              if (currentListing.listingID && item.listingID) {
+                return (currentListing.listingID.toLowerCase().indexOf(item.listingID.toLowerCase()) > -1);
               }
-            }]
-          });
-        },
-
-        // Finalize the transaction
-        onApprove: function (data, actions) {
-          return actions.order.capture()
-            .then(function (details) {
-              // Show a success message to the buyer
-              alert('Transaction completed by ' + details.payer.name.given_name + '!');
-            })
-            .catch(err => {
-              console.log(err);
-            })
+            });
+            thisListing.forEach(element => {
+              if(item.quantityCart>element.quantity){
+                throw new Error("Sorry, unfortunately there is not enough quantity to complete the " + element.name + " order. Please edit the quantity to be less than or equal to " + element.quantity +".");
+                
+              }           
+            });
+          } 
+          
         }
-      }).render('#paypal-button-container');
-    }, 500)
+        catch(error){
+          console.log(error);
+          self.presentAlert(error);
+          self.nacCtrl.navigateRoot(['/tabs/tabs/tab3']);
+        } 
+
+      }
+    });
+
+    setTimeout(() => {
+        // Render the PayPal button into #paypal-button-container
+        <any>window['paypal'].Buttons({
+
+          // Set up the transaction
+          createOrder: function (data, actions) {
+
+           
+            console.log(self.paymentAmount)
+
+            return actions.order.create({
+              purchase_units: [{
+                amount: {
+                  value: self.paymentAmount
+                }
+              }]
+            });
+          },
+  
+          // Finalize the transaction
+          onApprove: function (data, actions) {
+            return actions.order.capture()
+              .then(function (details) {
+                // Show a success message to the buyer
+                console.log(self.cart)
+                for(var item of self.cart){ 
+                  self.date = new Date();     
+                  self.afstore.doc(`users/${self.userUID}`).update({
+                    orders: firebase.firestore.FieldValue.arrayUnion({
+                      name: item.name,
+                      description: item.description,
+                      listingID: item.listingID,
+                      retailerUID: item.retailerUID,
+                      isCurrent: true,
+                      date: self.date
+                    })
+                  })
+            
+                  self.afstore.doc(`users/${self.userUID}`).update({
+                    cart: firebase.firestore.FieldValue.arrayRemove({
+                      name: item.name,
+                      description: item.description,
+                      listingID: item.listingID,
+                      retailerUID: item.retailerUID,
+                      quantity: item.quantity,
+                      quantityCart: item.quantityCart,
+                      price: item.price,
+                      totalPrice: item.totalPrice
+                    })
+                  })  
+                  
+                  self.afstore.doc(`users/${item.retailerUID}`).update({
+                    orders: firebase.firestore.FieldValue.arrayUnion({
+                      name: item.name,
+                      description: item.description,
+                      listingID: item.listingID,
+                      retailerUID: item.retailerUID,
+                      userUID: self.userUID,
+                      isCurrent: true,
+                      date: self.date
+                    })
+                  })
+            
+                  if(item.quantityCart>0){
+                    const decrement = firebase.firestore.FieldValue.increment(-item.quantityCart);
+                    console.log(self.listing)
+                    let thisListing: any[] = self.listing.filter(currentListing => {
+                    if (currentListing.listingID && item.listingID) {
+                      return (currentListing.listingID.toLowerCase().indexOf(item.listingID.toLowerCase()) > -1);
+                    }
+                    });
+            
+                    thisListing.forEach(element => {
+                      if(item.quantityCart==element.quantity){
+                        self.afstore.collection('listings').doc(item.listingID).delete()
+                      }
+                      else{           
+                      self.afstore.doc(`listings/${item.listingID}`).update({
+                        quantity: decrement
+                      })
+                    }
+                    });
+                  }
+                }
+                self.nacCtrl.navigateRoot(['/tabs/tabs/tab4']);
+                self.cart = []
+                console.log("checkout complete!")
+                alert('Transaction completed by ' + details.payer.name.given_name + '!');
+
+              })
+              .catch(err => {
+                console.log(err);
+                self.presentAlert(err);
+                self.nacCtrl.navigateRoot(['/tabs/tabs/tab3']);
+              })
+          }
+        }).render('#paypal-button-container');
+      }, 500) 
   
   }
 
   ngOnInit() { 
-    var self = this
-    this.cart = []
-    this.paymentAmount = 0;
-    this.afAuth.onAuthStateChanged(function(user) {        
-      if (user) {        
-        self.userUID = user.uid        
-        self.getCart();    
-        self.changeDetection.detectChanges();
-      }
-    });    
+        
   }
   
   ionViewWillEnter(){
     this.cart = []
     this.paymentAmount = 0;
-    if(this.userUID){      
-      this.getCart();
-      this.changeDetection.detectChanges();   
-    }      
+    let self = this;
+    this.afAuth.onAuthStateChanged(async function(user) {        
+      if (user) {        
+        self.userUID = user.uid        
+        await self.getCart();  
+        self.changeDetection.detectChanges();
+      }
+    });    
   }
 
   async getCart(){    
@@ -92,7 +189,14 @@ export class PaypalPage implements OnInit {
     .catch(function(error) {
         console.log("Error getting documents");
     }); 
+    
+    console.log(this.cart)
     this.changeDetection.detectChanges();     
+  }
+
+  renderPayPal(){
+   
+
   }
 
   async payWithPayPal() {
