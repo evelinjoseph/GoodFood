@@ -4,6 +4,9 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { AlertController, NavController } from '@ionic/angular';
 import { EmailComposer } from '@ionic-native/email-composer/ngx';
 
+declare var Email: any;
+
+
 @Component({
   selector: 'app-retailer-register',
   templateUrl: './retailer-register.page.html',
@@ -20,7 +23,9 @@ export class RetailerRegisterPage implements OnInit {
 
   constructor(private nacCtrl: NavController, public afAuth: AngularFireAuth, public afstore: AngularFirestore, public alertController: AlertController, public emailComposer: EmailComposer) { }
 
-  ngOnInit() {
+  ngOnInit() {   
+
+   
     
   }
 
@@ -57,24 +62,36 @@ export class RetailerRegisterPage implements OnInit {
           // TODO: make sure that 12 AM is not an option in pickuptime
         })
 
-        const emailConfirmation = await this.presentAlertCheck();
+      //   const emailConfirmation = await this.presentAlertCheck();
 
-        if (emailConfirmation) {
+      //   if (emailConfirmation) {
 
-        let newEmail = {
-          to: 'goodfoodinnova@gmail.com',
-          subject: 'New Retailer Verification',
-          body: 'Hello, please verify retailer: ' + name + ' with email: ' + email + ' and uid: ' + res.user.uid + '. Thank you!',
-          isHtml: true,
-        }
+      //   let newEmail = {
+      //     to: 'goodfoodinnova@gmail.com',
+      //     subject: 'New Retailer Verification',
+      //     body: 'Hello, please verify retailer: ' + name + ' with email: ' + email + ' and uid: ' + res.user.uid + '. Thank you!',
+      //     isHtml: true,
+      //   }
 
-        this.emailComposer.isAvailable().then((available: boolean) => {
-          if(available) {
-            alert("isAvailable");
-          }
-        });
-        this.emailComposer.open(newEmail);
-      }
+      //   this.emailComposer.isAvailable().then((available: boolean) => {
+      //     if(available) {
+      //       alert("isAvailable");
+      //     }
+      //   });
+      //   this.emailComposer.open(newEmail);
+      // }
+
+      //https://accounts.google.com/b/0/DisplayUnlockCaptcha
+
+      Email.send({
+        SecureToken : "c11c8a65-d4f9-45b7-8c2a-61f9c48e0ea7",
+        To : 'goodfoodinnova@gmail.com',
+        From : 'goodfoodinnova@gmail.com',
+        Subject : "New Retailer Verification",
+        Body : 'Hello, please verify retailer: ' + name + ' with email: ' + email + ' and uid: ' + res.user.uid + '. Thank you!'
+      }).then(
+        message => alert(message)
+      );    
       this.nacCtrl.navigateRoot(["./retailertabs"])   
   }catch(error){
     this.presentAlert(error.message);
