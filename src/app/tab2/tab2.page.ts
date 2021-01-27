@@ -23,6 +23,7 @@ export class Tab2Page implements OnInit{
   constructor(public plt: Platform, private firestore: AngularFirestore, public changeDetection: ChangeDetectorRef, private nativeGeocoder: NativeGeocoder) {}
 
   async ngOnInit() {
+    
     await this.getRestaurants();
     this.changeDetection.detectChanges();
     if (this.map != undefined || this.map != null) { this.map.remove(); }
@@ -41,14 +42,19 @@ export class Tab2Page implements OnInit{
   //   }  
   // }
 
-  async getRestaurants(){    
+  async getRestaurants(){  
+    
+    await this.firestore.collection('users').valueChanges().subscribe();
     this.restaurants = await this.firestore.collection('users').valueChanges().pipe(first()).toPromise();
+    console.log(this.restaurants)
     this.restaurants = this.restaurants.filter(currentListing => {
+      
      if(currentListing.isRetailer){
       return (currentListing.isRetailer);
      }    
     });
-    this.changeDetection.detectChanges();   
+    
+    this.changeDetection.detectChanges();  
   }
 
   loadMap(){
@@ -56,7 +62,7 @@ export class Tab2Page implements OnInit{
     let options: NativeGeocoderOptions = {
       useLocale: true,
       maxResults: 5
-  };
+    };
 
     this.map = Leaflet.map('mapId').setView([29.42412, -98.49363], 10);   
     Leaflet.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -109,8 +115,6 @@ export class Tab2Page implements OnInit{
 
     });
 }
-
-
   ngOnDestroy() {
     this.map.remove();
   }

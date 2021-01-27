@@ -21,6 +21,11 @@ export class PaypalPage implements OnInit {
   listing;
 
   constructor(public afAuth: AngularFireAuth, private nacCtrl: NavController, public alertController: AlertController, public afstore: AngularFirestore, private payPal: PayPal, public loadingController: LoadingController, public changeDetection: ChangeDetectorRef){
+   
+  
+  }
+
+  ngOnInit() {
     let self = this
     this.cart = []
     this.paymentAmount = 0;
@@ -153,11 +158,7 @@ export class PaypalPage implements OnInit {
               })
           }
         }).render('#paypal-button-container');
-      }, 500) 
-  
-  }
-
-  ngOnInit() { 
+      }, 100)  
         
   }
   
@@ -192,11 +193,6 @@ export class PaypalPage implements OnInit {
     
     console.log(this.cart)
     this.changeDetection.detectChanges();     
-  }
-
-  renderPayPal(){
-   
-
   }
 
   async payWithPayPal() {

@@ -9,10 +9,9 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content fullscreen>
+<ion-content>
   <div *ngFor="let item of cart">
-    <ion-card>
-      <!-- <ion-img src="/assets/paypal.jpg"></ion-img> -->        
+    <ion-card>      
       <ion-card-header>
         <ion-card-title>{{item.name}}</ion-card-title>      
       </ion-card-header>
@@ -23,19 +22,19 @@
     </ion-card>
   </div>
 
-  <ion-toolbar position="bottom" style="text-align: center;">
+  <ion-toolbar position="bottom" style="text-align: center">
     <div class="ion-text-end" id="subtotal">
       <ion-text > <p style="font-size: large;"> Subtotal ${{paymentAmount | number:'1.2-2'}} </p></ion-text> 
       <ion-text > <p style="font-size: large;"> Tax $-</p></ion-text> 
       <ion-text > <p id="total"> TOTAL ${{paymentAmount | number:'1.2-2'}} </p></ion-text> 
     </div>  
-    <div id="paypal-button-container"></div>   
-    <div class="paypal_div">
-    <!-- <ion-button class="paypal_button" expand="full" color="warning" (click)="payWithPayPal()">Pay with PayPal</ion-button> -->
-    <!-- <div id="paypal-button-container"></div> -->
-  </div> 
- </ion-toolbar>
+    <div id="paypal-button-container" ></div>  
+  </ion-toolbar>
+
+ 
 </ion-content>
+
+
 
 <!-- <ion-footer class="ion-no-border">
    <ion-toolbar position="bottom" style="text-align: center;">
