@@ -127,4 +127,7 @@ public async presentAlertCheck() : Promise<boolean> {
     let date = new Date(pickupTime);  
     this.pickupTime =  date.toString();
   }
+
 }
+
+

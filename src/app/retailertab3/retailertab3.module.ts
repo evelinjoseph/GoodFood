@@ -8,6 +8,9 @@ import { Retailertab3PageRoutingModule } from './retailertab3-routing.module';
 
 import { Retailertab3Page } from './retailertab3.page';
 
+import { FormatFileSizePipe } from './format-file-size.pipe';
+
+
 @NgModule({
   imports: [
     CommonModule,
@@ -15,6 +18,9 @@ import { Retailertab3Page } from './retailertab3.page';
     IonicModule,
     Retailertab3PageRoutingModule
   ],
-  declarations: [Retailertab3Page]
+  declarations: [
+    Retailertab3Page,
+    FormatFileSizePipe
+  ]
 })
 export class Retailertab3PageModule {}

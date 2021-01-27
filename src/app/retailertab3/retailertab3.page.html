@@ -9,7 +9,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [hidden]="!isReady" fullscreen>
+<ion-content [hidden]="!isReady" fullscreen>  
   <img [src]="url" style="width:100%;"> 
   <h1 style="text-align: center;"> {{ name }} </h1>
  
@@ -46,5 +46,31 @@
         <br>
         <ion-button size ="large" (click)="edit()">{{buttonText}}</ion-button>
       </section>
+    </div>
+
+    <div id="container">
+
+      <div class="ion-text-center" *ngIf="!isUploading && !isUploaded">
+        
+          <h2>Image Upload</h2>
+        
+          <ion-button color="primary" style="width: 100%">
+            <input type="file" (change)="uploadImage($event.target.files)" />
+          </ion-button>
+        </div>
+       
+  
+      <!-- File upload progress bar -->
+      <div *ngIf="percentageVal | async as percentage">
+        Progress: {{ percentage | number }}%
+        <ion-progress-bar value="{{ percentage / 100 }}"></ion-progress-bar>
+      </div>
+  
+      <div *ngIf="trackSnapshot | async as snap">
+        File size: {{ snap.totalBytes | formatFileSize }} 
+        
+        Data transfered: {{ snap.bytesTransferred | formatFileSize }}
+      </div>    
+  
     </div>
 </ion-content>

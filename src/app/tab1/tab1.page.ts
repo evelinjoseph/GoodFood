@@ -98,7 +98,7 @@ async initializeItems(): Promise<any> {
   var self = this;
   listing.forEach(async function(element, ind, array) { 
   var retailerURL;
-    var storageRef =  await self.afStorage.ref(`images/${element.retailerUID}.jpg`).getDownloadURL().toPromise().then(function(url) {
+    var storageRef =  await self.afStorage.ref(`images/${element.retailerUID}`).getDownloadURL().toPromise().then(function(url) {
       retailerURL = url;
    }).catch(function(error) {
      retailerURL = 'assets/images/default.png';

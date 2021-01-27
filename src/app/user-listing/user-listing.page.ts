@@ -43,7 +43,7 @@ export class UserListingPage implements OnInit {
         this.retailerType = listingRef.retailerType;
         this.retailerUID = listingRef.retailerUID; 
         
-    var storageRef =  this.afStorage.ref(`images/${this.retailerUID}.jpg`).getDownloadURL().toPromise().then(function(url) {        
+    var storageRef =  this.afStorage.ref(`images/${this.retailerUID}`).getDownloadURL().toPromise().then(function(url) {        
           self.url = url;
        }).catch(function(error) {
          self.url = 'assets/images/default.png';

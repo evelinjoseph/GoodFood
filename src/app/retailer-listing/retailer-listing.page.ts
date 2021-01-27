@@ -49,7 +49,7 @@ export class RetailerListingPage implements OnInit {
           }
         });
         
-        var storageRef =  self.afStorage.ref(`images/${self.retailerUID}.jpg`).getDownloadURL().toPromise().then(function(url) {        
+        var storageRef =  self.afStorage.ref(`images/${self.retailerUID}`).getDownloadURL().toPromise().then(function(url) {        
           self.url = url;
        }).catch(function(error) {
          self.url = 'assets/images/default.png';

@@ -8,6 +8,7 @@ import { RetailerRegisterPageRoutingModule } from './retailer-register-routing.m
 
 import { RetailerRegisterPage } from './retailer-register.page';
 
+
 @NgModule({
   imports: [
     CommonModule,
@@ -15,6 +16,8 @@ import { RetailerRegisterPage } from './retailer-register.page';
     IonicModule,
     RetailerRegisterPageRoutingModule
   ],
-  declarations: [RetailerRegisterPage]
+  declarations: [
+    RetailerRegisterPage
+  ]
 })
 export class RetailerRegisterPageModule {}
