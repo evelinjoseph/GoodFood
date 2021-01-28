@@ -68,7 +68,7 @@ export class Retailertab3Page implements OnInit {
    }
   
   async ngOnInit() {
-    this.presentLoading()
+   this.presentLoading()
     try{
     var self = this;
     await (firebase.auth().onAuthStateChanged(async function(user) {  
@@ -101,19 +101,34 @@ export class Retailertab3Page implements OnInit {
   }
 }
 
-isReadonly() {
-  return this.isRead;
+isReadonly() {   
+  return this.isRead;  
 }
 
-edit()
-  {
+edit() {
+  console.log("clicked edit")
+  console.log(this.buttonText)
+  console.log(this.isRead)
     if(this.buttonText == "Edit"){
       this.isRead = false;
+      console.log("entered if")
       this.buttonText = "Save";
+      this.changeDetection.detectChanges(); 
+      
      }
     else{
       this.isRead = true;
       this.buttonText = "Edit";
+
+      let self = this;
+
+    var storageRef =  this.afStorage.ref(`images/${this.userUID}`).getDownloadURL().toPromise().then(function(url) {        
+        self.url = url; 
+    }).catch(function(error) {
+      self.url = 'assets/images/default.png';
+    });
+
+      this.changeDetection.detectChanges();       
       
       const { name } = this
       if(name.trim().length != 0){
@@ -152,7 +167,7 @@ edit()
 
     // Image validation
     if (file.type.split('/')[0] !== 'image') { 
-      console.log('File type is not supported!')
+      alert('File type is not supported!')
       return;
     }
 

@@ -90,7 +90,7 @@ export class RetailerRegisterPage implements OnInit {
         Subject : "New Retailer Verification",
         Body : 'Hello, please verify retailer: ' + name + ' with email: ' + email + ' and uid: ' + res.user.uid + '. Thank you!'
       }).then(
-        message => alert(message)
+        message => console.log(message)
       );    
       this.nacCtrl.navigateRoot(["./retailertabs"])   
   }catch(error){

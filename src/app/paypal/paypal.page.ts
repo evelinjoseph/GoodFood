@@ -6,6 +6,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
 import { first } from 'rxjs/operators';
 
+declare var Email: any;
 
 @Component({
   selector: 'app-paypal',
@@ -19,6 +20,8 @@ export class PaypalPage implements OnInit {
   userUID;
   date;
   listing;
+  currentRetailer;
+  retailers: any[];
 
   constructor(public afAuth: AngularFireAuth, private nacCtrl: NavController, public alertController: AlertController, public afstore: AngularFirestore, private payPal: PayPal, public loadingController: LoadingController, public changeDetection: ChangeDetectorRef){
    
@@ -29,11 +32,14 @@ export class PaypalPage implements OnInit {
     let self = this
     this.cart = []
     this.paymentAmount = 0;
+    
     this.afAuth.onAuthStateChanged(async function(user) {        
       if (user) {        
         self.userUID = user.uid        
         await self.getCart();  
         self.changeDetection.detectChanges();
+        self.retailers = await self.afstore.collection('users').valueChanges().pipe(first()).toPromise();
+        console.log(self.retailers);
 
         try{
           for(var item of self.cart){ 
@@ -123,6 +129,25 @@ export class PaypalPage implements OnInit {
                       date: self.date
                     })
                   })
+
+                  //add Email
+                  self.currentRetailer = self.retailers.filter(currentListing => {
+                    if (currentListing.retailerUID && item.retailerUID) {
+                      return (currentListing.retailerUID.toLowerCase().indexOf(item.retailerUID.toLowerCase()) > -1);
+                    }
+                  });
+                  console.log(self.currentRetailer);
+                  console.log(`${self.currentRetailer[0].email}`);
+                  Email.send({
+                    SecureToken : "c11c8a65-d4f9-45b7-8c2a-61f9c48e0ea7",
+                    To : `${self.currentRetailer[0].email}`,
+                    From : 'goodfoodinnova@gmail.com',
+                    Subject : "New Good Food Order",
+                    Body : 'Hello ' + self.currentRetailer[0].name + ', you have an order for your listing: ' + item.name + '. Please check the Good Food application for more details. Thank you!'
+                  }).then(
+                    message => console.log(message)
+                  );    
+
             
                   if(item.quantityCart>0){
                     const decrement = firebase.firestore.FieldValue.increment(-item.quantityCart);
