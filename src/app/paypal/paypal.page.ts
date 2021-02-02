@@ -73,14 +73,13 @@ export class PaypalPage implements OnInit {
 
           // Set up the transaction
           createOrder: function (data, actions) {
-
            
-            console.log(self.paymentAmount)
+            console.log(self.paymentAmount.toFixed(2));
 
             return actions.order.create({
               purchase_units: [{
                 amount: {
-                  value: self.paymentAmount
+                  value: self.paymentAmount.toFixed(2)
                 }
               }]
             });
@@ -209,8 +208,9 @@ export class PaypalPage implements OnInit {
       self.changeDetection.detectChanges(); 
       cart1.forEach(element => {
         self.cart.push(element);
-        self.paymentAmount += element.totalPrice           
-        });            
+        self.paymentAmount += element.totalPrice          
+        });
+                    
     })
     .catch(function(error) {
         console.log("Error getting documents");
