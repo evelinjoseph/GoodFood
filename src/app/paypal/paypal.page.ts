@@ -156,10 +156,57 @@ export class PaypalPage implements OnInit {
                       return (currentListing.listingID.toLowerCase().indexOf(item.listingID.toLowerCase()) > -1);
                     }
                     });
+
+                    console.log(thisListing);
             
                     thisListing.forEach(element => {
                       if(item.quantityCart==element.quantity){
-                        self.afstore.collection('listings').doc(item.listingID).delete()
+                        console.log(self.currentRetailer[0].listings)
+                        var quantityArr = self.currentRetailer[0].listings.filter(currentListing => {
+                          if (currentListing.listingID && item.listingID) {
+                            return (currentListing.listingID.toLowerCase().indexOf(item.listingID.toLowerCase()) > -1);
+                          }
+                        }); 
+
+                        self.afstore.collection('archive').doc(item.listingID).set({
+                          name: item.name,
+                          description: item.description,
+                          listingID: item.listingID,
+                          price: item.price,
+                          type: "Listing",
+                          deleteTime: new Date()
+                        })
+                        .then(function() {
+                            console.log("Document successfully written!");
+                        })
+                        .catch(function(error) {
+                            console.error("Error writing document: ", error);
+                        });
+                        
+                        self.afstore.collection('listings').doc(item.listingID).delete();
+                        //change isListed
+                        self.afstore.doc(`users/${item.retailerUID}`).update({
+                          listings: firebase.firestore.FieldValue.arrayUnion({
+                            name: item.name,
+                            description: item.description,
+                            listingID: item.listingID,
+                            price: item.price,
+                            quantity: quantityArr[0].quantity,
+                            isListed: false
+                          })
+                        })
+
+                        self.afstore.doc(`users/${item.retailerUID}`).update({
+                          listings: firebase.firestore.FieldValue.arrayRemove({
+                            name: item.name,
+                            description: item.description,
+                            listingID: item.listingID,
+                            price: item.price,
+                            quantity: quantityArr[0].quantity,
+                            isListed: true
+                          })
+                        })
+                       
                       }
                       else{           
                       self.afstore.doc(`listings/${item.listingID}`).update({
@@ -319,22 +366,13 @@ export class PaypalPage implements OnInit {
 
         thisListing.forEach(element => {
           if(item.quantityCart==element.quantity){
+            console.log(element);
+            console.log(item);
+            
+
+
             this.afstore.collection('listings').doc(item.listingID).delete()
             //TODO: add to archive
-            this.afstore.collection('archive').doc(element.listingID).set({
-              name: element.name,
-              description: element.description,
-              listingID: element.listingID,
-              price: element.price,
-              type: "Listing",
-              deleteTime: new Date()
-            })
-            .then(function() {
-                console.log("Document successfully written!");
-            })
-            .catch(function(error) {
-                console.error("Error writing document: ", error);
-            });
           }
           else{           
           this.afstore.doc(`listings/${item.listingID}`).update({
