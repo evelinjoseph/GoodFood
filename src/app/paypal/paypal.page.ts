@@ -321,6 +321,20 @@ export class PaypalPage implements OnInit {
           if(item.quantityCart==element.quantity){
             this.afstore.collection('listings').doc(item.listingID).delete()
             //TODO: add to archive
+            this.afstore.collection('archive').doc(element.listingID).set({
+              name: element.name,
+              description: element.description,
+              listingID: element.listingID,
+              price: element.price,
+              type: "Listing",
+              deleteTime: new Date()
+            })
+            .then(function() {
+                console.log("Document successfully written!");
+            })
+            .catch(function(error) {
+                console.error("Error writing document: ", error);
+            });
           }
           else{           
           this.afstore.doc(`listings/${item.listingID}`).update({

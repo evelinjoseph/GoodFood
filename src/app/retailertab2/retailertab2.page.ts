@@ -74,6 +74,20 @@ export class Retailertab2Page implements OnInit {
     
     this.afstore.collection('listings').doc(listing.listingID).delete();
     //TODO: add to archive when deleted
+    this.afstore.collection('archive').doc(listing.listingID).set({
+      name: listing.name,
+      description: listing.description,
+      listingID: listing.listingID,
+      price: listing.price,
+      type: "Listing",
+      deleteTime: new Date()
+    })
+    .then(function() {
+        console.log("Document successfully written!");
+    })
+    .catch(function(error) {
+        console.error("Error writing document: ", error);
+    });
 
     // TODO: may need to delete from carts?
   }
