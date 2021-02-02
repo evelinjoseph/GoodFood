@@ -49,7 +49,24 @@ async initializeItems(): Promise<any> {
   });  
 
   this.deleteListings.forEach(async element => {
-    this.firestore.collection('listings').doc(element.listingID).delete()    
+    this.firestore.collection('listings').doc(element.listingID).delete()  
+    
+    //add to archive    
+    this.firestore.collection('archive').doc(element.listingID).set({
+      name: element.name,
+      description: element.description,
+      listingID: element.listingID,
+      price: element.price,
+      type: "Listing",
+      deleteTime: new Date()
+    })
+    .then(function() {
+        console.log("Document successfully written!");
+    })
+    .catch(function(error) {
+        console.error("Error writing document: ", error);
+    });
+
     
     let retailerListings: any[] = await this.firestore.collection('users').valueChanges().pipe(first()).toPromise();
     retailerListings = retailerListings.filter(currentListing => {

@@ -320,6 +320,7 @@ export class PaypalPage implements OnInit {
         thisListing.forEach(element => {
           if(item.quantityCart==element.quantity){
             this.afstore.collection('listings').doc(item.listingID).delete()
+            //TODO: add to archive
           }
           else{           
           this.afstore.doc(`listings/${item.listingID}`).update({

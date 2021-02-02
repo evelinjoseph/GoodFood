@@ -17,19 +17,16 @@ export class Tab2Page implements OnInit{
   marker: Leaflet.marker;
   restaurants = [];
   mapResult;
+  subscription;
 
   @ViewChild(IonSlides) slides: IonSlides;
 
   constructor(public plt: Platform, private firestore: AngularFirestore, public changeDetection: ChangeDetectorRef, private nativeGeocoder: NativeGeocoder) {}
 
-  async ngOnInit() {
-    
-    await this.getRestaurants();
-    this.changeDetection.detectChanges();
+  ngOnInit() {    
     if (this.map != undefined || this.map != null) { this.map.remove(); }
-    if(this.restaurants){
-      this.loadMap();
-    }  
+    this.loadMap()
+    this.changeDetection.detectChanges();  
   }
 
   // async ionViewWillEnter(){
@@ -42,20 +39,27 @@ export class Tab2Page implements OnInit{
   //   }  
   // }
 
-  async getRestaurants(){  
-    
-    await this.firestore.collection('users').valueChanges().subscribe();
-    this.restaurants = await this.firestore.collection('users').valueChanges().pipe(first()).toPromise();
-    console.log(this.restaurants)
-    this.restaurants = this.restaurants.filter(currentListing => {
-      
-     if(currentListing.isRetailer){
-      return (currentListing.isRetailer);
-     }    
-    });
-    
-    this.changeDetection.detectChanges();  
-  }
+  // async getRestaurants(){    
+       
+  //    this.firestore.collection('users').valueChanges().subscribe(data => {
+
+  //     //this.restaurants = await this.firestore.collection('users').valueChanges().pipe(first()).toPromise();
+  //     this.restaurants = data;
+  //     console.log(this.restaurants)
+     
+
+  //     this.restaurants = this.restaurants.filter(currentListing => {      
+  //       if(currentListing.isRetailer){
+  //       return (currentListing.isRetailer);
+  //       }    
+  //     });
+  //     console.log(this.restaurants)
+     
+  //    this.changeDetection.detectChanges(); 
+
+  //   })    
+
+  // }
 
   loadMap(){
 
@@ -64,40 +68,54 @@ export class Tab2Page implements OnInit{
       maxResults: 5
     };
 
-    this.map = Leaflet.map('mapId').setView([29.42412, -98.49363], 10);   
-    Leaflet.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    this.subscription = this.firestore.collection('users').valueChanges().subscribe(data => {
+      if (this.map != undefined || this.map != null) { this.map.remove(); }
+
+      this.restaurants = data;     
+
+      this.restaurants = this.restaurants.filter(currentListing => {      
+        if(currentListing.isRetailer){
+        return (currentListing.isRetailer);
+        }    
+      });     
+    
+
+        this.map = Leaflet.map('mapId').setView([29.42412, -98.49363], 10);   
+        Leaflet.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          
+        }).addTo(this.map); 
+
+        this.map.locate().on("locationfound", (event: any) => { 
+          console.log("got current loc")
+          this.map.flyTo(new Leaflet.LatLng(event.latitude, event.longitude), 11);           
+          this.locationMarker = Leaflet.marker([event.latitude, event.longitude], {
+              draggable: false
+          }).addTo(this.map);    
       
-    }).addTo(this.map); 
+          this.locationMarker.bindPopup("You are here!").openPopup();      
+        });
 
-    this.map.locate().on("locationfound", (event: any) => { 
-      console.log("got current loc")
-      this.map.flyTo(new Leaflet.LatLng(event.latitude, event.longitude), 11);           
-      this.locationMarker = Leaflet.marker([event.latitude, event.longitude], {
-          draggable: false
-      }).addTo(this.map);    
-  
-      this.locationMarker.bindPopup("You are here!").openPopup();      
-  });
+      console.log(this.restaurants)
 
-  console.log(this.restaurants)
+      this.restaurants.forEach((restaurant, index) => {
+        console.log(restaurant.location)
+        this.nativeGeocoder.forwardGeocode(restaurant.location, options)
+      .then((result: NativeGeocoderResult[]) => { 
+          Leaflet.marker([result[0].latitude, result[0].longitude], {draggable: false})
+          .bindPopup(`<b>${restaurant.name}</b>`, { autoClose: false })
+          .on('click', (event: any) => {
+            this.map.flyTo(event.latlng, 16); 
+            this.slides.slideTo(index);        
+            console.log(restaurant.name)
+          })
+          .addTo(this.map).openPopup();
+        }).catch((error: any) => console.log(error));       
+      });
 
-  this.restaurants.forEach((restaurant, index) => {
-    console.log(restaurant.location)
-    this.nativeGeocoder.forwardGeocode(restaurant.location, options)
-  .then((result: NativeGeocoderResult[]) => { 
-      Leaflet.marker([result[0].latitude, result[0].longitude], {draggable: false})
-      .bindPopup(`<b>${restaurant.name}</b>`, { autoClose: false })
-      .on('click', (event: any) => {
-        this.map.flyTo(event.latlng, 16); 
-        this.slides.slideTo(index);        
-        console.log(restaurant.name)
-      })
-      .addTo(this.map).openPopup();
-    }).catch((error: any) => console.log(error));       
-  });
+      this.changeDetection.detectChanges(); 
 
-  this.changeDetection.detectChanges();
+    }) 
    
   }
   
@@ -114,8 +132,10 @@ export class Tab2Page implements OnInit{
       }).catch((error: any) => console.log(error));   
 
     });
-}
+  }
   ngOnDestroy() {
     this.map.remove();
+    this.subscription.unsubscribe();
   }
+
 }

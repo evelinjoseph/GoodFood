@@ -23,6 +23,7 @@ export class UserListingPage implements OnInit {
   retailer;
   url; 
   isReady: Boolean = false;
+  listingSub;
 
   constructor(private nacCtrl: NavController, public alertController: AlertController, private activatedRoute: ActivatedRoute, private firestore: AngularFirestore, private afStorage: AngularFireStorage, private changeDetection: ChangeDetectorRef, public loadingController: LoadingController) { }
 
@@ -33,34 +34,73 @@ export class UserListingPage implements OnInit {
     var self = this;
     //collection.doc.id  ??to add to db when we get to it
 
-    var listingRef = (await this.firestore.collection("listings").doc(this.ID).get().toPromise()).data()
-        this.listing = listingRef;   
-        this.name = listingRef.name;
-        this.description = listingRef.description;
-        this.location = listingRef.location;
-        this.price = listingRef.price;
-        this.quantity = listingRef.quantity;
-        this.retailerType = listingRef.retailerType;
-        this.retailerUID = listingRef.retailerUID; 
-        
+    this.listingSub = this.firestore.collection("listings").doc(this.ID).valueChanges().subscribe(data=>{
+      this.listing = data;
+      this.name = this.listing.name;
+      this.description = this.listing.description;
+      this.location = this.listing.location;
+      this.price = this.listing.price;
+      this.quantity = this.listing.quantity;
+      this.retailerType = this.listing.retailerType;
+      this.retailerUID = this.listing.retailerUID; 
+
+      console.log(data)    
     var storageRef =  this.afStorage.ref(`images/${this.retailerUID}`).getDownloadURL().toPromise().then(function(url) {        
-          self.url = url;
-       }).catch(function(error) {
-         self.url = 'assets/images/default.png';
-       });
+      self.url = url;
+      console.log(url);
+    }).catch(function(error) {
+        self.url = 'assets/images/default.png';
+    });
 
     var retailerRef = this.firestore.doc(`users/${this.retailerUID}`);    
       retailerRef.get().toPromise().then(function(doc) {        
           if (doc.exists) {               
-               self.retailer = doc.data().name;   
+              self.retailer = doc.data().name;   
           } else {
               // doc.data() will be undefined in this case
               console.log("No such document!");
-               
+              
           }
       }).catch(function(error) {
           console.log("Error getting document:", error);
-      });  
+      }); 
+
+      
+    })
+
+    // var listingRef = (await this.firestore.collection("listings").doc(this.ID).get().toPromise()).data()
+    // console.log(listingRef)
+    //     this.listing = listingRef;   
+    //     this.name = listingRef.name;
+    //     this.description = listingRef.description;
+    //     this.location = listingRef.location;
+    //     this.price = listingRef.price;
+    //     this.quantity = listingRef.quantity;
+    //     this.retailerType = listingRef.retailerType;
+    //     this.retailerUID = listingRef.retailerUID; 
+    //     console.log(this.retailerUID)
+
+    // var storageRef =  this.afStorage.ref(`images/${this.retailerUID}`).getDownloadURL().toPromise().then(function(url) {        
+    //       self.url = url;
+    //       console.log(url);
+    //   }).catch(function(error) {
+    //     self.url = 'assets/images/default.png';
+    //   });
+
+    // var retailerRef = this.firestore.doc(`users/${this.retailerUID}`);    
+    //   retailerRef.get().toPromise().then(function(doc) {        
+    //       if (doc.exists) {               
+    //           self.retailer = doc.data().name;   
+    //       } else {
+    //           // doc.data() will be undefined in this case
+    //           console.log("No such document!");
+              
+    //       }
+    //   }).catch(function(error) {
+    //       console.log("Error getting document:", error);
+    //   }); 
+        
+   
       
   }
   catch(error){
@@ -121,6 +161,12 @@ export class UserListingPage implements OnInit {
 
     await alert.present();
     return promise;
+  }
+
+
+  ngOnDestroy(){
+    console.log("left");
+    this.listingSub.unsubscribe();
   }
 
   

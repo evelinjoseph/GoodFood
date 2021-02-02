@@ -73,6 +73,7 @@ export class Retailertab2Page implements OnInit {
     })
     
     this.afstore.collection('listings').doc(listing.listingID).delete();
+    //TODO: add to archive when deleted
 
     // TODO: may need to delete from carts?
   }
