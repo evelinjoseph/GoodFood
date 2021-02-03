@@ -18,10 +18,16 @@
             <ion-card-title class="ion-text-wrap" style="font-weight: bold;">{{item.name}}</ion-card-title>
           </ion-card-header>   
       <ion-card-content> 
-        <p>{{item.location}}</p> 
-        <div *ngFor="let listing of item.listings" >
-        <ion-text style="font-weight: 600;" *ngIf="listing.isListed" [routerLink]="['/user-listing']" [queryParams]="{ id: listing.listingID }" routerDirection="forward">{{listing.name}}</ion-text>
-      </div>
+        <p>{{item.location}}</p>
+        <ion-grid>
+          <ion-row class="ion-justify-content-center">                  
+        <div *ngFor="let listing of item.listings; let i = index" >
+          <ion-col size="auto">
+            <ion-text style="font-weight: 551;" *ngIf="listing.isListed" [routerLink]="['/user-listing']" [queryParams]="{ id: listing.listingID }" routerDirection="forward">{{listing.name}}</ion-text>
+          </ion-col>   
+        </div>
+      </ion-row>
+      </ion-grid> 
       </ion-card-content>
     </ion-card>
     </ion-slide>
