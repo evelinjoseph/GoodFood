@@ -3,6 +3,8 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { ActivatedRoute } from '@angular/router';
 import * as firebase from 'firebase/app';
+import { AlertController } from '@ionic/angular';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-account',
@@ -19,16 +21,15 @@ export class AccountPage implements OnInit {
   buttonText: string = "Edit";
   isRead: boolean = true;
 
-  constructor(private activatedRoute: ActivatedRoute, private firestore: AngularFirestore, private changeDetection: ChangeDetectorRef, public afAuth: AngularFireAuth) { }
+  constructor(public nacCtrl: NavController, private activatedRoute: ActivatedRoute, private firestore: AngularFirestore, private changeDetection: ChangeDetectorRef, public afAuth: AngularFireAuth, public alertCtrl: AlertController) { }
 
   async ngOnInit() {
     try{
     var self = this;
-    await (this.afAuth.onAuthStateChanged(async function(user) {  
-      
+    await (this.afAuth.onAuthStateChanged(async function(user) {             
       if (user) {        
         self.userUID = user.uid
-          var userRef = (await self.firestore.collection("users").doc(self.userUID).get().toPromise()).data()
+          var userRef = (await self.firestore.collection("users").doc(self.userUID).get().toPromise()).data()          
               self.firstName = userRef.firstname;
               self.lastName = userRef.lastname; 
               self.email = userRef.email;
@@ -45,10 +46,6 @@ export class AccountPage implements OnInit {
     console.log(error.message)
   }
   this.changeDetection.detectChanges();
-}
-
-isReadonly() {
-  return this.isRead;
 }
 
 edit()
@@ -78,4 +75,45 @@ edit()
     }   
   }
 
+  async deleteAccount(){
+
+    let self = this;
+    const confirm = await this.presentAlertDelete();
+    if (confirm) {
+      (await this.afAuth.currentUser).delete().then(function() {
+        // User deleted.
+        self.firestore.doc(`users/${self.userUID}`).delete();
+        self.nacCtrl.navigateRoot(['./login'])
+        console.log("user deleted")
+      }).catch(function(error) {
+        console.log("Error deleting user")
+      });
+
+
+    }
+
+  }
+
+  async presentAlertDelete() : Promise<boolean> {
+    let resolveFunction: (confirm: boolean) => void;
+    const promise = new Promise<boolean>(resolve => {
+      resolveFunction = resolve;
+    });
+    const alert = await this.alertCtrl.create({
+      header: 'Confirm Delete',
+      message: 'Are you sure you want to delete this account? This is a permanent deletion and cannot be undone.',
+      buttons: [
+        {
+          text: 'Yes',
+            handler: () => resolveFunction(true)
+        }, {
+          text: 'No',
+          handler: () => resolveFunction(false)
+        }
+      ]
+    });
+
+    await alert.present();
+    return promise;
+  }
 }

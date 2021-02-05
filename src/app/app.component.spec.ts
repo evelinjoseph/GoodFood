@@ -1,5 +1,6 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { TestBed, async } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
 
 import { Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
@@ -7,6 +8,8 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 
 import { AppComponent } from './app.component';
 import { RouterTestingModule } from '@angular/router/testing';
+import { CommonModule } from '@angular/common';
+import { BrowserModule } from '@angular/platform-browser';
 
 describe('AppComponent', () => {
 
@@ -23,7 +26,11 @@ describe('AppComponent', () => {
 
     TestBed.configureTestingModule({
       declarations: [AppComponent],
-      imports: [RouterTestingModule],
+      imports: [
+        FormsModule,
+        CommonModule,
+        BrowserModule,
+        RouterTestingModule],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
         { provide: StatusBar, useValue: statusBarSpy },

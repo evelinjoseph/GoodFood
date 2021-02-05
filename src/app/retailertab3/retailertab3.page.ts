@@ -101,9 +101,6 @@ export class Retailertab3Page implements OnInit {
   }
 }
 
-isReadonly() {   
-  return this.isRead;  
-}
 
 edit() {
   console.log("clicked edit")

@@ -17,14 +17,14 @@
     <ion-label>
       First Name:
     </ion-label>
-    <ion-textarea placeholder="{{ firstName }}" [readonly]="isReadonly()" [(ngModel)]="firstName" ></ion-textarea>
+    <ion-textarea placeholder="{{ firstName }}" [readonly]="isRead" [(ngModel)]="firstName" ></ion-textarea>
   </ion-item>
 
   <ion-item >    
     <ion-label>
       Last Name:
     </ion-label>
-    <ion-textarea placeholder="{{ lastName }}" [readonly]="isReadonly()" [(ngModel)]="lastName" ></ion-textarea>
+    <ion-textarea placeholder="{{ lastName }}" [readonly]="isRead" [(ngModel)]="lastName" ></ion-textarea>
   </ion-item>
 
    <ion-item >    
@@ -52,6 +52,10 @@
       <section >
         <br>
         <ion-button size ="large" (click)="edit()">{{buttonText}}</ion-button>
+      </section>
+      <section >
+        <br>
+        <ion-button color="danger" (click)="deleteAccount()">Delete Account</ion-button>
       </section>
     </div>
 
