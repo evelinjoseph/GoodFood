@@ -32,6 +32,13 @@
     <br>
     <ion-button size ="large" (click)="login()">Login</ion-button>
   </section>
+  <br>
+  <section>
+    <ion-text [routerDirection] = "'forward'" [routerLink]="['/password-reset']" color="primary">
+      <a><u>Forgot Password?</u></a>
+    </ion-text>
+
+  </section>
 </div>
   
 </ion-content>

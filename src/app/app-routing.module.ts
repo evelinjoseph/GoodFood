@@ -73,6 +73,10 @@ const routes: Routes = [
   {
     path: 'paypal',
     loadChildren: () => import('./paypal/paypal.module').then( m => m.PaypalPageModule)
+  },
+  {
+    path: 'password-reset',
+    loadChildren: () => import('./password-reset/password-reset.module').then( m => m.PasswordResetPageModule)
   }
 
 ];
