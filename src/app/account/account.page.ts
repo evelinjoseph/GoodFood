@@ -76,22 +76,35 @@ edit()
   }
 
   async deleteAccount(){
-
     let self = this;
     const confirm = await this.presentAlertDelete();
+    var userRef = (await self.firestore.collection("users").doc(self.userUID).get().toPromise()).data() 
     if (confirm) {
       (await this.afAuth.currentUser).delete().then(function() {
-        // User deleted.
+        // User deleted.    
+        self.firestore.collection('archive').doc(self.userUID).set({
+          email: userRef.email,
+          firstname: userRef.firstname,
+          lastname: userRef.lastname,
+          isRetailer: userRef.isRetailer,
+          orders: userRef.orders,
+          type: "User Account"
+        })
+        .then(function() {
+            console.log("Document successfully written to Archive!");
+        })
+        .catch(function(error) {
+            console.error("Error writing document: ", error);
+        });
+        
         self.firestore.doc(`users/${self.userUID}`).delete();
         self.nacCtrl.navigateRoot(['./login'])
         console.log("user deleted")
       }).catch(function(error) {
+        console.log(error)
         console.log("Error deleting user")
       });
-
-
     }
-
   }
 
   async presentAlertDelete() : Promise<boolean> {

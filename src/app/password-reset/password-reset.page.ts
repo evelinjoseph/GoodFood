@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import * as firebase from "firebase/app"
+import { AngularFireAuth } from '@angular/fire/auth';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-password-reset',
@@ -8,22 +9,23 @@ import * as firebase from "firebase/app"
 })
 export class PasswordResetPage implements OnInit {
 
-emailAddress;
+emailAddress = "";
 
-  constructor() { }
+  constructor(public afAuth: AngularFireAuth, public nacCtrl: NavController) { }
 
   ngOnInit() {
   }
 
   resetPassword(){
-    var auth = firebase.auth();
-//var emailAddress = "polamaluisland43@gmail.com";
-
-auth.sendPasswordResetEmail(this.emailAddress).then(function() {
-  // Email sent.
-}).catch(function(error) {
-  // An error happened.
-});
+    let self = this;
+    
+    this.afAuth.sendPasswordResetEmail(this.emailAddress).then(function() {
+      alert("Password Reset Link Sent to Email");
+      self.nacCtrl.navigateRoot(['./login'])
+      // Email sent.
+    }).catch(function(error) {
+      alert(error);
+    });
   }
 
 }
