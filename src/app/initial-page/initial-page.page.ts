@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { LoadingController, NavController } from '@ionic/angular';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { ListingsService} from '../listings.service';
 
 @Component({
   selector: 'app-initial-page',
@@ -11,12 +12,14 @@ import { AngularFirestore } from '@angular/fire/firestore';
 export class InitialPagePage implements OnInit {
   isReady: Boolean = false;
 
-  constructor(public nacCtrl: NavController, public afAuth: AngularFireAuth, public afstore: AngularFirestore, public loadingController: LoadingController,  public changeDetection: ChangeDetectorRef) {
+  constructor(public listingService: ListingsService, public nacCtrl: NavController, public afAuth: AngularFireAuth, public afstore: AngularFirestore, public loadingController: LoadingController,  public changeDetection: ChangeDetectorRef) {
     //this.presentLoading();
     var self = this;
+   
     afAuth.onAuthStateChanged(async function(users) {
-      if (users) {
-        self.presentLoading();        
+      if (users) {        
+        self.presentLoading();   
+        await listingService.initializeItems();     
          var docRef = (await afstore.collection("users").doc(users.uid).get().toPromise()).data()
          if(docRef.isRetailer == false){
             nacCtrl.navigateRoot(['./tabs'])
@@ -31,7 +34,8 @@ export class InitialPagePage implements OnInit {
     });    
    }   
 
-  ngOnInit() {
+  ngOnInit() {  
+    
   }
 
   async presentLoading() {

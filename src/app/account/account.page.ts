@@ -75,6 +75,15 @@ edit()
     }   
   }
 
+  updatePassword(){
+    //this.afAuth.currentUser
+    this.afAuth.onAuthStateChanged(async function(user) {
+      console.log(user);
+
+    });
+
+  }
+
   async deleteAccount(){
     let self = this;
     const confirm = await this.presentAlertDelete();

@@ -49,10 +49,17 @@
     </ion-item>  
     
     <div style="text-align: center"> 
+      
       <section >
         <br>
         <ion-button size ="large" (click)="edit()">{{buttonText}}</ion-button>
       </section>
+
+      <section>
+        <br>
+        <ion-button size ="large" (click)="updatePassword()">Change Password?</ion-button>
+      </section>
+
       <section >
         <br>
         <ion-text color="danger" (click)="deleteAccount()">

@@ -5,7 +5,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { first } from 'rxjs/operators';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { ActivatedRoute } from '@angular/router';
-import * as firebase from 'firebase/app';
+import { ListingsService} from '../listings.service';
 
 @Component({
   selector: 'app-tab1',
@@ -16,8 +16,6 @@ export class Tab1Page implements OnInit{
 
   public listings: any[];
   public listingsBackup: any[];
-  public retailers: any[];
-  public retailersBackup: any[];
   deleteListings: any[];
   searchText = "Search By Food";
   searchBy = "Food";
@@ -28,89 +26,18 @@ export class Tab1Page implements OnInit{
   isReady: Boolean = false;
 
 
-  constructor(private afStorage: AngularFireStorage, private activatedRoute: ActivatedRoute, private nacCtrl: NavController, public afAuth: AngularFireAuth, private firestore: AngularFirestore, private changeDetection: ChangeDetectorRef, public loadingController: LoadingController, public alertController: AlertController) {}
+  constructor(public listingService: ListingsService, private afStorage: AngularFireStorage, private activatedRoute: ActivatedRoute, private nacCtrl: NavController, public afAuth: AngularFireAuth, private firestore: AngularFirestore, private changeDetection: ChangeDetectorRef, public loadingController: LoadingController, public alertController: AlertController) {}
 
 
   async ngOnInit() {
     this.presentLoading(); 
     this.listings = await this.initializeItems();
-    this.retailers = await this.initializeRetailers(); //do we need this?
     
 }
 
 
 async initializeItems(): Promise<any> {
-  let listing: any[] = await this.firestore.collection('listings').valueChanges().pipe(first()).toPromise();
-  this.dateNow = new Date(Date.now());
-  this.deleteListings = listing.filter(currentListing => {
-    if (currentListing.deleteDate && this.dateNow.toUTCString()) {
-      return (currentListing.deleteDate.toDate().getTime() <= this.dateNow.getTime());
-    }
-  });  
-
-  this.deleteListings.forEach(async element => {
-    this.firestore.collection('listings').doc(element.listingID).delete()  
-    
-    //add to archive    
-    this.firestore.collection('archive').doc(element.listingID).set({
-      name: element.name,
-      description: element.description,
-      listingID: element.listingID,
-      price: element.price,
-      type: "Listing",
-      deleteTime: new Date()
-    })
-    .then(function() {
-        console.log("Document successfully written!");
-    })
-    .catch(function(error) {
-        console.error("Error writing document: ", error);
-    });
-
-    
-    let retailerListings: any[] = await this.firestore.collection('users').valueChanges().pipe(first()).toPromise();
-    retailerListings = retailerListings.filter(currentListing => {
-      if (currentListing.retailerUID && element.retailerUID) {
-        return (currentListing.retailerUID.toLowerCase().indexOf(element.retailerUID.toLowerCase()) > -1);
-      }
-    });    
-    retailerListings = retailerListings[0].listings;
-
-    retailerListings = retailerListings.filter(currentListing => {     
-        if (currentListing.listingID && element.listingID) {       
-          return (currentListing.listingID.toLowerCase().indexOf(element.listingID.toLowerCase()) > -1);
-        }        
-      });
-    
-    this.firestore.doc(`users/${element.retailerUID}`).update({
-      listings: firebase.firestore.FieldValue.arrayUnion({
-        name: element.name,
-        description: element.description,
-        listingID: element.listingID,
-        price: element.price,
-        quantity:retailerListings[0].quantity,
-        isListed: false
-      })
-    })
-
-    this.firestore.doc(`users/${element.retailerUID}`).update({
-      listings: firebase.firestore.FieldValue.arrayRemove({
-        name: element.name,
-        description: element.description,
-        listingID: element.listingID,
-        price: element.price,
-        quantity:retailerListings[0].quantity,
-        isListed: true
-      })
-    })
-  });
-  
-
-  listing = listing.filter(currentListing => {
-    if (currentListing.deleteDate && this.dateNow.toUTCString()) {
-      return (currentListing.deleteDate.toDate().getTime() > this.dateNow.getTime());
-    }
-  });    
+  let listing: any[] = await this.listingService.initializeItems();  
 
   var self = this;
   listing.forEach(async function(element, ind, array) { 
@@ -139,16 +66,10 @@ async initializeItems(): Promise<any> {
   return listing;
 }
 
-  async initializeRetailers(): Promise<any> {
-    var retailers = await this.firestore.collection('users')
-    .valueChanges().pipe(first()).toPromise();
-    this.retailersBackup = retailers;
-    return retailers;
-  }
+ 
 
   search(event){
     this.listings = this.listingsBackup;
-    this.retailers = this.retailersBackup;
     const searchTerm = event.srcElement.value;
 
     if(!searchTerm){
@@ -235,7 +156,7 @@ async initializeItems(): Promise<any> {
 
   async presentLoading() {
     const loading = await this.loadingController.create({
-      duration: 600,
+      duration: 700,
       translucent: true,
       cssClass: 'transparent',
       backdropDismiss: false
