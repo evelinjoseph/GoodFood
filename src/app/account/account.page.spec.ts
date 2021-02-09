@@ -114,9 +114,7 @@ describe('AccountPage', () => {
     expect(component.buttonText).toEqual("Edit");
     component.edit();    
     expect(component.isRead).toBeFalsy();
-    expect(component.buttonText).toEqual("Save");
-
-    
+    expect(component.buttonText).toEqual("Save");    
   });
 
   it('should save when buttonText is equal to Save', () => {

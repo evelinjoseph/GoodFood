@@ -17,7 +17,6 @@ export class AccountPage implements OnInit {
   firstName;
   lastName;
   email;
-  password;
   buttonText: string = "Edit";
   isRead: boolean = true;
 
@@ -32,8 +31,7 @@ export class AccountPage implements OnInit {
           var userRef = (await self.firestore.collection("users").doc(self.userUID).get().toPromise()).data()          
               self.firstName = userRef.firstname;
               self.lastName = userRef.lastname; 
-              self.email = userRef.email;
-              self.password = userRef.password;  
+              self.email = userRef.email; 
               self.changeDetection.detectChanges();                 
       }
       else{
@@ -75,13 +73,8 @@ edit()
     }   
   }
 
-  updatePassword(){
-    //this.afAuth.currentUser
-    this.afAuth.onAuthStateChanged(async function(user) {
-      console.log(user);
-
-    });
-
+  updatePassword(){        
+    this.nacCtrl.navigateRoot(['./update-password'])
   }
 
   async deleteAccount(){

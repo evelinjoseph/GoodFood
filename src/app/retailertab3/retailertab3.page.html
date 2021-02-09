@@ -59,18 +59,14 @@
         </ion-label>
         <ion-textarea placeholder="{{ email }}" [readonly]=true  ></ion-textarea>
     </ion-item>
-
-    <ion-item>
-        <ion-label>
-          Password:
-        </ion-label>
-        <ion-textarea placeholder="{{ password }}"  [readonly]=true ></ion-textarea>
-    </ion-item>  
     
     <div style="text-align: center"> 
       <section >
         <br>
-        <ion-button size ="large" (click)="edit()">{{buttonText}}</ion-button>
+        <ion-button expand="block" (click)="edit()">{{buttonText}}</ion-button>
+      </section>
+      <section>
+        <ion-button expand="block" (click)="updatePassword()">Update Password</ion-button>
       </section>
     </div>
 

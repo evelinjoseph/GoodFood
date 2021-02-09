@@ -3,7 +3,7 @@ import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/fire
 import { ActivatedRoute } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
-import { LoadingController } from '@ionic/angular';
+import { LoadingController, NavController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { finalize, tap } from 'rxjs/operators';
 import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/storage';
@@ -26,7 +26,6 @@ export class Retailertab3Page implements OnInit {
   retailerUID;
   name;
   email;
-  password;
   url;
   buttonText: string = "Edit";
   isRead: boolean = true;
@@ -57,7 +56,7 @@ export class Retailertab3Page implements OnInit {
 
   private filesCollection: AngularFirestoreCollection<imgFile>;
   
-  constructor(private activatedRoute: ActivatedRoute, private firestore: AngularFirestore, private afStorage: AngularFireStorage, public afAuth: AngularFireAuth, public loadingController: LoadingController, private changeDetection: ChangeDetectorRef) {
+  constructor(public nacCtrl: NavController, private activatedRoute: ActivatedRoute, private firestore: AngularFirestore, private afStorage: AngularFireStorage, public afAuth: AngularFireAuth, public loadingController: LoadingController, private changeDetection: ChangeDetectorRef) {
     this.isFileUploading = false;
     this.isFileUploaded = false;
     
@@ -80,7 +79,6 @@ export class Retailertab3Page implements OnInit {
               self.retailerType = userRef.retailerType;
               self.retailerUID = userRef.retailerUID;    
               self.email = userRef.email;
-              self.password = userRef.password;
               self.name = userRef.name;
 
           var storageRef =  self.afStorage.ref(`images/${self.userUID}`).getDownloadURL().toPromise().then(function(url) {        
@@ -99,6 +97,10 @@ export class Retailertab3Page implements OnInit {
   catch(error){
     console.log(error.message)
   }
+}
+
+updatePassword(){        
+  this.nacCtrl.navigateRoot(['./update-password'])
 }
 
 
