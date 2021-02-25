@@ -24,6 +24,11 @@ export class RetailerListingPage implements OnInit {
   pickupTime;
   date;
   pickupDate: Date;
+  time;
+  pDate;
+  buttonText: string = "Edit";
+  isRead: boolean = true;
+   
 
   // TODO: add the option to remove the listing that is currently published from the user view without deleting it for the retailer
 
@@ -40,14 +45,20 @@ export class RetailerListingPage implements OnInit {
         self.retailer = userRef.name;
         self.location = userRef.location;
         self.retailerType = userRef.retailerType;        
-        self.listing = userRef.listings;        
-        self.pickupTime = userRef.pickupTime; 
+        self.listing = userRef.listings; 
+        self.pickupTime = userRef.pickupTime.toDate().toLocaleString();
 
         self.listing = self.listing.filter(currentListing => {
           if (currentListing.listingID && self.listingID) {
             return (currentListing.listingID.toLowerCase().indexOf(self.listingID.toLowerCase()) > -1);
           }
         });
+
+        if(self.listing[0].isListed){
+          var listingRef = (await self.afstore.collection("listings").doc(self.listingID).get().toPromise()).data()
+          self.pickupTime = listingRef.deleteDate.toDate().toLocaleString();
+        }
+        
         
         var storageRef =  self.afStorage.ref(`images/${self.retailerUID}`).getDownloadURL().toPromise().then(function(url) {        
           self.url = url;
@@ -80,7 +91,7 @@ export class RetailerListingPage implements OnInit {
   publish(listing) {
     
     this.date = new Date();
-    this.pickupDate = new Date(this.pickupTime.toDate());
+    this.pickupDate = new Date(this.pickupTime);
 
     const data = {
       description: listing.description,
@@ -201,6 +212,55 @@ export class RetailerListingPage implements OnInit {
 
     await alert.present();
     return promise;
+  }
+
+  setPickupTime(pickupTime){  
+
+    let date = new Date(pickupTime);  
+    this.time =  date.toString();
+    console.log(this.time)
+  }
+
+  setPickupDate(pickupDate){
+    console.log(pickupDate)
+    this.pDate = (new Date(pickupDate)).toDateString();  
+    console.log(this.pDate)
+  }
+
+  edit(listing)
+  {
+    if(this.buttonText == "Edit"){
+      this.isRead = false;
+      this.buttonText = "Save";
+     }
+    else{
+      this.isRead = true;
+      this.buttonText = "Edit";  
+      //set pickuptime
+      //change deleteDate in firestore      
+      this.time = new Date(this.time);
+      this.pDate = new Date(this.pDate);
+      let newDate = new Date(this.pDate.getFullYear(), this.pDate.getMonth(), this.pDate.getDate(),this.time.getHours(), this.time.getMinutes(), this.time.getSeconds(), this.time.getMilliseconds())
+      console.log(newDate)
+
+      const data = {
+        description: listing.description,
+        listingID: listing.listingID,
+        name: listing.name,
+        price: listing.price,
+        quantity: listing.quantity,
+        retailerType: this.retailerType,
+        location: this.location,
+        retailerUID: this.retailerUID,
+        deleteDate: new Date(this.pDate.getFullYear(), this.pDate.getMonth(), this.pDate.getDate(), this.time.getHours(), this.time.getMinutes(), this.time.getSeconds(), this.time.getMilliseconds())
+      }
+  
+      this.afstore.collection("listings").doc(this.listingID).set(data);
+      this.pickupTime = newDate.toLocaleString();
+      
+
+      
+    }   
   }
  
 

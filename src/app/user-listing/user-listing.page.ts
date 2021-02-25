@@ -24,6 +24,7 @@ export class UserListingPage implements OnInit {
   url; 
   isReady: Boolean = false;
   listingSub;
+  deleteDate;
 
   constructor(private nacCtrl: NavController, public alertController: AlertController, private activatedRoute: ActivatedRoute, private firestore: AngularFirestore, private afStorage: AngularFireStorage, private changeDetection: ChangeDetectorRef, public loadingController: LoadingController) { }
 
@@ -43,6 +44,7 @@ export class UserListingPage implements OnInit {
       this.quantity = this.listing.quantity;
       this.retailerType = this.listing.retailerType;
       this.retailerUID = this.listing.retailerUID; 
+      this.deleteDate = this.listing.deleteDate.toDate().toLocaleTimeString();
 
       console.log(data)    
     var storageRef =  this.afStorage.ref(`images/${this.retailerUID}`).getDownloadURL().toPromise().then(function(url) {        
