@@ -100,7 +100,7 @@ export class Retailertab3Page implements OnInit {
 }
 
 updatePassword(){        
-  this.nacCtrl.navigateRoot(['./update-password'])
+  this.nacCtrl.navigateRoot(['./retailer-update-password'])
 }
 
 

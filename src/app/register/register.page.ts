@@ -45,7 +45,7 @@ export class RegisterPage implements OnInit {
         orders: [],
       })
 
-    this.nacCtrl.navigateRoot(["./tabs"])
+    this.nacCtrl.navigateRoot(["./tabs/tabs/tab1"])
   }catch(error){
     this.presentAlert(error.message);
   }

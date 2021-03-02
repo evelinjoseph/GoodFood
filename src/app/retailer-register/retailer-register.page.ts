@@ -98,7 +98,7 @@ export class RetailerRegisterPage implements OnInit {
           }         
         
       });    
-      this.nacCtrl.navigateRoot(["./retailertabs"])   
+      this.nacCtrl.navigateRoot(["./retailertabs/retailertabs/retailertab1"])   
   }catch(error){
     this.presentAlert(error.message);
   }

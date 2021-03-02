@@ -22,10 +22,10 @@ export class InitialPagePage implements OnInit {
         await listingService.initializeItems();     
          var docRef = (await afstore.collection("users").doc(users.uid).get().toPromise()).data()
          if(docRef.isRetailer == false){
-            nacCtrl.navigateRoot(['./tabs'])
+            nacCtrl.navigateRoot(['./tabs/tabs/tab1'])
           }
           else{
-            nacCtrl.navigateRoot(['./retailertabs'])
+            nacCtrl.navigateRoot(['./retailertabs/retailertabs/retailertab1'])
           }
       } else {         
           self.isReady = true; 

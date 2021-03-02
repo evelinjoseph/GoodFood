@@ -26,12 +26,6 @@ export class AppComponent {
     });
   }
 
-  async logout() {
-    this.afAuth.signOut();
-    this.nacCtrl.navigateRoot(['./login'])
-
-  }
-
   account() {
     var self = this;
     this.afAuth.onAuthStateChanged(async function(users) {
@@ -43,10 +37,27 @@ export class AppComponent {
           else{
             self.nacCtrl.navigateRoot(['/retailertabs/retailertabs/retailertab3'])
           }
-      } else {  
-           
-      }
+      } 
     });
 
   }
+
+  async logout() {
+    this.afAuth.signOut().then(function() {
+     console.log("logout complete")
+      
+    }, function(error) {
+      
+      console.log(error);
+
+    });
+    this.nacCtrl.navigateRoot(['./login'])
+
+  }
+
+  ngOnDestroy(){
+    console.log("left account")
+  }
+
+  
 }

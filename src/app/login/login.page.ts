@@ -43,10 +43,10 @@ export class LoginPage implements OnInit {
         await this.listingService.initializeItems();      
        var docRef = (await this.afstore.collection("users").doc(firebase.auth().currentUser.uid).get().toPromise()).data()
         if(docRef.isRetailer == false){
-          this.nacCtrl.navigateRoot(['./tabs'])
+          this.nacCtrl.navigateRoot(['./tabs/tabs/tab1'])
         }
         else{
-          this.nacCtrl.navigateRoot(['./retailertabs'])
+          this.nacCtrl.navigateRoot(['./retailertabs/retailertabs/retailertab1'])
         }
       }      
     }

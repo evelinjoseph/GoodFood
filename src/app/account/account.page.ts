@@ -78,34 +78,58 @@ edit()
   }
 
   async deleteAccount(){
-    let self = this;
+    //let self = this;
     const confirm = await this.presentAlertDelete();
-    var userRef = (await self.firestore.collection("users").doc(self.userUID).get().toPromise()).data() 
-    if (confirm) {
-      (await this.afAuth.currentUser).delete().then(function() {
-        // User deleted.    
-        self.firestore.collection('archive').doc(self.userUID).set({
-          email: userRef.email,
-          firstname: userRef.firstname,
-          lastname: userRef.lastname,
-          isRetailer: userRef.isRetailer,
-          orders: userRef.orders,
-          type: "User Account"
-        })
-        .then(function() {
-            console.log("Document successfully written to Archive!");
-        })
-        .catch(function(error) {
-            console.error("Error writing document: ", error);
-        });
-        
-        self.firestore.doc(`users/${self.userUID}`).delete();
-        self.nacCtrl.navigateRoot(['./login'])
-        console.log("user deleted")
-      }).catch(function(error) {
-        console.log(error)
-        console.log("Error deleting user")
-      });
+    var userRef = (await this.firestore.collection("users").doc(this.userUID).get().toPromise()).data() 
+    if (confirm) {  
+     try{
+
+      (await this.afAuth.currentUser).delete();
+
+      this.firestore.collection('archive').doc(this.userUID).set({
+            deleteTime: new Date(),
+            email: userRef.email,
+            firstname: userRef.firstname,
+            lastname: userRef.lastname,
+            isRetailer: userRef.isRetailer,
+            orders: userRef.orders,
+            type: "User Account"
+       });
+
+       this.firestore.doc(`users/${this.userUID}`).delete();
+       this.nacCtrl.navigateRoot(['./login']);
+       console.log("user deleted");
+     }
+     catch(error){
+       console.log(error)
+     }
+
+      // firebase.auth().currentUser.delete().then(function() {
+      //   // User deleted.       
+      //   console.log("entered then")  
+      //   console.log(self.userUID);
+      //   console.log(userRef);
+      //   self.firestore.collection('archive').doc(self.userUID).set({
+      //     email: userRef.email,
+      //     firstname: userRef.firstname,
+      //     lastname: userRef.lastname,
+      //     isRetailer: userRef.isRetailer,
+      //     orders: userRef.orders,
+      //     type: "User Account"
+      //   })
+      //   .then(function() {
+      //       console.log("Document successfully written to Archive!");
+      //   })
+      //   .catch(function(error) {
+      //       console.error("Error writing document: ", error);
+      //   });        
+      //   self.firestore.doc(`users/${self.userUID}`).delete();
+      //   self.nacCtrl.navigateRoot(['./login'])
+      //   console.log("user deleted")
+      // }).catch(function(error) {
+      //   console.log(error)
+      //   console.log("Error deleting user")
+      // });
     }
   }
 
@@ -116,14 +140,30 @@ edit()
     });
     const alert = await this.alertCtrl.create({
       header: 'Confirm Delete',
-      message: 'Are you sure you want to delete this account? This is a permanent deletion and cannot be undone.',
+      message: 'Are you sure you want to delete this account? This is a permanent deletion and cannot be undone. Please enter your password to continue',
+      inputs: [        
+        {
+          name: 'password',
+          placeholder: 'Password',
+          type: 'password'
+        }
+      ],
       buttons: [
         {
-          text: 'Yes',
-            handler: () => resolveFunction(true)
-        }, {
-          text: 'No',
+          text: 'Cancel',
           handler: () => resolveFunction(false)
+        },
+        {
+          text: 'Yes',
+          handler: data => {
+            this.afAuth.signInWithEmailAndPassword(firebase.auth().currentUser.email, data.password).then(function(){
+              console.log("signed in")
+              resolveFunction(true)
+            }).catch(function(error){
+              console.log(error.message)
+            })           
+                      
+          }
         }
       ]
     });

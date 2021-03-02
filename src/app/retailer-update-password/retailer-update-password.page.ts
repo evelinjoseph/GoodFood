@@ -4,11 +4,11 @@ import { AlertController, NavController } from '@ionic/angular';
 import * as firebase from 'firebase';
 
 @Component({
-  selector: 'app-update-password',
-  templateUrl: './update-password.page.html',
-  styleUrls: ['./update-password.page.scss'],
+  selector: 'app-retailer-update-password',
+  templateUrl: './retailer-update-password.page.html',
+  styleUrls: ['./retailer-update-password.page.scss'],
 })
-export class UpdatePasswordPage implements OnInit {
+export class RetailerUpdatePasswordPage implements OnInit {
   password: string = "";
   newpassword: string = "";
   cpassword: string = "";
@@ -19,7 +19,6 @@ export class UpdatePasswordPage implements OnInit {
   }
 
   updatePassword(){
-    
     try{
       let self = this;
       const {password, newpassword, cpassword} = this
@@ -41,7 +40,7 @@ export class UpdatePasswordPage implements OnInit {
               self.password = "";
               self.newpassword = "";
               self.cpassword = "";
-              self.nacCtrl.navigateRoot(['/account'])
+              self.nacCtrl.navigateRoot(['/retailertabs/retailertabs/retailertab3'])
 
             }).catch(function(error) {
                alert(error)
