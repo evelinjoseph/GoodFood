@@ -1,4 +1,9 @@
+import { CommonModule } from '@angular/common';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { FormsModule } from '@angular/forms';
+import { BrowserModule } from '@angular/platform-browser';
+import { RouterTestingModule } from '@angular/router/testing';
 import { IonicModule } from '@ionic/angular';
 
 import { PasswordResetPage } from './password-reset.page';
@@ -7,10 +12,31 @@ describe('PasswordResetPage', () => {
   let component: PasswordResetPage;
   let fixture: ComponentFixture<PasswordResetPage>;
 
+  const fireStub: any = {
+    authState: {},
+    auth: {
+      signInWithEmailAndPassword() {
+        return Promise.resolve();
+      },
+      updatePassword(newpassword: string){
+        return Promise.resolve();
+      },
+      sendPasswordResetEmail(emailAddress: string){
+        return Promise.resolve();
+      }
+    }
+  };
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ PasswordResetPage ],
-      imports: [IonicModule.forRoot()]
+      imports: [FormsModule,
+        CommonModule,
+        BrowserModule,
+        IonicModule.forRoot(), RouterTestingModule],
+      providers:[
+        { provide: AngularFireAuth, useValue: fireStub}
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasswordResetPage);

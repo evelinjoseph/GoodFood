@@ -8,41 +8,47 @@
 </ion-header>
 
 <ion-content fullscreen [hidden]="!isReady">
-  
-  <div *ngFor="let item of ((retailerItems | async)?.listings)">
-    <ion-card>
+  <div *ngIf="isVerified">
+      <div *ngFor="let item of ((retailerItems | async)?.listings)">
+        <ion-card>
 
-     <ion-item>
-      <ion-card-title class="ion-text-wrap" [routerLink]="['/retailer-listing']" [queryParams]="{ id: item.listingID }" routerDirection="forward">{{item.name}}</ion-card-title>
-     
-    </ion-item>
-   
-     <ion-card-content > 
-      <div [routerLink]="['/retailer-listing']" [queryParams]="{ id: item.listingID }" routerDirection="forward">
-
-      <p> Price: ${{item.price | number:'1.2-2'}}</p>
-      <p> Description: {{item.description}}</p>
-      <p> Location: {{location}}</p>
-      <p> Retailer Type: {{retailerType}}</p>
+        <ion-item>
+          <ion-card-title class="ion-text-wrap" [routerLink]="['/retailer-listing']" [queryParams]="{ id: item.listingID }" routerDirection="forward">{{item.name}}</ion-card-title>
+        
+        </ion-item>
       
-      </div>
-      <ion-button  (click)="delete(item)" fill="outline" slot="end">Delete</ion-button> 
-      <ion-button  *ngIf="item.isListed" (click)="unpublish(item)" slot="end">Unpublish</ion-button>       
-     </ion-card-content>
+        <ion-card-content > 
+          <div [routerLink]="['/retailer-listing']" [queryParams]="{ id: item.listingID }" routerDirection="forward">
 
-     
-   </ion-card>
-  </div>  
- 
-    <ion-text *ngIf="((retailerItems | async)?.listings).length <= 0" class="centerText" color="primary" style="text-align: center">
-      <p>There are no listings currently.</p>
+          <p> Price: ${{item.price | number:'1.2-2'}}</p>
+          <p> Description: {{item.description}}</p>
+          <p> Location: {{location}}</p>
+          <p> Retailer Type: {{retailerType}}</p>
+          
+          </div>
+          <ion-button  (click)="delete(item)" fill="outline" slot="end">Delete</ion-button> 
+          <ion-button  *ngIf="item.isListed" (click)="unpublish(item)" slot="end">Unpublish</ion-button>       
+        </ion-card-content>
+
+        
+      </ion-card>
+      </div>      
+        <ion-text *ngIf="((retailerItems | async)?.listings).length <= 0" class="centerText" color="primary" style="text-align: center">
+          <p>There are no listings currently.</p>
+        </ion-text>
+  </div>
+  <div *ngIf="!isVerified" class="centerText">
+    <ion-text class="centerText" color="primary" style="text-align: center">
+      <p>Your account is not verified yet, please wait until verified to gain access to this tab!</p>
     </ion-text>
-  
+  </div>
 </ion-content>
 
 <ion-footer class="ion-no-border">
-  <ion-toolbar position="bottom" style="text-align: center;">     
-    <ion-button size ="large" [routerLink]="['/new-listing']" routerDirection="forward">Add Listing</ion-button>    
-  </ion-toolbar>
+  <div *ngIf="isVerified">
+    <ion-toolbar position="bottom" style="text-align: center;">     
+      <ion-button size ="large" [routerLink]="['/new-listing']" routerDirection="forward">Add Listing</ion-button>    
+    </ion-toolbar>
+  </div>
 </ion-footer>
 

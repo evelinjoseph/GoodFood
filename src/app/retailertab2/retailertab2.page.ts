@@ -18,6 +18,7 @@ export class Retailertab2Page implements OnInit {
   items;
   retailerType;
   location;
+  isVerified = false;
   isReady = false;
 
   constructor(public afAuth: AngularFireAuth, private afstore: AngularFirestore, private changeDetection: ChangeDetectorRef, public alertCtrl: AlertController) {}
@@ -27,16 +28,13 @@ export class Retailertab2Page implements OnInit {
     this.afAuth.onAuthStateChanged(async function(user) {        
       if (user) {        
         self.retailerUID = user.uid
-        self.items = self.afstore.doc(`users/${self.retailerUID}`);
-        self.retailerItems = self.items.valueChanges(); 
-        console.log(self.retailerItems)
-
+        self.items = self.afstore.doc(`users/${self.retailerUID}`);        
+        self.retailerItems = self.items.valueChanges();        
         var userRef = (await self.afstore.collection("users").doc(self.retailerUID).get().toPromise()).data()
+        self.isVerified = userRef.isVerified;
         self.retailerType = userRef.retailerType;
         self.location = userRef.location;
-        console.log(self.isReady)
         self.isReady = true;
-        console.log(self.isReady)
         self.changeDetection.detectChanges();   
         
 

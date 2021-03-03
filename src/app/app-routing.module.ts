@@ -38,7 +38,8 @@ const routes: Routes = [
   {
     path: 'tab4',
     loadChildren: () => import('./tab4/tab4.module').then( m => m.Tab4PageModule)
-  },  {
+  },
+  {
     path: 'retailertabs',
     loadChildren: () => import('./retailertabs/retailertabs.module').then( m => m.RetailertabsPageModule)
   },
@@ -86,7 +87,6 @@ const routes: Routes = [
     path: 'retailer-update-password',
     loadChildren: () => import('./retailer-update-password/retailer-update-password.module').then( m => m.RetailerUpdatePasswordPageModule)
   }
-
 ];
 @NgModule({
   imports: [

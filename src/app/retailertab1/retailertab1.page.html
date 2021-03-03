@@ -8,26 +8,32 @@
 </ion-header>
 
 <ion-content fullscreen [hidden]="!isReady" >
-  <div *ngFor="let item of ((retailerItems | async)?.orders)">
-    <ion-card>
+  <div *ngIf="isVerified">
+    <div *ngFor="let item of ((retailerItems | async)?.orders)">
+      <ion-card>
 
-     <ion-item>
-      <ion-card-title class="ion-text-wrap">{{item.name}}</ion-card-title>
-    </ion-item>
-   
-     <ion-card-content> 
-        <p> Description: {{item.description}}</p>
-        <p> Ordered: {{item.date.toDate().toLocaleString()}}</p>
-        <p> User: {{getUser(item.userUID)}}</p>      
-     </ion-card-content>
-   </ion-card>
+      <ion-item>
+        <ion-card-title class="ion-text-wrap">{{item.name}}</ion-card-title>
+      </ion-item>
+    
+      <ion-card-content> 
+          <p> Description: {{item.description}}</p>
+          <p> Ordered: {{item.date.toDate().toLocaleString()}}</p>
+          <p> User: {{getUser(item.userUID)}}</p>      
+      </ion-card-content>
+    </ion-card>
+    </div>  
+    
+      <ion-text *ngIf="((retailerItems | async)?.orders).length <= 0" class="centerText" color="primary" style="text-align: center">
+        <p>There are no orders currently.</p>
+      </ion-text>
+     
   </div>
-
-  
-  
-    <ion-text *ngIf="((retailerItems | async)?.orders).length <= 0" class="centerText" color="primary" style="text-align: center">
-      <p>There are no orders currently.</p>
+  <div *ngIf="!isVerified" class="centerText">
+    <ion-text class="centerText" color="primary" style="text-align: center">
+    <p>Your account is not verified yet, please wait until verified to gain access to this tab!</p>
     </ion-text>
+  </div>
   
 </ion-content>
 
