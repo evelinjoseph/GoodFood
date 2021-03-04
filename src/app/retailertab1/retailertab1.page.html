@@ -8,7 +8,13 @@
 </ion-header>
 
 <ion-content fullscreen [hidden]="!isReady" >
-  <div *ngIf="isVerified">
+
+  <div *ngIf="!((retailerItems | async)?.isVerified) ; else verified" class="centerText">
+    <ion-text class="centerText" color="primary" style="text-align: center">
+      <p>Your account is not verified yet, please wait until verified to gain access to this tab!</p>
+    </ion-text>
+  </div>
+  <ng-template #verified>
     <div *ngFor="let item of ((retailerItems | async)?.orders)">
       <ion-card>
 
@@ -27,13 +33,6 @@
       <ion-text *ngIf="((retailerItems | async)?.orders).length <= 0" class="centerText" color="primary" style="text-align: center">
         <p>There are no orders currently.</p>
       </ion-text>
-     
-  </div>
-  <div *ngIf="!isVerified" class="centerText">
-    <ion-text class="centerText" color="primary" style="text-align: center">
-    <p>Your account is not verified yet, please wait until verified to gain access to this tab!</p>
-    </ion-text>
-  </div>
-  
+  </ng-template>  
 </ion-content>
 

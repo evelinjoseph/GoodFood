@@ -77,10 +77,5 @@ describe('Retailertab1Page', () => {
     expect(component.retailerUID).toEqual("testuid");   
     expect(afSpy.doc).toHaveBeenCalledWith('users/' + component.retailerUID); 
   });
-  it('should check isVerified', () => {
-
-    component.isVerified = false;
-    expect(component.isVerified).toBeFalsy();
-    
-  });
+  
 });

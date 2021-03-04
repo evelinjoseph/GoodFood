@@ -8,7 +8,14 @@
 </ion-header>
 
 <ion-content fullscreen [hidden]="!isReady">
-  <div *ngIf="isVerified">
+
+  <div *ngIf="!((retailerItems | async)?.isVerified) ; else verified" class="centerText">
+    <ion-text class="centerText" color="primary" style="text-align: center">
+      <p>Your account is not verified yet, please wait until verified to gain access to this tab!</p>
+    </ion-text>
+  </div>
+
+  <ng-template #verified>
       <div *ngFor="let item of ((retailerItems | async)?.listings)">
         <ion-card>
 
@@ -36,16 +43,11 @@
         <ion-text *ngIf="((retailerItems | async)?.listings).length <= 0" class="centerText" color="primary" style="text-align: center">
           <p>There are no listings currently.</p>
         </ion-text>
-  </div>
-  <div *ngIf="!isVerified" class="centerText">
-    <ion-text class="centerText" color="primary" style="text-align: center">
-      <p>Your account is not verified yet, please wait until verified to gain access to this tab!</p>
-    </ion-text>
-  </div>
+  </ng-template>
 </ion-content>
 
 <ion-footer class="ion-no-border">
-  <div *ngIf="isVerified">
+  <div *ngIf="((retailerItems | async)?.isVerified)">
     <ion-toolbar position="bottom" style="text-align: center;">     
       <ion-button size ="large" [routerLink]="['/new-listing']" routerDirection="forward">Add Listing</ion-button>    
     </ion-toolbar>
