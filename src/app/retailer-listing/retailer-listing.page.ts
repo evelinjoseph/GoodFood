@@ -5,6 +5,7 @@ import { AngularFireStorage } from '@angular/fire/storage';
 import { ActivatedRoute } from '@angular/router';
 import { AlertController, LoadingController, NavController } from '@ionic/angular';
 import * as firebase from 'firebase/app';
+import { ListingsService } from '../listings.service';
 
 @Component({
   selector: 'app-retailer-listing',
@@ -32,7 +33,7 @@ export class RetailerListingPage implements OnInit {
 
   // TODO: add the option to remove the listing that is currently published from the user view without deleting it for the retailer
 
-  constructor(private nacCtrl: NavController, private activatedRoute: ActivatedRoute, public afAuth: AngularFireAuth, private afstore: AngularFirestore, private afStorage: AngularFireStorage, private changeDetection: ChangeDetectorRef,public loadingController: LoadingController, public alertController: AlertController) { }
+  constructor(public listingService: ListingsService,private nacCtrl: NavController, private activatedRoute: ActivatedRoute, public afAuth: AngularFireAuth, private afstore: AngularFirestore, private afStorage: AngularFireStorage, private changeDetection: ChangeDetectorRef,public loadingController: LoadingController, public alertController: AlertController) { }
 
   ngOnInit() {
     this.presentLoading();
@@ -182,12 +183,15 @@ export class RetailerListingPage implements OnInit {
         isListed: listing.isListed
       })
     })
-    
+
+    // TODO: may need to delete from carts?
+    // await this.listingService.deleteListing(listing)
     this.afstore.collection('listings').doc(listing.listingID).delete();
     this.nacCtrl.navigateRoot(["./retailertabs/retailertabs/retailertab2"]);
     this.changeDetection.detectChanges(); 
    
-    // TODO: may need to delete from carts?
+    
+    
   }
   }
 

@@ -43,6 +43,7 @@ export class RegisterPage implements OnInit {
         isRetailer: false,
         cart: [],
         orders: [],
+        userUID: res.user.uid
       })
 
     this.nacCtrl.navigateRoot(["./tabs/tabs/tab1"])

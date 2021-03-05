@@ -4,6 +4,7 @@ import { AlertController } from '@ionic/angular';
 import { AngularFirestore } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
 import { first } from 'rxjs/operators';
+import { ListingsService } from '../listings.service';
 
 @Component({
   selector: 'app-retailertab2',
@@ -20,7 +21,7 @@ export class Retailertab2Page implements OnInit {
   location;
   isReady = false;
 
-  constructor(public afAuth: AngularFireAuth, private afstore: AngularFirestore, private changeDetection: ChangeDetectorRef, public alertCtrl: AlertController) {}
+  constructor(public listingService: ListingsService, public afAuth: AngularFireAuth, private afstore: AngularFirestore, private changeDetection: ChangeDetectorRef, public alertCtrl: AlertController) {}
 
   ngOnInit() {
     var self = this
@@ -85,6 +86,7 @@ export class Retailertab2Page implements OnInit {
     });
 
     // TODO: may need to delete from carts?
+    //await this.listingService.deleteListing(listing)
   }
   }
 
@@ -115,9 +117,11 @@ export class Retailertab2Page implements OnInit {
       })
     })
     
+    // TODO: may need to delete from carts?
+    //await this.listingService.deleteListing(listing)
     this.afstore.collection('listings').doc(listing.listingID).delete();
 
-    // TODO: may need to delete from carts?
+    
   }
   }
 
