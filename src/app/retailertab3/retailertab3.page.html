@@ -68,6 +68,9 @@
       <section>
         <ion-button expand="block" (click)="updatePassword()">Update Password</ion-button>
       </section>
+      <section *ngIf="!isVerified">
+        <ion-button expand="block" (click)="sendEmail()">Send Verification Email</ion-button>
+      </section>
     </div>
 
     

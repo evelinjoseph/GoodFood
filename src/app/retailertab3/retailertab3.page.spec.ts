@@ -6,6 +6,7 @@ import { AngularFireStorage } from '@angular/fire/storage';
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
 import { of } from 'rxjs';
+import { EmailComposer } from '@ionic-native/email-composer/ngx';
 
 import { Retailertab3Page } from './retailertab3.page';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -25,6 +26,15 @@ describe('Retailertab3Page', () => {
       arrayUnion(){
         return firebase.firestore.FieldValue;
       }
+    }
+  };
+
+  const emailComposerStub: any = {
+    isAvailable() {
+        return Promise.resolve();
+    },
+    open(){
+      return Promise.resolve();
     }
   };
 
@@ -58,7 +68,8 @@ describe('Retailertab3Page', () => {
           }
         }},
         { provide: AngularFirestore, useValue: afSpy },
-        { provide: AngularFireStorage, useValue: fireStub}
+        { provide: AngularFireStorage, useValue: fireStub},
+        { provide: EmailComposer, useValue: emailComposerStub}
     ]     
     }).compileComponents();
 

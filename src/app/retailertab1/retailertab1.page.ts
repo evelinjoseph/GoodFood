@@ -19,7 +19,6 @@ export class Retailertab1Page implements OnInit {
 
   ngOnInit() {
     var self = this
-    console.log(self.retailerItems)
     this.afAuth.onAuthStateChanged(async function(user) {        
       if (user) {              
         self.retailerUID = user.uid

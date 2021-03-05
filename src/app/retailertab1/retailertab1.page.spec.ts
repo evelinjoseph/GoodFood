@@ -70,12 +70,18 @@ describe('Retailertab1Page', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
   it('should populate retailerItems', () => {
     AngularFireAuthMock.onAuthStateChanged = jasmine.createSpy("onAuthStateChanged");
     component.ngOnInit();    
     expect(AngularFireAuthMock.onAuthStateChanged).toHaveBeenCalled();
     expect(component.retailerUID).toEqual("testuid");   
     expect(afSpy.doc).toHaveBeenCalledWith('users/' + component.retailerUID); 
+  });
+
+  it('getUser() should return uid', () => {
+    
+    expect(component.getUser("testuid")).toEqual("testuid"); 
   });
   
 });
