@@ -86,7 +86,7 @@ export class Retailertab2Page implements OnInit {
     });
 
     // TODO: may need to delete from carts?
-    //await this.listingService.deleteListing(listing)
+    await this.listingService.deleteListing(listing)
   }
   }
 
@@ -118,7 +118,7 @@ export class Retailertab2Page implements OnInit {
     })
     
     // TODO: may need to delete from carts?
-    //await this.listingService.deleteListing(listing)
+    await this.listingService.deleteListing(listing)
     this.afstore.collection('listings').doc(listing.listingID).delete();
 
     

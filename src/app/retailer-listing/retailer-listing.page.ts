@@ -185,7 +185,7 @@ export class RetailerListingPage implements OnInit {
     })
 
     // TODO: may need to delete from carts?
-    // await this.listingService.deleteListing(listing)
+    await this.listingService.deleteListing(listing)
     this.afstore.collection('listings').doc(listing.listingID).delete();
     this.nacCtrl.navigateRoot(["./retailertabs/retailertabs/retailertab2"]);
     this.changeDetection.detectChanges(); 

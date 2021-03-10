@@ -116,16 +116,19 @@ export class ListingsService {
 
   async deleteItems(){
     let userListings = this.users
+    console.log(userListings);
     this.deleteListings.forEach(element => {
       userListings.forEach(user => {
         if(user.isRetailer == false){ 
         let userCart = user.cart
+        console.log(userCart)
         let deleteUserListing: any[] = userCart.filter(currentListing => {
         if (currentListing.listingID && element.listingID) {
           return (currentListing.listingID.toLowerCase().indexOf(element.listingID.toLowerCase()) > -1);
           }
         }); 
 
+        console.log(deleteUserListing);
         deleteUserListing.forEach(listing => {
           this.firestore.doc(`users/${user.userUID}`).update({
             cart: firebase.firestore.FieldValue.arrayRemove({
