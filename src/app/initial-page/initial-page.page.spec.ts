@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed, tick } from '@angular/core/testing';
+import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
@@ -15,51 +15,58 @@ describe('InitialPagePage', () => {
   let fixture: ComponentFixture<InitialPagePage>;
   let de: DebugElement
 
-  // const fireStub: any = {
-  //   authState: {},
-  //   auth: {
-  //     onAuthStateChanged() {
-  //       return of({uid: '1234'})
-
-  //     },
-  //     signInWithEmailAndPassword() {
-  //       return Promise.resolve();
-  //     }
-  //   }
+  
+  let AngularFireAuthMock = {
     
-  // };
+    onAuthStateChanged(users) { 
+      if(users){
+        var docRef = afSpy.doc("testuid"); 
+        component.nacCtrl.navigateRoot(['./tabs/tabs/tab1']);            
 
-  // class AngularFireAuthStub {
-  //   readonly auth: AuthStub = new AuthStub();
-  // }
+      }
+      else{
+        component.isReady = true;
+      }
+      return of({
+        uid: "testuid"
+      }) 
+      
+    },
+    currentUser: () => of({uid: "test"})
+  }
 
-  // class AuthStub {
-  //   onAuthStateChanged(){
-  //     return of({uid: '1234'})
-  //   }
-  // }  
-
-  const FirestoreStub = {
-    collection: (name: string) => ({
-      // doc: (_id: string) => ({
-      //   valueChanges: () => new BehaviorSubject({ foo: 'bar' }),
-      //   set: (_d: any) => new Promise((resolve, _reject) => resolve()),
-      // }),
-    }),
-  };
+  let afSpy: any;
+  let navSpy: any;
 
   beforeEach(async(() => {
+
+    navSpy = jasmine.createSpyObj('NavController',['navigateRoot']);
+    navSpy.navigateRoot.and.returnValue(navSpy);
+    
+    afSpy = jasmine.createSpyObj('AngularFirestore', ['collection', 
+    'valueChanges', 'snapshotChanges', 'ref', 'doc','add','update', 
+    'then', 'catch', 'finally', 'firestore', 'get']);
+    afSpy.collection.and.returnValue(afSpy);
+    afSpy.valueChanges.and.returnValue(afSpy);
+    afSpy.snapshotChanges.and.returnValue(afSpy); 
+    afSpy.ref.and.returnValue(afSpy); 
+    afSpy.doc.and.returnValue(afSpy); 
+    afSpy.add.and.returnValue(afSpy);
+    afSpy.update.and.returnValue(Promise.resolve()); 
+    afSpy.then.and.returnValue(Promise.resolve('hello world')); 
+    afSpy.catch.and.returnValue(afSpy); 
+    afSpy.finally.and.callThrough()
+    afSpy.firestore.and.returnValue(afSpy); 
+    afSpy.get.and.returnValue(afSpy);
+
+
     TestBed.configureTestingModule({
       declarations: [ InitialPagePage ],
       imports: [IonicModule.forRoot(), RouterTestingModule],
       providers:[
-        { provide: AngularFireAuth, useClass:  class {
-          onAuthStateChanged(){
-            return of({uid: '1234'})
-          }
-        }},
-        { provide: AngularFirestore, useValue: FirestoreStub },
-        { provide: NavController, useClass: class { navigate = jasmine.createSpy('navigate') } }
+        { provide: AngularFireAuth, useValue: AngularFireAuthMock },
+        { provide: AngularFirestore, useValue: afSpy },
+        { provide: NavController, useValue: navSpy}
     ]     
     }).compileComponents();
 
@@ -74,9 +81,31 @@ describe('InitialPagePage', () => {
     expect(component).toBeTruthy();
   });
 
-  // it('should toggle', () => {
-  //   expect(component.isReady).toBeFalsy();
-  //   tick(600);
-  //   expect(component.isReady).toBeTruthy();
-  // });
+  
+
+  it('should navigate', () => {
+   
+    AngularFireAuthMock.onAuthStateChanged = jasmine.createSpy("onAuthStateChanged");
+    component.ngOnInit();    
+    expect(AngularFireAuthMock.onAuthStateChanged).toHaveBeenCalled();
+    expect(navSpy.navigateRoot).toHaveBeenCalled();
+    
+  });
+
+  it('should set isReady if no user', fakeAsync(() => {
+   
+    AngularFireAuthMock.onAuthStateChanged = jasmine.createSpy("onAuthStateChanged");
+    AngularFireAuthMock.onAuthStateChanged(false);
+    expect(AngularFireAuthMock.onAuthStateChanged).toHaveBeenCalledWith(false);
+    //expect(AngularFireAuthMock.onAuthStateChanged.arguments).toBeFalsy();
+    //expect(component.isReady).toBeTruthy();
+    
+  }));
+
+  it('should toggle is Ready', fakeAsync(() => {
+    expect(component.isReady).toBeFalsy();
+    AngularFireAuthMock.onAuthStateChanged(false);
+    tick(700);
+    expect(component.isReady).toBeTruthy();
+  }));
 });

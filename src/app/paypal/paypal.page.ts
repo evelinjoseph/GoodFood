@@ -67,8 +67,10 @@ export class PaypalPage implements OnInit {
       }
     });
 
+   
     setTimeout(() => {
         // Render the PayPal button into #paypal-button-container
+        
         <any>window['paypal'].Buttons({
 
           // Set up the transaction
@@ -229,7 +231,7 @@ export class PaypalPage implements OnInit {
               })
           }
         }).render('#paypal-button-container');
-      }, 100)  
+       }, 10)
         
   }
   

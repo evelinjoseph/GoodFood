@@ -59,9 +59,11 @@ describe('PaypalPage', () => {
     ]     
     }).compileComponents();
 
+    
     fixture = TestBed.createComponent(PaypalPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    
   }));
 
   it('should create', () => {

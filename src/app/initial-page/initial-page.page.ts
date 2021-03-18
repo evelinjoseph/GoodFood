@@ -14,27 +14,29 @@ export class InitialPagePage implements OnInit {
 
   constructor(public listingService: ListingsService, public nacCtrl: NavController, public afAuth: AngularFireAuth, public afstore: AngularFirestore, public loadingController: LoadingController,  public changeDetection: ChangeDetectorRef) {
     //this.presentLoading();
+    
+   }   
+
+  ngOnInit() {
+    
     var self = this;
    
-    afAuth.onAuthStateChanged(async function(users) {
+    this.afAuth.onAuthStateChanged(async function(users) {
       if (users) {        
         self.presentLoading();   
-        await listingService.initializeItems();     
-         var docRef = (await afstore.collection("users").doc(users.uid).get().toPromise()).data()
+        await self.listingService.initializeItems();     
+         var docRef = (await self.afstore.collection("users").doc(users.uid).get().toPromise()).data()
          if(docRef.isRetailer == false){
-            nacCtrl.navigateRoot(['./tabs/tabs/tab1'])
+            self.nacCtrl.navigateRoot(['./tabs/tabs/tab1'])
           }
           else{
-            nacCtrl.navigateRoot(['./retailertabs/retailertabs/retailertab1'])
+            self.nacCtrl.navigateRoot(['./retailertabs/retailertabs/retailertab1'])
           }
       } else {         
           self.isReady = true; 
           self.changeDetection.detectChanges(); 
       }
     });    
-   }   
-
-  ngOnInit() {  
     
   }
 
