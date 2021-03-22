@@ -23,10 +23,7 @@ export class PaypalPage implements OnInit {
   currentRetailer;
   retailers: any[];
 
-  constructor(public afAuth: AngularFireAuth, private nacCtrl: NavController, public alertController: AlertController, public afstore: AngularFirestore, private payPal: PayPal, public loadingController: LoadingController, public changeDetection: ChangeDetectorRef){
-   
-  
-  }
+  constructor(public afAuth: AngularFireAuth, private nacCtrl: NavController, public alertController: AlertController, public afstore: AngularFirestore, private payPal: PayPal, public loadingController: LoadingController, public changeDetection: ChangeDetectorRef){}
 
   ngOnInit() {
     let self = this

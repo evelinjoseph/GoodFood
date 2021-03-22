@@ -15,7 +15,7 @@
     </ion-text>
   </div>
   <ng-template #verified>
-    <div *ngFor="let item of ((retailerItems | async)?.orders)">
+    <div *ngFor="let item of ((retailerItems | async)?.orders).sort().reverse()">
       <ion-card>
 
       <ion-item>

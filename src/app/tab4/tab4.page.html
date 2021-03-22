@@ -8,7 +8,7 @@
 </ion-header>
 
 <ion-content fullscreen [hidden]="!isReady">
-  <div *ngFor="let item of ((userItems | async)?.orders)">
+  <div *ngFor="let item of ((userItems | async)?.orders).sort().reverse()">
     <ion-card>
 
      <ion-item>
