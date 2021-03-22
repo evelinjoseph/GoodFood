@@ -3,7 +3,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { AlertController, NavController } from '@ionic/angular';
 import * as firebase from 'firebase/app';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { ListingsService} from '../listings.service';
+import { ListingsService} from '../listings.service'; 
 
 @Component({
   selector: 'app-login',

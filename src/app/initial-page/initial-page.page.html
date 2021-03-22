@@ -6,10 +6,10 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content color = "white" [hidden]="!isReady">  
+<ion-content color = "white" [hidden]="!isReady" mode="ios">  
   <img class="displayed"  height="250 px" width="250 px" src="assets/images/GoodFoodLogo.png" alt="logo">
          
- <div style="text-align: center"> 
+ <div style="text-align: center" > 
   <section >
     <ion-button size="large" color = "primary" [routerDirection] = "'forward'" [routerLink]="['/register']">Create Account</ion-button>
   </section>
