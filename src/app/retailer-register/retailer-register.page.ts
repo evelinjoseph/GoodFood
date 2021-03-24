@@ -18,6 +18,9 @@ export class RetailerRegisterPage implements OnInit {
   password: string = "";
   cpassword: string = "";
   location: string = "";
+  city: string = "";
+  state: string = "";
+  zipcode: string = "";
   retailerType: string = "";
   pickupTime; 
 
@@ -28,6 +31,7 @@ export class RetailerRegisterPage implements OnInit {
   }
 
   async register() {
+    
     try{
       const { name, email, password, cpassword, location, retailerType} = this
       if(password !== cpassword){      
@@ -42,7 +46,10 @@ export class RetailerRegisterPage implements OnInit {
       if(retailerType.length==0){
         throw new Error('Please Enter Retailer Type (Restaurant, Food Truck, Cafe)');
       } 
-      // TODO: add location and type checks   
+      if(this.pickupTime == undefined){
+        throw new Error('Please Enter Pickup Time');
+      } 
+      
         const res = await this.afAuth.createUserWithEmailAndPassword(email, password)
         this.afstore.doc(`users/${res.user.uid}`).set({
           email,
@@ -51,14 +58,11 @@ export class RetailerRegisterPage implements OnInit {
           isVerified: false,
           isRetailer: true,
           retailerUID: res.user.uid,
-          location,
+          location: this.location + ", " + this.city + ", " + this.state + " " + this.zipcode,
           retailerType,
           listings: [],
           orders: [],
           pickupTime: new Date(this.pickupTime)
-          // TODO: add location, retailerType, picture, pick-up time
-          // TODO: seperate address fields
-          // TODO: make sure that 12 AM is not an option in pickuptime
         })
       
       //https://accounts.google.com/b/0/DisplayUnlockCaptcha
