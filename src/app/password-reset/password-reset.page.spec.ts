@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 import { IonicModule } from '@ionic/angular';
+import { AlertController, NavController } from '@ionic/angular';
 
 import { PasswordResetPage } from './password-reset.page';
 
@@ -12,22 +13,29 @@ describe('PasswordResetPage', () => {
   let component: PasswordResetPage;
   let fixture: ComponentFixture<PasswordResetPage>;
 
-  const fireStub: any = {
-    authState: {},
-    auth: {
-      signInWithEmailAndPassword() {
-        return Promise.resolve();
-      },
-      updatePassword(newpassword: string){
-        return Promise.resolve();
-      },
-      sendPasswordResetEmail(emailAddress: string){
-        return Promise.resolve();
-      }
+  let AngularFireAuthMock = {
+    signInWithEmailAndPassword() {
+      return Promise.resolve();
+    },
+    updatePassword(newpassword: string){
+      return Promise.resolve();
+    },
+    sendPasswordResetEmail(emailAddress: string){
+      return Promise.resolve();
     }
-  };
+  }
+
+  let navSpy: any;
+  let alertSpy: any;
 
   beforeEach(async(() => {
+
+    navSpy = jasmine.createSpyObj('NavController',['navigateRoot']);
+    navSpy.navigateRoot.and.returnValue(navSpy);
+
+    alertSpy = jasmine.createSpyObj('AlertController',['presentAlert']);
+    alertSpy.presentAlert.and.returnValue(Promise.resolve(true));
+
     TestBed.configureTestingModule({
       declarations: [ PasswordResetPage ],
       imports: [FormsModule,
@@ -35,7 +43,9 @@ describe('PasswordResetPage', () => {
         BrowserModule,
         IonicModule.forRoot(), RouterTestingModule],
       providers:[
-        { provide: AngularFireAuth, useValue: fireStub}
+        { provide: AngularFireAuth, useValue: AngularFireAuthMock},
+        { provide: NavController, useValue: navSpy},
+        { provide: AlertController, useValue: alertSpy}
       ]
     }).compileComponents();
 
@@ -46,5 +56,19 @@ describe('PasswordResetPage', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should send reset link', () => {
+    const spy = spyOn(AngularFireAuthMock, "sendPasswordResetEmail").and.returnValue(Promise.resolve());
+    component.presentAlert = jasmine.createSpy("presentAlert");
+    component.resetPassword();
+    expect(spy).toHaveBeenCalled();
+    spy.calls.mostRecent().returnValue.then(res => {
+      expect(component.presentAlert).toHaveBeenCalledWith("Password Reset Link Sent to Email");
+      expect(navSpy.navigateRoot).toHaveBeenCalledWith(['./login']);      
+   })
+   
+  
+
   });
 });

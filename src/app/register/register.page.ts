@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore'
 import { AngularFireAuth } from '@angular/fire/auth';
-import { NavController } from '@ionic/angular';
-import { AlertController } from '@ionic/angular';
+import {  AlertController , NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-register',

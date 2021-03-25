@@ -30,10 +30,9 @@ export class LoginPage implements OnInit {
       throw new Error('Please Enter Password');
     }
     var self = this;
-      this.afAuth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-      .then(function() {
+      this.afAuth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(function() {
                 // New sign-in will be persisted with local persistence.
-        return firebase.auth().signInWithEmailAndPassword(email, password);
+        return self.afAuth.signInWithEmailAndPassword(email, password);
       })
       .catch(function(error) {
         self.presentAlert(error.message)
