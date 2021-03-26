@@ -23,6 +23,7 @@ export interface imgFile {
   styleUrls: ['./retailertab3.page.scss'],
 })
 export class Retailertab3Page implements OnInit {
+  userRef;
   userUID;
   retailerType;
   retailerUID;
@@ -78,12 +79,12 @@ export class Retailertab3Page implements OnInit {
       if (user) {        
         self.userUID = user.uid
 
-          var userRef = (await self.firestore.collection("users").doc(self.userUID).get().toPromise()).data()
-              self.retailerType = userRef.retailerType;
-              self.retailerUID = userRef.retailerUID;    
-              self.email = userRef.email;
-              self.name = userRef.name;
-              self.isVerified = userRef.isVerified;
+          self.userRef = (await self.firestore.collection("users").doc(self.userUID).get().toPromise()).data()
+              self.retailerType = self.userRef.retailerType;
+              self.retailerUID = self.userRef.retailerUID;    
+              self.email = self.userRef.email;
+              self.name = self.userRef.name;
+              self.isVerified = self.userRef.isVerified;
 
           var storageRef =  self.afStorage.ref(`images/${self.userUID}`).getDownloadURL().toPromise().then(function(url) {        
               self.url = url; 
@@ -102,6 +103,16 @@ export class Retailertab3Page implements OnInit {
     console.log(error.message)
   }
 }
+
+async ionViewWillEnter(){
+  if(this.userUID){  
+  const userRef = (await this.firestore.collection("users").doc(this.userUID).get().toPromise()).data();
+    this.isVerified = userRef.isVerified;
+    this.changeDetection.detectChanges(); 
+    this.isReady = true; 
+  } 
+}  
+
 
 updatePassword(){        
   this.nacCtrl.navigateRoot(['./retailer-update-password'])

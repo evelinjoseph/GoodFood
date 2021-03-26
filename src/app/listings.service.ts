@@ -116,7 +116,6 @@ export class ListingsService {
 
   async deleteItems(){
     let userListings = this.users
-    console.log(userListings);
     this.deleteListings.forEach(element => {
       userListings.forEach(user => {
         if(user.isRetailer == false){ 
@@ -181,6 +180,10 @@ export class ListingsService {
     }
   });         
   
+  }
+
+  public getUsers(){
+    return this.users;
   }
 
 }

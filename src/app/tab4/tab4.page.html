@@ -18,6 +18,7 @@
      <ion-card-content> 
         <p> Description: {{item.description}}</p>
         <p> Ordered: {{item.date.toDate().toLocaleString()}}</p>
+        <p> Retailer: {{getRetailer(item.retailerUID)}}</p>
       
      </ion-card-content>
    </ion-card>

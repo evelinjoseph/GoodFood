@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AlertController } from '@ionic/angular';
+import { ListingsService } from '../listings.service';
 
 @Component({
   selector: 'app-retailertab1',
@@ -14,8 +15,9 @@ export class Retailertab1Page implements OnInit {
   items;
   retailerName;
   isReady = false;
+  users: any[];
 
-  constructor(public afstore: AngularFirestore, public afAuth: AngularFireAuth, private changeDetection: ChangeDetectorRef, public alertCtrl: AlertController) { }
+  constructor(public listingService: ListingsService, public afstore: AngularFirestore, public afAuth: AngularFireAuth, private changeDetection: ChangeDetectorRef, public alertCtrl: AlertController) { }
 
   ngOnInit() {
     var self = this
@@ -24,6 +26,14 @@ export class Retailertab1Page implements OnInit {
         self.retailerUID = user.uid
         self.items = self.afstore.doc(`users/${self.retailerUID}`);
         self.retailerItems = self.items.valueChanges(); 
+        await self.listingService.initializeItems();
+        self.users = self.listingService.getUsers();
+        self.users = self.users.filter(currentUser => {
+          if (!currentUser.isRetailer) {
+            return (!currentUser.isRetailer);
+          }
+        });  
+        console.log(self.users);
         self.isReady = true;
         self.changeDetection.detectChanges(); 
       }
@@ -41,8 +51,12 @@ export class Retailertab1Page implements OnInit {
     }    
   }
 
-  getUser(uid) : String{     
-    return uid;
+  getUser(uid) { 
+    if(this.users){
+      const user = this.users.find(element => element.userUID == uid);
+      return user.firstname + " " + user.lastname + " (" + uid + ")";
+    }
+   
   }
 
 }
