@@ -25,7 +25,8 @@ export class Retailertab1Page implements OnInit {
       if (user) {              
         self.retailerUID = user.uid
         self.items = self.afstore.doc(`users/${self.retailerUID}`);
-        self.retailerItems = self.items.valueChanges(); 
+        self.retailerItems = self.items.valueChanges();
+        self.changeDetection.detectChanges(); 
         await self.listingService.initializeItems();
         self.users = self.listingService.getUsers();
         self.users = self.users.filter(currentUser => {
