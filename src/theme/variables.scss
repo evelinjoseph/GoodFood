@@ -145,10 +145,13 @@
     --ion-color-light-tint: #383a3e;
   }
 
+  // TODO: Add Dark Mode
+  //NO DARK MODE AS OF CURRENT RELEASE
+
   /*
    * iOS Dark Theme
    * -------------------------------------------
-   */
+  
 
   .ios body {
     --ion-background-color: #000000;
@@ -182,13 +185,13 @@
     --ion-item-background: #000000;
 
     --ion-card-background: #1c1c1d;
-  }
+  }*/
 
 
   /*
    * Material Design Dark Theme
    * -------------------------------------------
-   */
+   
 
   .md body {
     --ion-background-color: #121212;
@@ -226,5 +229,6 @@
     --ion-tab-bar-background: #1f1f1f;
 
     --ion-card-background: #1e1e1e;
-  }
+  }*/
+  
 }
