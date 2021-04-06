@@ -22,10 +22,17 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>0.0.1</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>mailto</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSMainNibFile</key>
-	<string/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 	<key>NSMainNibFile~ipad</key>
 	<string/>
 	<key>UILaunchStoryboardName</key>
@@ -45,16 +52,7 @@
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>NSAppTransportSecurity</key>
-	<dict>
-		<key>NSAllowsArbitraryLoads</key>
-		<true/>
-	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>We use your location for full functionality of certain app features.</string>
-	<key>LSApplicationQueriesSchemes</key>
-	<array>
-		<string>mailto</string>
-	</array>
 </dict>
 </plist>
