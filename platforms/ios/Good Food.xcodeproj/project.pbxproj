@@ -498,7 +498,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"$SRCROOT/Good Food/Scripts/copy-www-build-step.sh\"";
+			shellScript = "\"$SRCROOT/Good Food/Scripts/copy-www-build-step.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
