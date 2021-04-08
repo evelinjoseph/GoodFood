@@ -61,4 +61,60 @@ describe('NewListingPage', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should present error for name', () => {
+    component.name = "";
+    component.description = "test"
+    component.price = 1;
+    component.quantity = 1;
+    component.presentError = jasmine.createSpy("presentError");
+    component.publish();
+    expect(component.presentError).toHaveBeenCalledWith('Please Enter a Name');
+
+    component.save();
+    expect(component.presentError).toHaveBeenCalledWith('Please Enter a Name');
+    
+  });
+
+  it('should present error for description', () => {
+    component.name = "test";
+    component.description = ""
+    component.price = 1;
+    component.quantity = 1;
+    component.presentError = jasmine.createSpy("presentError");
+    component.publish();
+    expect(component.presentError).toHaveBeenCalledWith('Please Enter a Description');
+
+    component.save();
+    expect(component.presentError).toHaveBeenCalledWith('Please Enter a Description');
+    
+  });
+
+  it('should present error for price', () => {
+    component.name = "test";
+    component.description = "test"
+    component.price = 0;
+    component.quantity = 1;
+    component.presentError = jasmine.createSpy("presentError");
+    component.publish();
+    expect(component.presentError).toHaveBeenCalledWith('Please Enter Price');
+
+    component.save();
+    expect(component.presentError).toHaveBeenCalledWith('Please Enter Price');
+    
+  });
+
+  it('should present error for quantity', () => {
+    component.name = "test";
+    component.description = "test"
+    component.price = 1;
+    component.quantity = 0;
+    component.presentError = jasmine.createSpy("presentError");
+    component.publish();
+    expect(component.presentError).toHaveBeenCalledWith('Please Enter Quantity');
+
+    component.save();
+    expect(component.presentError).toHaveBeenCalledWith('Please Enter Quantity');
+    
+  });
 });

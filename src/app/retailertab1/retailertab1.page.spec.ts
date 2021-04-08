@@ -12,10 +12,18 @@ describe('Retailertab1Page', () => {
   let fixture: ComponentFixture<Retailertab1Page>;
 
   let AngularFireAuthMock = {
-    onAuthStateChanged() {     
+    
+    onAuthStateChanged() {  
+       
         component.retailerUID = "testuid";
         component.items = afSpy.doc('users/' + component.retailerUID);
         component.retailerItems = component.items.valueChanges();
+        component.users = Array({
+          fistname: "test",
+          lastname : "user",
+          uid: "testuid",
+          isRetailer: false
+      });
         component.isReady = true;
         return of({
           uid: "testuid"
@@ -77,11 +85,16 @@ describe('Retailertab1Page', () => {
     expect(AngularFireAuthMock.onAuthStateChanged).toHaveBeenCalled();
     expect(component.retailerUID).toEqual("testuid");   
     expect(afSpy.doc).toHaveBeenCalledWith('users/' + component.retailerUID); 
+    
   });
 
-  it('getUser() should return uid', () => {
-    
-    expect(component.getUser("testuid")).toEqual("testuid"); 
-  });
+  // it('getUser() should return uid', () => {  
+  //     component.ngOnInit();
+  //     AngularFireAuthMock.onAuthStateChanged = jasmine.createSpy("onAuthStateChanged");
+  //     component.ngOnInit();    
+   
+  //     component.getUser("testuid"); 
+  //     expect(component.getUser("testuid")).toEqual("test user (testuid)"); 
+  // });
   
 });
