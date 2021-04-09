@@ -8,6 +8,9 @@ import { RouterTestingModule } from '@angular/router/testing'
 import { LoginPage } from './login.page';
 import { of } from 'rxjs';
 import * as firebase from 'firebase';
+import { environment } from 'src/environments/environment';
+
+firebase.initializeApp(environment.firebase);
 
 describe('LoginPage', () => {
   let component: LoginPage;

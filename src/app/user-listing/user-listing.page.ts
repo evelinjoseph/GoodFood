@@ -70,40 +70,6 @@ export class UserListingPage implements OnInit {
       
     })
 
-    // var listingRef = (await this.firestore.collection("listings").doc(this.ID).get().toPromise()).data()
-    // console.log(listingRef)
-    //     this.listing = listingRef;   
-    //     this.name = listingRef.name;
-    //     this.description = listingRef.description;
-    //     this.location = listingRef.location;
-    //     this.price = listingRef.price;
-    //     this.quantity = listingRef.quantity;
-    //     this.retailerType = listingRef.retailerType;
-    //     this.retailerUID = listingRef.retailerUID; 
-    //     console.log(this.retailerUID)
-
-    // var storageRef =  this.afStorage.ref(`images/${this.retailerUID}`).getDownloadURL().toPromise().then(function(url) {        
-    //       self.url = url;
-    //       console.log(url);
-    //   }).catch(function(error) {
-    //     self.url = 'assets/images/default.png';
-    //   });
-
-    // var retailerRef = this.firestore.doc(`users/${this.retailerUID}`);    
-    //   retailerRef.get().toPromise().then(function(doc) {        
-    //       if (doc.exists) {               
-    //           self.retailer = doc.data().name;   
-    //       } else {
-    //           // doc.data() will be undefined in this case
-    //           console.log("No such document!");
-              
-    //       }
-    //   }).catch(function(error) {
-    //       console.log("Error getting document:", error);
-    //   }); 
-        
-   
-      
   }
   catch(error){
     console.log(error.message)
@@ -167,7 +133,6 @@ export class UserListingPage implements OnInit {
 
 
   ngOnDestroy(){
-    console.log("left");
     this.listingSub.unsubscribe();
   }
 

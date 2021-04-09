@@ -13,7 +13,7 @@ export class RetailerUpdatePasswordPage implements OnInit {
   newpassword: string = "";
   cpassword: string = "";
 
-  constructor(public afAuth: AngularFireAuth, private nacCtrl: NavController) { }
+  constructor(public afAuth: AngularFireAuth, private nacCtrl: NavController,  public alertController: AlertController) { }
 
   ngOnInit() {
   }
@@ -35,6 +35,7 @@ export class RetailerUpdatePasswordPage implements OnInit {
         throw new Error('Passwords Do Not Match');
       }
       self.afAuth.signInWithEmailAndPassword(firebase.auth().currentUser.email, password).then(function() {
+        
         firebase.auth().currentUser.updatePassword(newpassword).then(function() {
               alert("Password Updated");
               self.password = "";
@@ -43,16 +44,37 @@ export class RetailerUpdatePasswordPage implements OnInit {
               self.nacCtrl.navigateRoot(['/retailertabs/retailertabs/retailertab3'])
 
             }).catch(function(error) {
-               alert(error)
+               self.presentAlert(error)
             });
           }).catch(function(error) {
-            alert(error)
+            self.presentAlert(error)
          });
     }
     catch(error){
-      alert(error.message);
+      this.presentAlert(error.message);
     }
   }
+
+  public async presentAlert(errorMessage) : Promise<boolean> {
+    let resolveFunction: (confirm: boolean) => void;
+    const promise = new Promise<boolean>(resolve => {
+      resolveFunction = resolve;
+    });
+    
+    const alert = await this.alertController.create({
+      header: 'Update Password Error',
+      message: errorMessage,
+      buttons: [
+        {
+          text: 'OK',
+            handler: () => resolveFunction(true)
+        }
+      ]
+    });
+    
+  await alert.present();
+  return promise;
+}
 
   ngOnDestroy() {
     this.password = "";
