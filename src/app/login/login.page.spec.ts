@@ -14,13 +14,10 @@ firebase.initializeApp(environment.firebase);
 
 describe('LoginPage', () => {
   let component: LoginPage;
-  let fixture: ComponentFixture<LoginPage>;
-
- 
+  let fixture: ComponentFixture<LoginPage>; 
 
   let AngularFireAuthMock = {
-    setPersistence(persistence){
-       
+    setPersistence(persistence){       
       return Promise.resolve(true);
     },
     onAuthStateChanged(users) { 
@@ -31,8 +28,7 @@ describe('LoginPage', () => {
     signInWithEmailAndPassword(email, password) {
       return Promise.resolve();
     }
-  }
- 
+  } 
   
   const FirestoreStub = {
     collection: (name: string) => ({
