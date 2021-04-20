@@ -181,7 +181,7 @@
       /* harmony default export */
 
 
-      __webpack_exports__["default"] = ".paypal_button {\n  font-family: Verdana;\n  font-weight: bold;\n}\n\np {\n  padding-right: 2%;\n  font-size: large;\n}\n\n#total {\n  font-size: large;\n  font-weight: bold;\n}\n\n.paypal_div {\n  padding-bottom: 2%;\n  padding-left: 2%;\n  padding-right: 2%;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvcGF5cGFsL3BheXBhbC5wYWdlLnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDSSxvQkFBQTtFQUNBLGlCQUFBO0FBQ0o7O0FBRUE7RUFDSSxpQkFBQTtFQUNBLGdCQUFBO0FBQ0o7O0FBRUE7RUFDSSxnQkFBQTtFQUNBLGlCQUFBO0FBQ0o7O0FBRUE7RUFDSSxrQkFBQTtFQUNBLGdCQUFBO0VBQ0EsaUJBQUE7QUFDSiIsImZpbGUiOiJzcmMvYXBwL3BheXBhbC9wYXlwYWwucGFnZS5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLnBheXBhbF9idXR0b257XG4gICAgZm9udC1mYW1pbHk6IFZlcmRhbmE7XG4gICAgZm9udC13ZWlnaHQ6IGJvbGQ7XG59XG5cbnB7XG4gICAgcGFkZGluZy1yaWdodDogMiU7XG4gICAgZm9udC1zaXplOiBsYXJnZTtcbn1cblxuI3RvdGFse1xuICAgIGZvbnQtc2l6ZTogbGFyZ2U7XG4gICAgZm9udC13ZWlnaHQ6IGJvbGQ7XG59XG5cbi5wYXlwYWxfZGl2e1xuICAgIHBhZGRpbmctYm90dG9tOiAyJTtcbiAgICBwYWRkaW5nLWxlZnQ6IDIlO1xuICAgIHBhZGRpbmctcmlnaHQ6IDIlO1xufSJdfQ== */";
+      __webpack_exports__["default"] = ".paypal_button {\n  font-family: Verdana;\n  font-weight: bold;\n  padding-top: 3%;\n}\n\np {\n  padding-right: 2%;\n  font-size: large;\n}\n\n#total {\n  font-size: large;\n  font-weight: bold;\n}\n\n.paypal_div {\n  padding-bottom: 2%;\n  padding-left: 2%;\n  padding-right: 2%;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvcGF5cGFsL3BheXBhbC5wYWdlLnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDSSxvQkFBQTtFQUNBLGlCQUFBO0VBQ0EsZUFBQTtBQUNKOztBQUVBO0VBQ0ksaUJBQUE7RUFDQSxnQkFBQTtBQUNKOztBQUVBO0VBQ0ksZ0JBQUE7RUFDQSxpQkFBQTtBQUNKOztBQUVBO0VBQ0ksa0JBQUE7RUFDQSxnQkFBQTtFQUNBLGlCQUFBO0FBQ0oiLCJmaWxlIjoic3JjL2FwcC9wYXlwYWwvcGF5cGFsLnBhZ2Uuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIi5wYXlwYWxfYnV0dG9ue1xuICAgIGZvbnQtZmFtaWx5OiBWZXJkYW5hO1xuICAgIGZvbnQtd2VpZ2h0OiBib2xkO1xuICAgIHBhZGRpbmctdG9wOiAzJTtcbn1cblxucHtcbiAgICBwYWRkaW5nLXJpZ2h0OiAyJTtcbiAgICBmb250LXNpemU6IGxhcmdlO1xufVxuXG4jdG90YWx7XG4gICAgZm9udC1zaXplOiBsYXJnZTtcbiAgICBmb250LXdlaWdodDogYm9sZDtcbn1cblxuLnBheXBhbF9kaXZ7XG4gICAgcGFkZGluZy1ib3R0b206IDIlO1xuICAgIHBhZGRpbmctbGVmdDogMiU7XG4gICAgcGFkZGluZy1yaWdodDogMiU7XG59Il19 */";
       /***/
     },
 
@@ -288,7 +288,7 @@
                     switch (_context.prev = _context.next) {
                       case 0:
                         if (!user) {
-                          _context.next = 37;
+                          _context.next = 36;
                           break;
                         }
 
@@ -303,24 +303,23 @@
 
                       case 7:
                         self.retailers = _context.sent;
-                        console.log(self.retailers);
-                        _context.prev = 9;
+                        _context.prev = 8;
                         _iterator = _createForOfIteratorHelper(self.cart);
-                        _context.prev = 11;
+                        _context.prev = 10;
 
                         _iterator.s();
 
-                      case 13:
+                      case 12:
                         if ((_step = _iterator.n()).done) {
-                          _context.next = 22;
+                          _context.next = 21;
                           break;
                         }
 
                         item = _step.value;
-                        _context.next = 17;
+                        _context.next = 16;
                         return self.afstore.collection('listings').valueChanges().pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_7__["first"])()).toPromise();
 
-                      case 17:
+                      case 16:
                         self.listing = _context.sent;
                         thisListing = self.listing.filter(function (currentListing) {
                           if (currentListing.listingID && item.listingID) {
@@ -333,44 +332,44 @@
                           }
                         });
 
-                      case 20:
-                        _context.next = 13;
+                      case 19:
+                        _context.next = 12;
                         break;
 
-                      case 22:
-                        _context.next = 27;
+                      case 21:
+                        _context.next = 26;
                         break;
 
-                      case 24:
-                        _context.prev = 24;
-                        _context.t0 = _context["catch"](11);
+                      case 23:
+                        _context.prev = 23;
+                        _context.t0 = _context["catch"](10);
 
                         _iterator.e(_context.t0);
 
-                      case 27:
-                        _context.prev = 27;
+                      case 26:
+                        _context.prev = 26;
 
                         _iterator.f();
 
-                        return _context.finish(27);
+                        return _context.finish(26);
 
-                      case 30:
-                        _context.next = 37;
+                      case 29:
+                        _context.next = 36;
                         break;
 
-                      case 32:
-                        _context.prev = 32;
-                        _context.t1 = _context["catch"](9);
+                      case 31:
+                        _context.prev = 31;
+                        _context.t1 = _context["catch"](8);
                         console.log(_context.t1);
                         self.presentAlert(_context.t1);
                         self.nacCtrl.navigateRoot(['/tabs/tabs/tab3']);
 
-                      case 37:
+                      case 36:
                       case "end":
                         return _context.stop();
                     }
                   }
-                }, _callee, null, [[9, 32], [11, 24, 27, 30]]);
+                }, _callee, null, [[8, 31], [10, 23, 26, 29]]);
               }));
             });
             setTimeout(function () {
@@ -459,8 +458,8 @@
                               if (currentListing.listingID && item.listingID) {
                                 return currentListing.listingID.toLowerCase().indexOf(item.listingID.toLowerCase()) > -1;
                               }
-                            });
-                            console.log(thisListing);
+                            }); //console.log(thisListing);
+
                             thisListing.forEach(function (element) {
                               if (item.quantityCart == element.quantity) {
                                 console.log(self.currentRetailer[0].listings);

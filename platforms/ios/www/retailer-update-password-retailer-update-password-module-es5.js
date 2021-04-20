@@ -234,11 +234,12 @@
       var firebase__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(firebase__WEBPACK_IMPORTED_MODULE_4__);
 
       var RetailerUpdatePasswordPage = /*#__PURE__*/function () {
-        function RetailerUpdatePasswordPage(afAuth, nacCtrl) {
+        function RetailerUpdatePasswordPage(afAuth, nacCtrl, alertController) {
           _classCallCheck(this, RetailerUpdatePasswordPage);
 
           this.afAuth = afAuth;
           this.nacCtrl = nacCtrl;
+          this.alertController = alertController;
           this.password = "";
           this.newpassword = "";
           this.cpassword = "";
@@ -280,14 +281,54 @@
                   self.cpassword = "";
                   self.nacCtrl.navigateRoot(['/retailertabs/retailertabs/retailertab3']);
                 })["catch"](function (error) {
-                  alert(error);
+                  self.presentAlert(error);
                 });
               })["catch"](function (error) {
-                alert(error);
+                self.presentAlert(error);
               });
             } catch (error) {
-              alert(error.message);
+              this.presentAlert(error.message);
             }
+          }
+        }, {
+          key: "presentAlert",
+          value: function presentAlert(errorMessage) {
+            return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+              var resolveFunction, promise, alert;
+              return regeneratorRuntime.wrap(function _callee$(_context) {
+                while (1) {
+                  switch (_context.prev = _context.next) {
+                    case 0:
+                      promise = new Promise(function (resolve) {
+                        resolveFunction = resolve;
+                      });
+                      _context.next = 3;
+                      return this.alertController.create({
+                        header: 'Update Password Error',
+                        message: errorMessage,
+                        buttons: [{
+                          text: 'OK',
+                          handler: function handler() {
+                            return resolveFunction(true);
+                          }
+                        }]
+                      });
+
+                    case 3:
+                      alert = _context.sent;
+                      _context.next = 6;
+                      return alert.present();
+
+                    case 6:
+                      return _context.abrupt("return", promise);
+
+                    case 7:
+                    case "end":
+                      return _context.stop();
+                  }
+                }
+              }, _callee, this);
+            }));
           }
         }, {
           key: "ngOnDestroy",
@@ -307,6 +348,8 @@
           type: _angular_fire_auth__WEBPACK_IMPORTED_MODULE_2__["AngularFireAuth"]
         }, {
           type: _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["NavController"]
+        }, {
+          type: _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["AlertController"]
         }];
       };
 

@@ -36,7 +36,7 @@ export class PaypalPage implements OnInit {
         await self.getCart();  
         self.changeDetection.detectChanges();
         self.retailers = await self.afstore.collection('users').valueChanges().pipe(first()).toPromise();
-        console.log(self.retailers);
+        //console.log(self.retailers);
 
         try{
           for(var item of self.cart){ 
@@ -69,7 +69,6 @@ export class PaypalPage implements OnInit {
         // Render the PayPal button into #paypal-button-container
         
         <any>window['paypal'].Buttons({
-
           // Set up the transaction
           createOrder: function (data, actions) {
            
@@ -156,7 +155,7 @@ export class PaypalPage implements OnInit {
                     }
                     });
 
-                    console.log(thisListing);
+                    //console.log(thisListing);
             
                     thisListing.forEach(element => {
                       if(item.quantityCart==element.quantity){
@@ -228,7 +227,8 @@ export class PaypalPage implements OnInit {
               })
           }
         }).render('#paypal-button-container');
-       }, 10)
+    }, 10)
+      
         
   }
   

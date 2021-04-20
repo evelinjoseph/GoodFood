@@ -45,6 +45,10 @@
         <splash density="port-xxxhdpi" src="resources/android/splash/drawable-port-xxxhdpi-screen.png" />
     </platform>
     <platform name="ios">
+        <allow-navigation href="about:*" />
+        <allow-navigation href="https://www.sandbox.paypal.com/*" />
+        <allow-navigation href="https://www.paypal.com/*" />
+        <allow-navigation href="https://www.paypalobjects.com/*" />
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
         <edit-config file="*-Info.plist" mode="merge" target="NSLocationWhenInUseUsageDescription">

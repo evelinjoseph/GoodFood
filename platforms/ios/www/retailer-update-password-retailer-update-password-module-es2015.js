@@ -127,9 +127,10 @@ __webpack_require__.r(__webpack_exports__);
 
 
 let RetailerUpdatePasswordPage = class RetailerUpdatePasswordPage {
-    constructor(afAuth, nacCtrl) {
+    constructor(afAuth, nacCtrl, alertController) {
         this.afAuth = afAuth;
         this.nacCtrl = nacCtrl;
+        this.alertController = alertController;
         this.password = "";
         this.newpassword = "";
         this.cpassword = "";
@@ -160,15 +161,35 @@ let RetailerUpdatePasswordPage = class RetailerUpdatePasswordPage {
                     self.cpassword = "";
                     self.nacCtrl.navigateRoot(['/retailertabs/retailertabs/retailertab3']);
                 }).catch(function (error) {
-                    alert(error);
+                    self.presentAlert(error);
                 });
             }).catch(function (error) {
-                alert(error);
+                self.presentAlert(error);
             });
         }
         catch (error) {
-            alert(error.message);
+            this.presentAlert(error.message);
         }
+    }
+    presentAlert(errorMessage) {
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
+            let resolveFunction;
+            const promise = new Promise(resolve => {
+                resolveFunction = resolve;
+            });
+            const alert = yield this.alertController.create({
+                header: 'Update Password Error',
+                message: errorMessage,
+                buttons: [
+                    {
+                        text: 'OK',
+                        handler: () => resolveFunction(true)
+                    }
+                ]
+            });
+            yield alert.present();
+            return promise;
+        });
     }
     ngOnDestroy() {
         this.password = "";
@@ -179,7 +200,8 @@ let RetailerUpdatePasswordPage = class RetailerUpdatePasswordPage {
 };
 RetailerUpdatePasswordPage.ctorParameters = () => [
     { type: _angular_fire_auth__WEBPACK_IMPORTED_MODULE_2__["AngularFireAuth"] },
-    { type: _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["NavController"] }
+    { type: _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["NavController"] },
+    { type: _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["AlertController"] }
 ];
 RetailerUpdatePasswordPage = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
