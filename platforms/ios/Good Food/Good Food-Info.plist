@@ -30,22 +30,20 @@
 	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
-		<key>NSAllowsArbitraryLoads</key>
-		<true/>
 		<key>NSExceptionDomains</key>
 		<dict>
+			<key>www.sandbox.paypal.com</key>
+			<dict/>
 			<key>www.paypal.com</key>
 			<dict/>
 			<key>www.paypalobjects.com</key>
 			<dict/>
-			<key>www.sandbox.paypal.com</key>
-			<dict/>
 		</dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
 	</dict>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>We use your location for full functionality of certain app features.</string>
 	<key>NSMainNibFile~ipad</key>
-	<string></string>
+	<string/>
 	<key>UILaunchStoryboardName</key>
 	<string>CDVLaunchScreen</string>
 	<key>UIRequiresFullScreen</key>
@@ -65,5 +63,7 @@
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>We use your location for full functionality of certain app features.</string>
 </dict>
 </plist>

@@ -191,7 +191,7 @@ let RetailerRegisterPage = class RetailerRegisterPage {
                 }).then((message) => Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
                     if (message == "OK") {
                         console.log(message);
-                        alert("A message has been sent to ensure your account is verified!");
+                        this.presentEmailConfirmation("A message has been sent to ensure your account is verified!");
                     }
                     else {
                         console.log("SMTP.js Error: " + message);
@@ -228,6 +228,26 @@ let RetailerRegisterPage = class RetailerRegisterPage {
             const alert = yield this.alertController.create({
                 header: 'Registration Error',
                 message: errorMessage,
+                buttons: [
+                    {
+                        text: 'OK',
+                        handler: () => resolveFunction(true)
+                    }
+                ]
+            });
+            yield alert.present();
+            return promise;
+        });
+    }
+    presentEmailConfirmation(message) {
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
+            let resolveFunction;
+            const promise = new Promise(resolve => {
+                resolveFunction = resolve;
+            });
+            const alert = yield this.alertController.create({
+                header: 'Email Confirmation',
+                message: message,
                 buttons: [
                     {
                         text: 'OK',

@@ -275,7 +275,7 @@
 
               self.afAuth.signInWithEmailAndPassword(firebase__WEBPACK_IMPORTED_MODULE_4__["auth"]().currentUser.email, password).then(function () {
                 firebase__WEBPACK_IMPORTED_MODULE_4__["auth"]().currentUser.updatePassword(newpassword).then(function () {
-                  alert("Password Updated");
+                  self.presentConfirmation("Password Updated");
                   self.password = "";
                   self.newpassword = "";
                   self.cpassword = "";
@@ -328,6 +328,46 @@
                   }
                 }
               }, _callee, this);
+            }));
+          }
+        }, {
+          key: "presentConfirmation",
+          value: function presentConfirmation(message) {
+            return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+              var resolveFunction, promise, alert;
+              return regeneratorRuntime.wrap(function _callee2$(_context2) {
+                while (1) {
+                  switch (_context2.prev = _context2.next) {
+                    case 0:
+                      promise = new Promise(function (resolve) {
+                        resolveFunction = resolve;
+                      });
+                      _context2.next = 3;
+                      return this.alertController.create({
+                        header: 'Password Update Confirmation',
+                        message: message,
+                        buttons: [{
+                          text: 'OK',
+                          handler: function handler() {
+                            return resolveFunction(true);
+                          }
+                        }]
+                      });
+
+                    case 3:
+                      alert = _context2.sent;
+                      _context2.next = 6;
+                      return alert.present();
+
+                    case 6:
+                      return _context2.abrupt("return", promise);
+
+                    case 7:
+                    case "end":
+                      return _context2.stop();
+                  }
+                }
+              }, _callee2, this);
             }));
           }
         }, {
