@@ -10,7 +10,6 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { userInfo } from 'os';
 import { DebugElement } from '@angular/core';
 import { AlertController } from '@ionic/angular';
-import { AlertControllerMock} from 'ionic-mocks';
 import { NavController } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -20,7 +19,6 @@ describe('AccountPage', () => {
   let component: AccountPage;
   let fixture: ComponentFixture<AccountPage>;
   let de: DebugElement;
-  let alertCtrl: AlertController;
 
   // const AngularFireAuthMock = jasmine.createSpy('onAuthStateChanged')
   //     .and.returnValue(of({uid: 'W6czkGca3RXip77ZRCJSlQ58QXz1'}));
@@ -81,15 +79,13 @@ describe('AccountPage', () => {
       providers:[
         { provide: AngularFireAuth, useValue: AngularFireAuthMock },
         { provide: AngularFirestore, useValue: afSpy },
-        { provide: NavController, useValue: null},
-        { provide: AlertController, useFactory: () => AlertControllerMock.instance() }
+        { provide: NavController, useValue: null}
     ]     
     }).compileComponents();
 
     fixture = TestBed.createComponent(AccountPage);
     component = fixture.componentInstance;
     de = fixture.debugElement;
-    alertCtrl = AlertControllerMock.instance();
     fixture.detectChanges();
   }));
 
@@ -131,14 +127,14 @@ describe('AccountPage', () => {
 
     component.buttonText = "Save";
     component.firstName = " ";
-    spyOn(window, "alert");
+    component.presentAlert = jasmine.createSpy("presentAlert");
     component.edit();
-    expect(window.alert).toHaveBeenCalledWith("Please enter a value for name");
+    expect(component.presentAlert).toHaveBeenCalledWith("Please enter a value for name");
 
     component.buttonText = "Save";
     component.lastName = " ";
     component.edit();
-    expect(window.alert).toHaveBeenCalledWith("Please enter a value for name");
+    expect(component.presentAlert).toHaveBeenCalledWith("Please enter a value for name");
   });
 
   // it('should delete account', () => {

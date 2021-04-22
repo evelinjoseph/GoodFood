@@ -246,7 +246,7 @@
       "./node_modules/@ionic/angular/__ivy_ngcc__/fesm2015/ionic-angular.js");
 
       var AccountPage = /*#__PURE__*/function () {
-        function AccountPage(nacCtrl, activatedRoute, firestore, changeDetection, afAuth, alertCtrl) {
+        function AccountPage(nacCtrl, activatedRoute, firestore, changeDetection, afAuth, alertController) {
           _classCallCheck(this, AccountPage);
 
           this.nacCtrl = nacCtrl;
@@ -254,7 +254,7 @@
           this.firestore = firestore;
           this.changeDetection = changeDetection;
           this.afAuth = afAuth;
-          this.alertCtrl = alertCtrl;
+          this.alertController = alertController;
           this.buttonText = "Edit";
           this.isRead = true;
         }
@@ -335,8 +335,6 @@
               this.isRead = false;
               this.buttonText = "Save";
             } else {
-              this.isRead = true;
-              this.buttonText = "Edit";
               var firstName = this.firstName,
                   lastName = this.lastName;
 
@@ -346,13 +344,55 @@
                     firstname: this.firstName,
                     lastname: this.lastName
                   });
+                  this.isRead = true;
+                  this.buttonText = "Edit";
                 } catch (error) {
                   console.log(error.message);
                 }
               } else {
-                alert("Please enter a value for name");
+                this.presentAlert("Please enter a value for name");
               }
             }
+          }
+        }, {
+          key: "presentAlert",
+          value: function presentAlert(errorMessage) {
+            return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
+              var resolveFunction, promise, alert;
+              return regeneratorRuntime.wrap(function _callee3$(_context3) {
+                while (1) {
+                  switch (_context3.prev = _context3.next) {
+                    case 0:
+                      promise = new Promise(function (resolve) {
+                        resolveFunction = resolve;
+                      });
+                      _context3.next = 3;
+                      return this.alertController.create({
+                        header: 'Error',
+                        message: errorMessage,
+                        buttons: [{
+                          text: 'OK',
+                          handler: function handler() {
+                            return resolveFunction(true);
+                          }
+                        }]
+                      });
+
+                    case 3:
+                      alert = _context3.sent;
+                      _context3.next = 6;
+                      return alert.present();
+
+                    case 6:
+                      return _context3.abrupt("return", promise);
+
+                    case 7:
+                    case "end":
+                      return _context3.stop();
+                  }
+                }
+              }, _callee3, this);
+            }));
           }
         }, {
           key: "updatePassword",
@@ -362,34 +402,34 @@
         }, {
           key: "deleteAccount",
           value: function deleteAccount() {
-            return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
+            return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
               var confirm, userRef;
-              return regeneratorRuntime.wrap(function _callee3$(_context3) {
+              return regeneratorRuntime.wrap(function _callee4$(_context4) {
                 while (1) {
-                  switch (_context3.prev = _context3.next) {
+                  switch (_context4.prev = _context4.next) {
                     case 0:
-                      _context3.next = 2;
+                      _context4.next = 2;
                       return this.presentAlertDelete();
 
                     case 2:
-                      confirm = _context3.sent;
-                      _context3.next = 5;
+                      confirm = _context4.sent;
+                      _context4.next = 5;
                       return this.firestore.collection("users").doc(this.userUID).get().toPromise();
 
                     case 5:
-                      userRef = _context3.sent.data();
+                      userRef = _context4.sent.data();
 
                       if (!confirm) {
-                        _context3.next = 20;
+                        _context4.next = 20;
                         break;
                       }
 
-                      _context3.prev = 7;
-                      _context3.next = 10;
+                      _context4.prev = 7;
+                      _context4.next = 10;
                       return this.afAuth.currentUser;
 
                     case 10:
-                      _context3.sent["delete"]();
+                      _context4.sent["delete"]();
 
                       this.firestore.collection('archive').doc(this.userUID).set({
                         deleteTime: new Date(),
@@ -403,38 +443,38 @@
                       this.firestore.doc("users/".concat(this.userUID))["delete"]();
                       this.nacCtrl.navigateRoot(['./login']);
                       console.log("user deleted");
-                      _context3.next = 20;
+                      _context4.next = 20;
                       break;
 
                     case 17:
-                      _context3.prev = 17;
-                      _context3.t0 = _context3["catch"](7);
-                      console.log(_context3.t0);
+                      _context4.prev = 17;
+                      _context4.t0 = _context4["catch"](7);
+                      console.log(_context4.t0);
 
                     case 20:
                     case "end":
-                      return _context3.stop();
+                      return _context4.stop();
                   }
                 }
-              }, _callee3, this, [[7, 17]]);
+              }, _callee4, this, [[7, 17]]);
             }));
           }
         }, {
           key: "presentAlertDelete",
           value: function presentAlertDelete() {
-            return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
+            return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
               var _this = this;
 
               var resolveFunction, promise, alert;
-              return regeneratorRuntime.wrap(function _callee4$(_context4) {
+              return regeneratorRuntime.wrap(function _callee5$(_context5) {
                 while (1) {
-                  switch (_context4.prev = _context4.next) {
+                  switch (_context5.prev = _context5.next) {
                     case 0:
                       promise = new Promise(function (resolve) {
                         resolveFunction = resolve;
                       });
-                      _context4.next = 3;
-                      return this.alertCtrl.create({
+                      _context5.next = 3;
+                      return this.alertController.create({
                         header: 'Confirm Delete',
                         message: 'Are you sure you want to delete this account? This is a permanent deletion and cannot be undone. Please enter your password to continue',
                         inputs: [{
@@ -461,19 +501,19 @@
                       });
 
                     case 3:
-                      alert = _context4.sent;
-                      _context4.next = 6;
+                      alert = _context5.sent;
+                      _context5.next = 6;
                       return alert.present();
 
                     case 6:
-                      return _context4.abrupt("return", promise);
+                      return _context5.abrupt("return", promise);
 
                     case 7:
                     case "end":
-                      return _context4.stop();
+                      return _context5.stop();
                   }
                 }
-              }, _callee4, this);
+              }, _callee5, this);
             }));
           }
         }]);

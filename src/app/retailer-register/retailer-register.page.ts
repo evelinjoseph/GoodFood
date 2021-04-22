@@ -77,7 +77,7 @@ export class RetailerRegisterPage implements OnInit {
         async message => { 
           if(message == "OK"){
             console.log(message)
-            alert("A message has been sent to ensure your account is verified!")
+            this.presentEmailConfirmation("A message has been sent to ensure your account is verified!")
           }
           else{
             console.log("SMTP.js Error: " + message)
@@ -117,6 +117,27 @@ public async presentAlert(errorMessage) : Promise<boolean> {
   const alert = await this.alertController.create({
     header: 'Registration Error',
     message: errorMessage,
+    buttons: [
+      {
+        text: 'OK',
+          handler: () => resolveFunction(true)
+      }
+    ]
+  });
+
+  await alert.present();
+  return promise;
+}
+
+public async presentEmailConfirmation(message) : Promise<boolean> {
+  let resolveFunction: (confirm: boolean) => void;
+  const promise = new Promise<boolean>(resolve => {
+    resolveFunction = resolve;
+  });
+  
+  const alert = await this.alertController.create({
+    header: 'Email Confirmation',
+    message: message,
     buttons: [
       {
         text: 'OK',

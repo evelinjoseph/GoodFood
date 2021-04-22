@@ -132,13 +132,13 @@ __webpack_require__.r(__webpack_exports__);
 
 
 let AccountPage = class AccountPage {
-    constructor(nacCtrl, activatedRoute, firestore, changeDetection, afAuth, alertCtrl) {
+    constructor(nacCtrl, activatedRoute, firestore, changeDetection, afAuth, alertController) {
         this.nacCtrl = nacCtrl;
         this.activatedRoute = activatedRoute;
         this.firestore = firestore;
         this.changeDetection = changeDetection;
         this.afAuth = afAuth;
-        this.alertCtrl = alertCtrl;
+        this.alertController = alertController;
         this.buttonText = "Edit";
         this.isRead = true;
     }
@@ -174,8 +174,6 @@ let AccountPage = class AccountPage {
             this.buttonText = "Save";
         }
         else {
-            this.isRead = true;
-            this.buttonText = "Edit";
             const { firstName, lastName } = this;
             if (firstName.trim().length != 0 && lastName.trim().length != 0) {
                 try {
@@ -183,15 +181,37 @@ let AccountPage = class AccountPage {
                         firstname: this.firstName,
                         lastname: this.lastName
                     });
+                    this.isRead = true;
+                    this.buttonText = "Edit";
                 }
                 catch (error) {
                     console.log(error.message);
                 }
             }
             else {
-                alert("Please enter a value for name");
+                this.presentAlert("Please enter a value for name");
             }
         }
+    }
+    presentAlert(errorMessage) {
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
+            let resolveFunction;
+            const promise = new Promise(resolve => {
+                resolveFunction = resolve;
+            });
+            const alert = yield this.alertController.create({
+                header: 'Error',
+                message: errorMessage,
+                buttons: [
+                    {
+                        text: 'OK',
+                        handler: () => resolveFunction(true)
+                    }
+                ]
+            });
+            yield alert.present();
+            return promise;
+        });
     }
     updatePassword() {
         this.nacCtrl.navigateRoot(['./update-password']);
@@ -255,7 +275,7 @@ let AccountPage = class AccountPage {
             const promise = new Promise(resolve => {
                 resolveFunction = resolve;
             });
-            const alert = yield this.alertCtrl.create({
+            const alert = yield this.alertController.create({
                 header: 'Confirm Delete',
                 message: 'Are you sure you want to delete this account? This is a permanent deletion and cannot be undone. Please enter your password to continue',
                 inputs: [

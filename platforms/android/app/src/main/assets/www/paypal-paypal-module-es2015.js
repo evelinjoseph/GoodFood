@@ -315,7 +315,7 @@ let PaypalPage = class PaypalPage {
                         self.nacCtrl.navigateRoot(['/tabs/tabs/tab4']);
                         self.cart = [];
                         console.log("checkout complete!");
-                        alert('Transaction completed by ' + details.payer.name.given_name + '!');
+                        self.presentConfirmation('Transaction completed!');
                     })
                         .catch(err => {
                         console.log(err);
@@ -496,6 +496,26 @@ let PaypalPage = class PaypalPage {
             const alert = yield this.alertController.create({
                 header: 'Order Error',
                 message: errorMessage,
+                buttons: [
+                    {
+                        text: 'OK',
+                        handler: () => resolveFunction(true)
+                    }
+                ]
+            });
+            yield alert.present();
+            return promise;
+        });
+    }
+    presentConfirmation(message) {
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
+            let resolveFunction;
+            const promise = new Promise(resolve => {
+                resolveFunction = resolve;
+            });
+            const alert = yield this.alertController.create({
+                header: 'PayPal',
+                message: message,
                 buttons: [
                     {
                         text: 'OK',

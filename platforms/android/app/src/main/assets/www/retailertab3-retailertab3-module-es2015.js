@@ -256,7 +256,7 @@ let Retailertab3Page = class Retailertab3Page {
         }).then((message) => Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
             if (message == "OK") {
                 console.log(message);
-                alert("A message has been sent to ensure your account is verified!");
+                this.presentConfirmation("A message has been sent to ensure your account is verified!");
             }
             else {
                 console.log("SMTP.js Error: " + message);
@@ -309,8 +309,6 @@ let Retailertab3Page = class Retailertab3Page {
             this.changeDetection.detectChanges();
         }
         else {
-            this.isRead = true;
-            this.buttonText = "Edit";
             let self = this;
             var storageRef = this.afStorage.ref(`images/${this.userUID}`).getDownloadURL().toPromise().then(function (url) {
                 self.url = url;
@@ -324,15 +322,57 @@ let Retailertab3Page = class Retailertab3Page {
                     this.firestore.doc(`users/${this.userUID}`).update({
                         name
                     });
+                    this.isRead = true;
+                    this.buttonText = "Edit";
                 }
                 catch (error) {
                     console.log(error.message);
                 }
             }
             else {
-                alert("Please enter a value for name");
+                this.presentAlert("Please enter a value for name");
             }
         }
+    }
+    presentAlert(errorMessage) {
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
+            let resolveFunction;
+            const promise = new Promise(resolve => {
+                resolveFunction = resolve;
+            });
+            const alert = yield this.alertController.create({
+                header: 'Error',
+                message: errorMessage,
+                buttons: [
+                    {
+                        text: 'OK',
+                        handler: () => resolveFunction(true)
+                    }
+                ]
+            });
+            yield alert.present();
+            return promise;
+        });
+    }
+    presentConfirmation(message) {
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
+            let resolveFunction;
+            const promise = new Promise(resolve => {
+                resolveFunction = resolve;
+            });
+            const alert = yield this.alertController.create({
+                header: 'Email Confirmation',
+                message: message,
+                buttons: [
+                    {
+                        text: 'OK',
+                        handler: () => resolveFunction(true)
+                    }
+                ]
+            });
+            yield alert.present();
+            return promise;
+        });
     }
     presentLoading() {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
@@ -352,7 +392,7 @@ let Retailertab3Page = class Retailertab3Page {
         const file = event.item(0);
         // Image validation
         if (file.type.split('/')[0] !== 'image') {
-            alert('File type is not supported!');
+            this.presentAlert('File type is not supported!');
             return;
         }
         this.isFileUploading = true;

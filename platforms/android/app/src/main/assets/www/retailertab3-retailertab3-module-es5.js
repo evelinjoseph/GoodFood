@@ -490,7 +490,7 @@
                         }
 
                         console.log(message);
-                        alert("A message has been sent to ensure your account is verified!");
+                        this.presentConfirmation("A message has been sent to ensure your account is verified!");
                         _context4.next = 10;
                         break;
 
@@ -581,8 +581,6 @@
               this.buttonText = "Save";
               this.changeDetection.detectChanges();
             } else {
-              this.isRead = true;
-              this.buttonText = "Edit";
               var self = this;
               var storageRef = this.afStorage.ref("images/".concat(this.userUID)).getDownloadURL().toPromise().then(function (url) {
                 self.url = url;
@@ -597,25 +595,107 @@
                   this.firestore.doc("users/".concat(this.userUID)).update({
                     name: name
                   });
+                  this.isRead = true;
+                  this.buttonText = "Edit";
                 } catch (error) {
                   console.log(error.message);
                 }
               } else {
-                alert("Please enter a value for name");
+                this.presentAlert("Please enter a value for name");
               }
             }
           }
         }, {
-          key: "presentLoading",
-          value: function presentLoading() {
+          key: "presentAlert",
+          value: function presentAlert(errorMessage) {
             return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
-              var loading, _yield$loading$onDidD, role, data;
-
+              var resolveFunction, promise, alert;
               return regeneratorRuntime.wrap(function _callee6$(_context6) {
                 while (1) {
                   switch (_context6.prev = _context6.next) {
                     case 0:
-                      _context6.next = 2;
+                      promise = new Promise(function (resolve) {
+                        resolveFunction = resolve;
+                      });
+                      _context6.next = 3;
+                      return this.alertController.create({
+                        header: 'Error',
+                        message: errorMessage,
+                        buttons: [{
+                          text: 'OK',
+                          handler: function handler() {
+                            return resolveFunction(true);
+                          }
+                        }]
+                      });
+
+                    case 3:
+                      alert = _context6.sent;
+                      _context6.next = 6;
+                      return alert.present();
+
+                    case 6:
+                      return _context6.abrupt("return", promise);
+
+                    case 7:
+                    case "end":
+                      return _context6.stop();
+                  }
+                }
+              }, _callee6, this);
+            }));
+          }
+        }, {
+          key: "presentConfirmation",
+          value: function presentConfirmation(message) {
+            return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee7() {
+              var resolveFunction, promise, alert;
+              return regeneratorRuntime.wrap(function _callee7$(_context7) {
+                while (1) {
+                  switch (_context7.prev = _context7.next) {
+                    case 0:
+                      promise = new Promise(function (resolve) {
+                        resolveFunction = resolve;
+                      });
+                      _context7.next = 3;
+                      return this.alertController.create({
+                        header: 'Email Confirmation',
+                        message: message,
+                        buttons: [{
+                          text: 'OK',
+                          handler: function handler() {
+                            return resolveFunction(true);
+                          }
+                        }]
+                      });
+
+                    case 3:
+                      alert = _context7.sent;
+                      _context7.next = 6;
+                      return alert.present();
+
+                    case 6:
+                      return _context7.abrupt("return", promise);
+
+                    case 7:
+                    case "end":
+                      return _context7.stop();
+                  }
+                }
+              }, _callee7, this);
+            }));
+          }
+        }, {
+          key: "presentLoading",
+          value: function presentLoading() {
+            return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee8() {
+              var loading, _yield$loading$onDidD, role, data;
+
+              return regeneratorRuntime.wrap(function _callee8$(_context8) {
+                while (1) {
+                  switch (_context8.prev = _context8.next) {
+                    case 0:
+                      _context8.next = 2;
                       return this.loadingController.create({
                         duration: 900,
                         translucent: true,
@@ -624,16 +704,16 @@
                       });
 
                     case 2:
-                      loading = _context6.sent;
-                      _context6.next = 5;
+                      loading = _context8.sent;
+                      _context8.next = 5;
                       return loading.present();
 
                     case 5:
-                      _context6.next = 7;
+                      _context8.next = 7;
                       return loading.onDidDismiss();
 
                     case 7:
-                      _yield$loading$onDidD = _context6.sent;
+                      _yield$loading$onDidD = _context8.sent;
                       role = _yield$loading$onDidD.role;
                       data = _yield$loading$onDidD.data;
                       this.isReady = true;
@@ -641,10 +721,10 @@
 
                     case 12:
                     case "end":
-                      return _context6.stop();
+                      return _context8.stop();
                   }
                 }
-              }, _callee6, this);
+              }, _callee8, this);
             }));
           }
         }, {
@@ -655,7 +735,7 @@
             var file = event.item(0); // Image validation
 
             if (file.type.split('/')[0] !== 'image') {
-              alert('File type is not supported!');
+              this.presentAlert('File type is not supported!');
               return;
             }
 

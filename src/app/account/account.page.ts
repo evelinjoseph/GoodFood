@@ -20,7 +20,7 @@ export class AccountPage implements OnInit {
   buttonText: string = "Edit";
   isRead: boolean = true;
 
-  constructor(public nacCtrl: NavController, private activatedRoute: ActivatedRoute, private firestore: AngularFirestore, private changeDetection: ChangeDetectorRef, public afAuth: AngularFireAuth, public alertCtrl: AlertController) { }
+  constructor(public nacCtrl: NavController, private activatedRoute: ActivatedRoute, private firestore: AngularFirestore, private changeDetection: ChangeDetectorRef, public afAuth: AngularFireAuth, public alertController: AlertController) { }
 
   async ngOnInit() {
     try{
@@ -52,9 +52,7 @@ edit()
       this.isRead = false;
       this.buttonText = "Save";
      }
-    else{
-      this.isRead = true;
-      this.buttonText = "Edit";
+    else{  
       
       const { firstName, lastName } = this
       if(firstName.trim().length != 0 && lastName.trim().length != 0){
@@ -63,15 +61,39 @@ edit()
             firstname: this.firstName,
             lastname: this.lastName              
           })
+          this.isRead = true;
+          this.buttonText = "Edit";
         }catch(error){  
           console.log(error.message)
         }   
       }else {
-       alert("Please enter a value for name");       
+       this.presentAlert("Please enter a value for name");   
+           
       }  
       
     }   
   }
+  
+  public async presentAlert(errorMessage) : Promise<boolean> {
+    let resolveFunction: (confirm: boolean) => void;
+    const promise = new Promise<boolean>(resolve => {
+      resolveFunction = resolve;
+    });
+    
+    const alert = await this.alertController.create({
+      header: 'Error',
+      message: errorMessage,
+      buttons: [
+        {
+          text: 'OK',
+            handler: () => resolveFunction(true)
+        }
+      ]
+    });
+    
+  await alert.present();
+  return promise;
+}
 
   updatePassword(){        
     this.nacCtrl.navigateRoot(['./update-password'])
@@ -138,7 +160,7 @@ edit()
     const promise = new Promise<boolean>(resolve => {
       resolveFunction = resolve;
     });
-    const alert = await this.alertCtrl.create({
+    const alert = await this.alertController.create({
       header: 'Confirm Delete',
       message: 'Are you sure you want to delete this account? This is a permanent deletion and cannot be undone. Please enter your password to continue',
       inputs: [        

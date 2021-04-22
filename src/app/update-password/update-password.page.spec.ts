@@ -48,4 +48,42 @@ describe('UpdatePasswordPage', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should present error for password', async() => {
+    component.password = "";
+    component.cpassword = "new password";    
+    component.newpassword =  "new password";    
+    component.presentAlert = jasmine.createSpy("presentAlert");
+    component.updatePassword();    
+    expect(component.presentAlert).toHaveBeenCalledWith('Please Enter Current Password');    
+  });
+
+  it('should present error for new password', async() => {
+    component.password = "password";
+    component.cpassword = "";    
+    component.newpassword =  "";    
+    component.presentAlert = jasmine.createSpy("presentAlert");
+    component.updatePassword();    
+    expect(component.presentAlert).toHaveBeenCalledWith('Please Enter New Password');    
+  });
+
+
+  it('should present error for confirm password', async() => {
+    component.password = "password";
+    component.cpassword = "";    
+    component.newpassword =  "new password";    
+    component.presentAlert = jasmine.createSpy("presentAlert");
+    component.updatePassword();    
+    expect(component.presentAlert).toHaveBeenCalledWith('Please Confirm Password');    
+  });
+
+  it('should present error for passwords not matching', async() => {
+    component.password = "password";
+    component.cpassword = "password";    
+    component.newpassword =  "new password";    
+    component.presentAlert = jasmine.createSpy("presentAlert");
+    component.updatePassword();    
+    expect(component.presentAlert).toHaveBeenCalledWith('Passwords Do Not Match');    
+  });
+
 });

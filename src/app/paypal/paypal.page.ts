@@ -217,7 +217,7 @@ export class PaypalPage implements OnInit {
                 self.nacCtrl.navigateRoot(['/tabs/tabs/tab4']);
                 self.cart = []
                 console.log("checkout complete!")
-                alert('Transaction completed by ' + details.payer.name.given_name + '!');
+                self.presentConfirmation('Transaction completed!');
 
               })
               .catch(err => {
@@ -265,6 +265,7 @@ export class PaypalPage implements OnInit {
     console.log(this.cart)
     this.changeDetection.detectChanges();     
   }
+  
 
   async payWithPayPal() {
     try{
@@ -410,7 +411,7 @@ export class PaypalPage implements OnInit {
 
   }
   
-  public async presentAlert(errorMessage) : Promise<boolean> {
+public async presentAlert(errorMessage) : Promise<boolean> {
     let resolveFunction: (confirm: boolean) => void;
     const promise = new Promise<boolean>(resolve => {
       resolveFunction = resolve;
@@ -430,5 +431,29 @@ export class PaypalPage implements OnInit {
     await alert.present();
     return promise;
   }  
+
+  public async presentConfirmation(message) : Promise<boolean> {
+    let resolveFunction: (confirm: boolean) => void;
+    const promise = new Promise<boolean>(resolve => {
+      resolveFunction = resolve;
+    });
+    
+    const alert = await this.alertController.create({
+      header: 'PayPal',
+      message: message,
+      buttons: [
+        {
+          text: 'OK',
+            handler: () => resolveFunction(true)
+        }
+      ]
+    });
+  
+    await alert.present();
+    return promise;
+  }  
   
 }
+  
+
+

@@ -520,7 +520,7 @@
                     self.nacCtrl.navigateRoot(['/tabs/tabs/tab4']);
                     self.cart = [];
                     console.log("checkout complete!");
-                    alert('Transaction completed by ' + details.payer.name.given_name + '!');
+                    self.presentConfirmation('Transaction completed!');
                   })["catch"](function (err) {
                     console.log(err);
                     self.presentAlert(err);
@@ -841,6 +841,46 @@
                   }
                 }
               }, _callee5, this);
+            }));
+          }
+        }, {
+          key: "presentConfirmation",
+          value: function presentConfirmation(message) {
+            return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
+              var resolveFunction, promise, alert;
+              return regeneratorRuntime.wrap(function _callee6$(_context6) {
+                while (1) {
+                  switch (_context6.prev = _context6.next) {
+                    case 0:
+                      promise = new Promise(function (resolve) {
+                        resolveFunction = resolve;
+                      });
+                      _context6.next = 3;
+                      return this.alertController.create({
+                        header: 'PayPal',
+                        message: message,
+                        buttons: [{
+                          text: 'OK',
+                          handler: function handler() {
+                            return resolveFunction(true);
+                          }
+                        }]
+                      });
+
+                    case 3:
+                      alert = _context6.sent;
+                      _context6.next = 6;
+                      return alert.present();
+
+                    case 6:
+                      return _context6.abrupt("return", promise);
+
+                    case 7:
+                    case "end":
+                      return _context6.stop();
+                  }
+                }
+              }, _callee6, this);
             }));
           }
         }]);

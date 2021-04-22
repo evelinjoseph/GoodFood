@@ -350,7 +350,7 @@
                                   }
 
                                   console.log(message);
-                                  alert("A message has been sent to ensure your account is verified!");
+                                  this.presentEmailConfirmation("A message has been sent to ensure your account is verified!");
                                   _context.next = 10;
                                   break;
 
@@ -445,8 +445,8 @@
             }));
           }
         }, {
-          key: "presentAlertCheck",
-          value: function presentAlertCheck() {
+          key: "presentEmailConfirmation",
+          value: function presentEmailConfirmation(message) {
             return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
               var resolveFunction, promise, alert;
               return regeneratorRuntime.wrap(function _callee4$(_context4) {
@@ -458,8 +458,8 @@
                       });
                       _context4.next = 3;
                       return this.alertController.create({
-                        header: 'Confirm Navigation',
-                        message: 'You are about to be navigated out of this application. Click OK to continue.',
+                        header: 'Email Confirmation',
+                        message: message,
                         buttons: [{
                           text: 'OK',
                           handler: function handler() {
@@ -482,6 +482,46 @@
                   }
                 }
               }, _callee4, this);
+            }));
+          }
+        }, {
+          key: "presentAlertCheck",
+          value: function presentAlertCheck() {
+            return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
+              var resolveFunction, promise, alert;
+              return regeneratorRuntime.wrap(function _callee5$(_context5) {
+                while (1) {
+                  switch (_context5.prev = _context5.next) {
+                    case 0:
+                      promise = new Promise(function (resolve) {
+                        resolveFunction = resolve;
+                      });
+                      _context5.next = 3;
+                      return this.alertController.create({
+                        header: 'Confirm Navigation',
+                        message: 'You are about to be navigated out of this application. Click OK to continue.',
+                        buttons: [{
+                          text: 'OK',
+                          handler: function handler() {
+                            return resolveFunction(true);
+                          }
+                        }]
+                      });
+
+                    case 3:
+                      alert = _context5.sent;
+                      _context5.next = 6;
+                      return alert.present();
+
+                    case 6:
+                      return _context5.abrupt("return", promise);
+
+                    case 7:
+                    case "end":
+                      return _context5.stop();
+                  }
+                }
+              }, _callee5, this);
             }));
           }
         }, {

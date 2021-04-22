@@ -13,7 +13,7 @@ export class UpdatePasswordPage implements OnInit {
   newpassword: string = "";
   cpassword: string = "";
 
-  constructor(public afAuth: AngularFireAuth, private nacCtrl: NavController) { }
+  constructor(public alertController: AlertController, public afAuth: AngularFireAuth, private nacCtrl: NavController) { }
 
   ngOnInit() {
   }
@@ -37,22 +37,64 @@ export class UpdatePasswordPage implements OnInit {
       }
       self.afAuth.signInWithEmailAndPassword(firebase.auth().currentUser.email, password).then(function() {
         firebase.auth().currentUser.updatePassword(newpassword).then(function() {
-              alert("Password Updated");
+              self.presentConfirmation("Password Updated");
               self.password = "";
               self.newpassword = "";
               self.cpassword = "";
               self.nacCtrl.navigateRoot(['/account'])
 
             }).catch(function(error) {
-               alert(error)
+               self.presentAlert(error)
             });
           }).catch(function(error) {
-            alert(error)
+            self.presentAlert(error)
          });
     }
     catch(error){
-      alert(error.message);
+      this.presentAlert(error.message);
     }
+  }
+
+  public async presentAlert(errorMessage) : Promise<boolean> {
+    let resolveFunction: (confirm: boolean) => void;
+    const promise = new Promise<boolean>(resolve => {
+      resolveFunction = resolve;
+    });
+    
+    const alert = await this.alertController.create({
+      header: 'Registration Error',
+      message: errorMessage,
+      buttons: [
+        {
+          text: 'OK',
+            handler: () => resolveFunction(true)
+        }
+      ]
+    });
+  
+    await alert.present();
+    return promise;
+  }
+
+  public async presentConfirmation(message) : Promise<boolean> {
+    let resolveFunction: (confirm: boolean) => void;
+    const promise = new Promise<boolean>(resolve => {
+      resolveFunction = resolve;
+    });
+    
+    const alert = await this.alertController.create({
+      header: 'Password Update Confirmation',
+      message: message,
+      buttons: [
+        {
+          text: 'OK',
+            handler: () => resolveFunction(true)
+        }
+      ]
+    });
+    
+  await alert.present();
+  return promise;
   }
 
   ngOnDestroy() {

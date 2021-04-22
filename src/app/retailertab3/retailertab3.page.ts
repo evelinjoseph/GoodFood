@@ -129,7 +129,7 @@ sendEmail(){
     async message => { 
       if(message == "OK"){
         console.log(message)
-        alert("A message has been sent to ensure your account is verified!")
+        this.presentConfirmation("A message has been sent to ensure your account is verified!")
       }
       else{
         console.log("SMTP.js Error: " + message)
@@ -190,8 +190,7 @@ edit() {
       
      }
     else{
-      this.isRead = true;
-      this.buttonText = "Edit";
+     
 
       let self = this;
 
@@ -209,15 +208,59 @@ edit() {
           this.firestore.doc(`users/${this.userUID}`).update({          
             name               
           })
+          this.isRead = true;
+          this.buttonText = "Edit";
         }catch(error){  
           console.log(error.message)
         }   
       }else {
-       alert("Please enter a value for name");       
+       this.presentAlert("Please enter a value for name");       
       }  
       
     }   
   }
+
+  public async presentAlert(errorMessage) : Promise<boolean> {
+    let resolveFunction: (confirm: boolean) => void;
+    const promise = new Promise<boolean>(resolve => {
+      resolveFunction = resolve;
+    });
+    
+    const alert = await this.alertController.create({
+      header: 'Error',
+      message: errorMessage,
+      buttons: [
+        {
+          text: 'OK',
+            handler: () => resolveFunction(true)
+        }
+      ]
+    });
+    
+  await alert.present();
+  return promise;
+}
+
+public async presentConfirmation(message) : Promise<boolean> {
+  let resolveFunction: (confirm: boolean) => void;
+  const promise = new Promise<boolean>(resolve => {
+    resolveFunction = resolve;
+  });
+  
+  const alert = await this.alertController.create({
+    header: 'Email Confirmation',
+    message: message,
+    buttons: [
+      {
+        text: 'OK',
+          handler: () => resolveFunction(true)
+      }
+    ]
+  });
+  
+await alert.present();
+return promise;
+}
 
   async presentLoading() {
     const loading = await this.loadingController.create({
@@ -240,7 +283,7 @@ edit() {
 
     // Image validation
     if (file.type.split('/')[0] !== 'image') { 
-      alert('File type is not supported!')
+      this.presentAlert('File type is not supported!')
       return;
     }
 
@@ -294,6 +337,8 @@ storeFilesFirebase(image: imgFile) {
       console.log(err);
     });
 }
+
+
 
 
 }
