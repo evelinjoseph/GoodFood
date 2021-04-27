@@ -42,6 +42,13 @@ export class AppComponent {
 
   }
 
+  about() {
+    
+            this.nacCtrl.navigateRoot(['/about'])
+          
+
+  }
+
   async logout() {
     this.afAuth.signOut().then(function() {
      console.log("logout complete")

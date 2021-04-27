@@ -270,7 +270,7 @@ module.exports = webpackAsyncContext;
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<ion-app>\r\n  <ion-menu side=\"start\" menuId=\"first\" contentId=\"main\">\r\n    <ion-header>\r\n      <ion-toolbar color=\"primary\" mode=\"ios\">\r\n        <ion-title>Good Food</ion-title>\r\n      </ion-toolbar>\r\n    </ion-header>\r\n    <ion-content>\r\n      <ion-list>\r\n        <ion-menu-toggle auto-hide=\"true\">        \r\n        <ion-item (click)=\"account()\">Account Settings</ion-item>\r\n        <ion-item>Notification Settings</ion-item>\r\n        <ion-item>About</ion-item>\r\n        <ion-item (click)=\"logout()\">Logout</ion-item>\r\n      </ion-menu-toggle>\r\n      </ion-list>\r\n    </ion-content>\r\n  </ion-menu>\r\n\r\n  <ion-router-outlet id=\"main\"></ion-router-outlet>\r\n</ion-app>\r\n");
+/* harmony default export */ __webpack_exports__["default"] = ("<ion-app>\r\n  <ion-menu side=\"start\" menuId=\"first\" contentId=\"main\">\r\n    <ion-header>\r\n      <ion-toolbar color=\"primary\" mode=\"ios\">\r\n        <ion-title>Good Food</ion-title>\r\n      </ion-toolbar>\r\n    </ion-header>\r\n    <ion-content>\r\n      <ion-list>\r\n        <ion-menu-toggle auto-hide=\"true\">        \r\n        <ion-item (click)=\"account()\">Account Settings</ion-item>\r\n        <ion-item>Notification Settings</ion-item>\r\n        <ion-item (click)=\"about()\">About</ion-item>\r\n        <ion-item (click)=\"logout()\">Logout</ion-item>\r\n      </ion-menu-toggle>\r\n      </ion-list>\r\n    </ion-content>\r\n  </ion-menu>\r\n\r\n  <ion-router-outlet id=\"main\"></ion-router-outlet>\r\n</ion-app>\r\n");
 
 /***/ }),
 
@@ -375,6 +375,10 @@ const routes = [
     {
         path: 'retailer-update-password',
         loadChildren: () => Promise.all(/*! import() | retailer-update-password-retailer-update-password-module */[__webpack_require__.e("default~firebase-auth~retailer-update-password-retailer-update-password-module~update-password-updat~c63c26d4"), __webpack_require__.e("default~retailer-update-password-retailer-update-password-module~update-password-update-password-module"), __webpack_require__.e("retailer-update-password-retailer-update-password-module")]).then(__webpack_require__.bind(null, /*! ./retailer-update-password/retailer-update-password.module */ "./src/app/retailer-update-password/retailer-update-password.module.ts")).then(m => m.RetailerUpdatePasswordPageModule)
+    },
+    {
+        path: 'about',
+        loadChildren: () => __webpack_require__.e(/*! import() | about-about-module */ "about-about-module").then(__webpack_require__.bind(null, /*! ./about/about.module */ "./src/app/about/about.module.ts")).then(m => m.AboutPageModule)
     }
 ];
 let AppRoutingModule = class AppRoutingModule {
@@ -459,6 +463,9 @@ let AppComponent = class AppComponent {
                 }
             });
         });
+    }
+    about() {
+        this.nacCtrl.navigateRoot(['/about']);
     }
     logout() {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {

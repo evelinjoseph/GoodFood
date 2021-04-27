@@ -133,7 +133,7 @@
       /* harmony default export */
 
 
-      __webpack_exports__["default"] = "<ion-app>\r\n  <ion-menu side=\"start\" menuId=\"first\" contentId=\"main\">\r\n    <ion-header>\r\n      <ion-toolbar color=\"primary\" mode=\"ios\">\r\n        <ion-title>Good Food</ion-title>\r\n      </ion-toolbar>\r\n    </ion-header>\r\n    <ion-content>\r\n      <ion-list>\r\n        <ion-menu-toggle auto-hide=\"true\">        \r\n        <ion-item (click)=\"account()\">Account Settings</ion-item>\r\n        <ion-item>Notification Settings</ion-item>\r\n        <ion-item>About</ion-item>\r\n        <ion-item (click)=\"logout()\">Logout</ion-item>\r\n      </ion-menu-toggle>\r\n      </ion-list>\r\n    </ion-content>\r\n  </ion-menu>\r\n\r\n  <ion-router-outlet id=\"main\"></ion-router-outlet>\r\n</ion-app>\r\n";
+      __webpack_exports__["default"] = "<ion-app>\r\n  <ion-menu side=\"start\" menuId=\"first\" contentId=\"main\">\r\n    <ion-header>\r\n      <ion-toolbar color=\"primary\" mode=\"ios\">\r\n        <ion-title>Good Food</ion-title>\r\n      </ion-toolbar>\r\n    </ion-header>\r\n    <ion-content>\r\n      <ion-list>\r\n        <ion-menu-toggle auto-hide=\"true\">        \r\n        <ion-item (click)=\"account()\">Account Settings</ion-item>\r\n        <ion-item>Notification Settings</ion-item>\r\n        <ion-item (click)=\"about()\">About</ion-item>\r\n        <ion-item (click)=\"logout()\">Logout</ion-item>\r\n      </ion-menu-toggle>\r\n      </ion-list>\r\n    </ion-content>\r\n  </ion-menu>\r\n\r\n  <ion-router-outlet id=\"main\"></ion-router-outlet>\r\n</ion-app>\r\n";
       /***/
     },
 
@@ -410,6 +410,17 @@
             return m.RetailerUpdatePasswordPageModule;
           });
         }
+      }, {
+        path: 'about',
+        loadChildren: function loadChildren() {
+          return __webpack_require__.e(
+          /*! import() | about-about-module */
+          "about-about-module").then(__webpack_require__.bind(null,
+          /*! ./about/about.module */
+          "./src/app/about/about.module.ts")).then(function (m) {
+            return m.AboutPageModule;
+          });
+        }
       }];
 
       var AppRoutingModule = function AppRoutingModule() {
@@ -565,6 +576,11 @@
                 }, _callee);
               }));
             });
+          }
+        }, {
+          key: "about",
+          value: function about() {
+            this.nacCtrl.navigateRoot(['/about']);
           }
         }, {
           key: "logout",

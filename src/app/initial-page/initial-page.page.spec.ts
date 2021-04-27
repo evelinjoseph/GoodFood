@@ -83,14 +83,14 @@ describe('InitialPagePage', () => {
 
   
 
-  xit('should navigate', () => {
+  // xit('should navigate', () => {
    
-    AngularFireAuthMock.onAuthStateChanged = jasmine.createSpy("onAuthStateChanged");
-    component.ngOnInit();    
-    expect(AngularFireAuthMock.onAuthStateChanged).toHaveBeenCalled();
-    expect(navSpy.navigateRoot).toHaveBeenCalled();
+  //   AngularFireAuthMock.onAuthStateChanged = jasmine.createSpy("onAuthStateChanged");
+  //   component.ngOnInit();    
+  //   expect(AngularFireAuthMock.onAuthStateChanged).toHaveBeenCalled();
+  //   expect(navSpy.navigateRoot).toHaveBeenCalled();
     
-  });
+  // });
 
   it('should set isReady if no user', fakeAsync(() => {
    
@@ -102,10 +102,10 @@ describe('InitialPagePage', () => {
     
   }));
 
-  xit('should toggle is Ready', fakeAsync(() => {
-    expect(component.isReady).toBeFalsy();
-    AngularFireAuthMock.onAuthStateChanged(false);
-    tick(700);
-    expect(component.isReady).toBeTruthy();
-  }));
+  // xit('should toggle is Ready', fakeAsync(() => {
+  //   expect(component.isReady).toBeFalsy();
+  //   AngularFireAuthMock.onAuthStateChanged(false);
+  //   tick(700);
+  //   expect(component.isReady).toBeTruthy();
+  // }));
 });

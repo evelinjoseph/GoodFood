@@ -86,7 +86,11 @@ const routes: Routes = [
   {
     path: 'retailer-update-password',
     loadChildren: () => import('./retailer-update-password/retailer-update-password.module').then( m => m.RetailerUpdatePasswordPageModule)
+  },  {
+    path: 'about',
+    loadChildren: () => import('./about/about.module').then( m => m.AboutPageModule)
   }
+
 ];
 @NgModule({
   imports: [

@@ -23,7 +23,7 @@
     {{ location }}
   </div>
 
-  <p style="text-align: center"> {{ quantity }} meals left</p>  
+  <p style="text-align: center; font-weight: bold;"> {{ quantity }} meals left</p>  
   <hr> 
   <div style="text-align: center;">
     <ion-icon name="time-outline"></ion-icon>
@@ -31,10 +31,12 @@
   </div>
   <hr>
   <p style="text-align: center; font-size: large;"> {{ description }} </p>
-  <p style="text-align: center; font-weight: bold;" > Please keep in mind that because the Good Food application deals with surplus food, all options vary on availability. Thank you!</p>   
+  <p style="text-align: center; font-weight: bold;" > Please keep in mind that because the Good Food application deals with surplus food, all options vary on availability. Thank you!</p> 
+  
+  <ion-toolbar [hidden]="!isReady" position="bottom" style="text-align: center;" color="translucent"> 
+    <ion-button expand="block" size ="large" (click)="cart(listing)">Add To Cart</ion-button>
+  </ion-toolbar>
 </ion-content>
 
-<ion-toolbar [hidden]="!isReady" position="bottom" style="text-align: center;" color="translucent"> 
-  <ion-button size ="large" (click)="cart(listing)">Add To Cart</ion-button>
-</ion-toolbar>
+
 

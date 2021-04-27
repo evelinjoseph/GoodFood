@@ -212,11 +212,12 @@ export class Tab3Page implements OnInit{
       message: 'Are you sure you want to check out these items from your cart?',
       buttons: [
         {
-          text: 'Yes',
-            handler: () => resolveFunction(true)
-        }, {
           text: 'No',
           handler: () => resolveFunction(false)
+        },
+        {
+          text: 'Yes',
+            handler: () => resolveFunction(true)
         }
       ]
     });

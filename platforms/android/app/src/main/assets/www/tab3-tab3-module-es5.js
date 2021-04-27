@@ -22,7 +22,7 @@
       /* harmony default export */
 
 
-      __webpack_exports__["default"] = "<ion-header style=\"text-align: center\">\r\n  <ion-toolbar mode=\"ios\" color=\"primary\">\r\n    <ion-title>Good Food</ion-title>\r\n    <ion-buttons slot=\"start\">\r\n      <ion-menu-button autoHide=\"true\"></ion-menu-button>\r\n    </ion-buttons>\r\n  </ion-toolbar>\r\n</ion-header>\r\n\r\n<ion-content fullscreen [hidden]=\"!isReady\">\r\n  <div *ngFor=\"let item of cart\">\r\n    <ion-card>\r\n     <ion-item>\r\n      <ion-card-title class=\"ion-text-wrap\">{{item.name}}</ion-card-title>\r\n      <ion-button  (click)=\"delete(item)\" fill=\"outline\" slot=\"end\">Delete</ion-button> \r\n    </ion-item>\r\n   \r\n     <ion-card-content> \r\n        <p style=\"font-size: large;\" > Quantity: \r\n          <ion-button (click)=\"dec(item)\" size=\"small\" fill=\"clear\"> \r\n            <ion-icon name=\"remove-circle-outline\"></ion-icon> \r\n          </ion-button>\r\n          {{item.quantityCart}}\r\n          <ion-button (click)=\"inc(item)\" size=\"small\" fill=\"clear\"> \r\n            <ion-icon name=\"add-circle-outline\"></ion-icon> \r\n          </ion-button></p>\r\n          <p style=\"font-size: large;\"> Price: ${{item.totalPrice | number:'1.2-2'}}</p>\r\n        <p style=\"font-size: large;\"> Description: {{item.description}}</p>\r\n     </ion-card-content>\r\n   </ion-card>\r\n  </div>\r\n  <ion-text class=\"centerText\" *ngIf=\"((userItems | async)?.cart).length <= 0\" color=\"primary\" style=\"text-align: center\">\r\n      <p>There are no items in the cart.</p>\r\n  </ion-text>  \r\n</ion-content>\r\n\r\n<ion-footer *ngIf=\"((userItems | async)?.cart).length > 0\" >\r\n  <!-- class=\"ion-no-border\" -->\r\n \r\n  <ion-toolbar *ngIf=\"userItems | async as cartData\"  position=\"bottom\" style=\"text-align: center;\">\r\n    <div class=\"ion-text-end\" id=\"subtotal\">\r\n      <ion-text > <p style=\"font-size: large;\"> Subtotal: ${{subtotal | number:'1.2-2'}} </p></ion-text> \r\n    </div>     \r\n    <ion-button (click)=\"checkOut(cartData.cart)\" size=\"large\">Checkout</ion-button>\r\n </ion-toolbar>\r\n</ion-footer>\r\n";
+      __webpack_exports__["default"] = "<ion-header style=\"text-align: center\">\r\n  <ion-toolbar mode=\"ios\" color=\"primary\">\r\n    <ion-title>Good Food</ion-title>\r\n    <ion-buttons slot=\"start\">\r\n      <ion-menu-button autoHide=\"true\"></ion-menu-button>\r\n    </ion-buttons>\r\n  </ion-toolbar>\r\n</ion-header>\r\n\r\n<ion-content fullscreen [hidden]=\"!isReady\">\r\n  <div *ngFor=\"let item of cart\">\r\n    <ion-card>\r\n     <ion-item>\r\n      <ion-card-title class=\"ion-text-wrap\">{{item.name}}</ion-card-title>\r\n      <ion-button  (click)=\"delete(item)\" fill=\"outline\" slot=\"end\">Delete</ion-button> \r\n    </ion-item>\r\n   \r\n     <ion-card-content> \r\n        <p style=\"font-size: large;\" > Quantity: \r\n          <ion-button (click)=\"dec(item)\" size=\"small\" fill=\"clear\"> \r\n            <ion-icon name=\"remove-circle-outline\"></ion-icon> \r\n          </ion-button>\r\n          {{item.quantityCart}}\r\n          <ion-button (click)=\"inc(item)\" size=\"small\" fill=\"clear\"> \r\n            <ion-icon name=\"add-circle-outline\"></ion-icon> \r\n          </ion-button></p>\r\n          <p style=\"font-size: large;\"> Price: ${{item.totalPrice | number:'1.2-2'}}</p>\r\n        <p style=\"font-size: large;\"> Description: {{item.description}}</p>\r\n     </ion-card-content>\r\n   </ion-card>\r\n  </div>\r\n  <ion-text class=\"centerText\" *ngIf=\"((userItems | async)?.cart).length <= 0\" color=\"primary\" style=\"text-align: center\">\r\n      <p>There are no items in the cart.</p>\r\n  </ion-text>  \r\n</ion-content>\r\n\r\n<ion-footer *ngIf=\"((userItems | async)?.cart).length > 0\" >\r\n  <!-- class=\"ion-no-border\" -->\r\n \r\n  <ion-toolbar *ngIf=\"userItems | async as cartData\"  position=\"bottom\" style=\"text-align: center;\">\r\n    <div class=\"ion-text-end\" id=\"subtotal\">\r\n      <ion-text > <p style=\"font-size: large;\"> Subtotal: ${{subtotal | number:'1.2-2'}} </p></ion-text> \r\n    </div>     \r\n    <ion-button expand=\"block\" (click)=\"checkOut(cartData.cart)\" size=\"large\">Checkout</ion-button>\r\n </ion-toolbar>\r\n</ion-footer>\r\n";
       /***/
     },
 
@@ -529,14 +529,14 @@
                         header: 'Confirm Check-Out',
                         message: 'Are you sure you want to check out these items from your cart?',
                         buttons: [{
-                          text: 'Yes',
-                          handler: function handler() {
-                            return resolveFunction(true);
-                          }
-                        }, {
                           text: 'No',
                           handler: function handler() {
                             return resolveFunction(false);
+                          }
+                        }, {
+                          text: 'Yes',
+                          handler: function handler() {
+                            return resolveFunction(true);
                           }
                         }]
                       });
