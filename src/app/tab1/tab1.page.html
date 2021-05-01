@@ -42,13 +42,13 @@
         
         <img src={{item.url}} style="width:100%;"> 
         <ion-card-header> 
-          <ion-card-title class="ion-text-wrap">{{item.name}}</ion-card-title>
+          <!-- TODO: change this and add meals left-->
+          <ion-card-title class="ion-text-wrap">{{getRetailer(item.retailerUID)}}</ion-card-title> 
         </ion-card-header>
    
      <ion-card-content> 
      
        <p> Price: ${{item.price | number:'1.2-2'}}</p>
-       <p> Description: {{item.description}}</p>
        <p> Location: {{item.location}}</p>
        <p> Retailer Type: {{item.retailerType}}</p>
      </ion-card-content>

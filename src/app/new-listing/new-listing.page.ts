@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
-import { LoadingController } from '@ionic/angular';
+import { LoadingController, NavController } from '@ionic/angular';
 import { AlertController } from '@ionic/angular';
 import { Guid } from "ez-guid";
 
@@ -19,7 +19,7 @@ export class NewListingPage implements OnInit {
   retailerType;
   location;
   retailerUID;
-  name: String = "";
+  //name: String = "";
   description: String = "";
   price: Number = 0;
   quantity: Number = 0;  
@@ -28,7 +28,7 @@ export class NewListingPage implements OnInit {
   date;
   pickupDate: Date;
   
-  constructor(public afstore: AngularFirestore, public alertController: AlertController, private activatedRoute: ActivatedRoute, private firestore: AngularFirestore, private afStorage: AngularFireStorage, public afAuth: AngularFireAuth, public loadingController: LoadingController, private changeDetection: ChangeDetectorRef) { }
+  constructor(public afstore: AngularFirestore, private nacCtrl: NavController, public alertController: AlertController, private activatedRoute: ActivatedRoute, private firestore: AngularFirestore, private afStorage: AngularFireStorage, public afAuth: AngularFireAuth, public loadingController: LoadingController, private changeDetection: ChangeDetectorRef) { }
   
   ngOnInit() {
       var self = this
@@ -48,13 +48,6 @@ export class NewListingPage implements OnInit {
 save()
   {    
     try{
-      
-      if(this.name.length==0){
-        throw new Error('Please Enter a Name');
-      }  
-      if(this.description.length==0){
-        throw new Error('Please Enter a Description');
-      } 
       if(this.price<=0){
         throw new Error('Please Enter Price');
       } 
@@ -70,13 +63,14 @@ save()
         quantity: this.quantity,
         price: this.price,
         description: this.description,
-        name: this.name,
         listingID: this.listingID,
         isListed: false      
       })
     })
 
     this.presentAlert("Listing Added Successfully");
+    this.nacCtrl.navigateRoot(["./retailertabs/retailertabs/retailertab2"]);
+    
     
   }
   catch(error){
@@ -89,12 +83,6 @@ save()
   {    
     try{
       
-      if(this.name.length==0){
-        throw new Error('Please Enter a Name');
-      }  
-      if(this.description.length==0){
-        throw new Error('Please Enter a Description');
-      } 
       if(this.price==0){
         throw new Error('Please Enter Price');
       } 
@@ -113,7 +101,6 @@ save()
       const data = {
         description: this.description,
         listingID: this.listingID,
-        name: this.name,
         price: this.price,
         quantity: this.quantity,
         retailerType: this.retailerType,
@@ -129,13 +116,13 @@ save()
           quantity: this.quantity,
           price: this.price,
           description: this.description,
-          name: this.name,
           listingID: this.listingID,
           isListed: true      
         })
       })
 
     this.presentAlert("Listing Added and Published Successfully");
+    this.nacCtrl.navigateRoot(["./retailertabs/retailertabs/retailertab2"]);
     
   }
   catch(error){

@@ -13,7 +13,6 @@ import { AlertController, LoadingController, NavController } from '@ionic/angula
 export class UserListingPage implements OnInit {
   ID;
   listing;
-  name;
   description;
   location;
   price;
@@ -37,7 +36,6 @@ export class UserListingPage implements OnInit {
 
     this.listingSub = this.firestore.collection("listings").doc(this.ID).valueChanges().subscribe(data=>{
       this.listing = data;
-      this.name = this.listing.name;
       this.description = this.listing.description;
       this.location = this.listing.location;
       this.price = this.listing.price;
@@ -79,7 +77,6 @@ export class UserListingPage implements OnInit {
   async cart(listing){
     this.firestore.doc(`users/${firebase.auth().currentUser.uid}`).update({
       cart: firebase.firestore.FieldValue.arrayUnion({
-        name: listing.name,
         description: listing.description,
         listingID: listing.listingID,
         retailerUID: listing.retailerUID,

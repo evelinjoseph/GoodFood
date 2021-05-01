@@ -24,6 +24,7 @@ export class Tab1Page implements OnInit{
   retailerUID;
   ID;
   isReady: Boolean = false;
+  retailers: any[];
 
 
   constructor(public listingService: ListingsService, private afStorage: AngularFireStorage, private activatedRoute: ActivatedRoute, private nacCtrl: NavController, public afAuth: AngularFireAuth, private firestore: AngularFirestore, private changeDetection: ChangeDetectorRef, public loadingController: LoadingController, public alertController: AlertController) {}
@@ -38,7 +39,11 @@ export class Tab1Page implements OnInit{
 
 async initializeItems(): Promise<any> {
   let listing: any[] = await this.listingService.initializeItems();  
-
+  this.retailers = this.listingService.getUsers().filter(currentListing => {
+    if (currentListing.isRetailer) {
+      return (currentListing.isRetailer);
+    }
+  });  
   var self = this;
   listing.forEach(async function(element, ind, array) { 
   var retailerURL;
@@ -52,7 +57,6 @@ async initializeItems(): Promise<any> {
       description: element.description,
       listingID: element.listingID,
       location: element.location,
-      name: element.name,
       price: element.price,
       quantity: element.quantity,
       retailerType: element.retailerType,     
@@ -93,7 +97,7 @@ async initializeItems(): Promise<any> {
       });
     }
 
-    else if(this.searchBy == "Retailer"){
+    else if(this.searchBy == "Retailer Type"){
       this.listings = this.listings.filter(currentListing => {
         if (currentListing.retailerType && searchTerm) {
           return (currentListing.retailerType.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1);
@@ -116,15 +120,15 @@ async initializeItems(): Promise<any> {
         {
           name: 'radio1',
           type: 'radio',
-          label: 'Food',
-          value: 'Food',
+          label: 'Retailer',
+          value: 'Retailer',
           checked: true
         },
         {
           name: 'radio2',
           type: 'radio',
-          label: 'Retailer',
-          value: 'Retailer'
+          label: 'Retailer Type',
+          value: 'Retailer Type'
         },
         {
           name: 'radio3',
@@ -172,5 +176,16 @@ async initializeItems(): Promise<any> {
     this.listings = await this.initializeItems();    
     event.target.complete();
   }
+
+  
+    getRetailer(uid) : String{  
+      if(this.retailers){
+       const user = this.retailers.find(element => element.retailerUID == uid);    
+       return user.name;
+ 
+      }
+    }
+
+  
 
 }

@@ -59,7 +59,6 @@ export class Retailertab2Page implements OnInit {
     if (confirm) {
     this.afstore.doc(`users/${this.retailerUID}`).update({
       listings: firebase.firestore.FieldValue.arrayRemove({
-        name: listing.name,
         description: listing.description,
         listingID: listing.listingID,
         price: listing.price,
@@ -71,7 +70,7 @@ export class Retailertab2Page implements OnInit {
     this.afstore.collection('listings').doc(listing.listingID).delete();
     //TODO: add to archive when deleted
     this.afstore.collection('archive').doc(listing.listingID).set({
-      name: listing.name,
+      
       description: listing.description,
       listingID: listing.listingID,
       price: listing.price,
@@ -97,7 +96,7 @@ export class Retailertab2Page implements OnInit {
 
       this.afstore.doc(`users/${this.retailerUID}`).update({
         listings: firebase.firestore.FieldValue.arrayUnion({
-          name: listing.name,
+          
           description: listing.description,
           listingID: listing.listingID,
           price: listing.price,
@@ -108,7 +107,7 @@ export class Retailertab2Page implements OnInit {
 
     this.afstore.doc(`users/${this.retailerUID}`).update({
       listings: firebase.firestore.FieldValue.arrayRemove({
-        name: listing.name,
+        
         description: listing.description,
         listingID: listing.listingID,
         price: listing.price,

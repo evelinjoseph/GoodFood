@@ -185,7 +185,7 @@ export class PaypalPage implements OnInit {
                         //change isListed
                         self.afstore.doc(`users/${item.retailerUID}`).update({
                           listings: firebase.firestore.FieldValue.arrayUnion({
-                            name: item.name,
+                            
                             description: item.description,
                             listingID: item.listingID,
                             price: item.price,
@@ -196,7 +196,7 @@ export class PaypalPage implements OnInit {
 
                         self.afstore.doc(`users/${item.retailerUID}`).update({
                           listings: firebase.firestore.FieldValue.arrayRemove({
-                            name: item.name,
+                            
                             description: item.description,
                             listingID: item.listingID,
                             price: item.price,
@@ -367,12 +367,11 @@ export class PaypalPage implements OnInit {
         thisListing.forEach(element => {
           if(item.quantityCart==element.quantity){
             console.log(element);
-            console.log(item);
-            
+            console.log(item);           
 
 
             this.afstore.collection('listings').doc(item.listingID).delete()
-            //TODO: add to archive
+            
           }
           else{           
           this.afstore.doc(`listings/${item.listingID}`).update({

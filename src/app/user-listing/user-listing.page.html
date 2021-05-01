@@ -12,7 +12,7 @@
 <ion-content [hidden]="!isReady" fullscreen>
   <img [src]="url" style="width:100%;"> 
 
-  <h1 style="text-align: center; font-weight: bold"> {{ retailer }}: {{ name }}</h1>
+  <h1 style="text-align: center; font-weight: bold"> {{ retailer }}</h1>
   <hr>
   <ion-text color="primary">
   <h3 style="text-align: center; font-weight: bold;" > ${{ price | number:'1.2-2' }}</h3>
@@ -30,6 +30,7 @@
    Pick Up By: {{deleteDate}}
   </div>
   <hr>
+  <!-- TODO: might need to change this, talk to carolina -->
   <p style="text-align: center; font-size: large;"> {{ description }} </p>
   <p style="text-align: center; font-weight: bold;" > Please keep in mind that because the Good Food application deals with surplus food, all options vary on availability. Thank you!</p> 
   

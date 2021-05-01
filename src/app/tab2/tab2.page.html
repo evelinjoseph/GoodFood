@@ -23,7 +23,8 @@
           <ion-row class="ion-justify-content-center">                  
         <div *ngFor="let listing of item.listings; let i = index" >
           <ion-col size="auto">
-            <ion-text style="font-weight: 551;" *ngIf="listing.isListed" [routerLink]="['/user-listing']" [queryParams]="{ id: listing.listingID }" routerDirection="forward">{{listing.name}}</ion-text>
+            <!-- TODO: Change this -->
+            <ion-text style="font-weight: 551;" *ngIf="listing.isListed" [routerLink]="['/user-listing']" [queryParams]="{ id: listing.listingID }" routerDirection="forward">Listing</ion-text>
           </ion-col>   
         </div>
       </ion-row>

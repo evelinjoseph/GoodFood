@@ -97,7 +97,6 @@ export class RetailerListingPage implements OnInit {
     const data = {
       description: listing.description,
       listingID: listing.listingID,
-      name: listing.name,
       price: listing.price,
       quantity: listing.quantity,
       retailerType: this.retailerType,
@@ -114,7 +113,6 @@ export class RetailerListingPage implements OnInit {
         quantity: listing.quantity,
         price: listing.price,
         description: listing.description,
-        name: listing.name,
         listingID: listing.listingID,
         isListed: true      
       })
@@ -125,7 +123,6 @@ export class RetailerListingPage implements OnInit {
         quantity: listing.quantity,
         price: listing.price,
         description: listing.description,
-        name: listing.name,
         listingID: listing.listingID,
         isListed: false      
       })
@@ -164,7 +161,7 @@ export class RetailerListingPage implements OnInit {
 
       this.afstore.doc(`users/${this.retailerUID}`).update({
         listings: firebase.firestore.FieldValue.arrayUnion({
-          name: listing.name,
+          
           description: listing.description,
           listingID: listing.listingID,
           price: listing.price,
@@ -175,7 +172,7 @@ export class RetailerListingPage implements OnInit {
 
     this.afstore.doc(`users/${this.retailerUID}`).update({
       listings: firebase.firestore.FieldValue.arrayRemove({
-        name: listing.name,
+        
         description: listing.description,
         listingID: listing.listingID,
         price: listing.price,
@@ -250,7 +247,6 @@ export class RetailerListingPage implements OnInit {
       const data = {
         description: listing.description,
         listingID: listing.listingID,
-        name: listing.name,
         price: listing.price,
         quantity: listing.quantity,
         retailerType: this.retailerType,
