@@ -1,15 +1,38 @@
-<ion-header color= "primary">
-  <ion-toolbar>
-    <ion-title>Retailer Tab 1</ion-title>
+<ion-header style="text-align: center">
+  <ion-toolbar mode="ios" color="primary">
+    <ion-title>Good Food</ion-title>
     <ion-buttons slot="start">
       <ion-menu-button autoHide="true"></ion-menu-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <app-explore-container name="Tab 1 page"></app-explore-container>
-</ion-content>
+<ion-content fullscreen [hidden]="!isReady" >
 
-<ion-router-outlet id="main"></ion-router-outlet>
+  <div *ngIf="!((retailerItems | async)?.isVerified) ; else verified" class="centerText">
+    <ion-text class="centerText" color="primary" style="text-align: center">
+      <p>Your account is not verified yet, please wait until verified to gain access to this tab!</p>
+    </ion-text>
+  </div>
+  <ng-template #verified>
+    <div *ngFor="let item of ((retailerItems | async)?.orders).sort().reverse()">
+      <ion-card>
+
+      <ion-item>
+        <ion-card-title class="ion-text-wrap">{{item.name}}</ion-card-title>
+      </ion-item>
+    
+      <ion-card-content> 
+          <p> Description: {{item.description}}</p>
+          <p> Ordered: {{item.date.toDate().toLocaleString()}}</p>
+          <p> User: {{getUser(item.userUID)}}</p>      
+      </ion-card-content>
+    </ion-card>
+    </div>  
+    
+      <ion-text *ngIf="((retailerItems | async)?.orders).length <= 0" class="centerText" color="primary" style="text-align: center">
+        <p>There are no orders currently.</p>
+      </ion-text>
+  </ng-template>  
+</ion-content>
 

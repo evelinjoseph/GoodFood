@@ -7,7 +7,12 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content fullscreen [hidden]="!isReady"> 
+
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  
   <br>
   <ion-toolbar> 
     <ion-row>
@@ -19,20 +24,34 @@
     </ion-col>
   </ion-row> 
     </ion-toolbar> 
-
-  <ion-item *ngFor="let item of listings">   
-    <ion-card>
-     <ion-item>
+    <!-- 
+    <ion-item>
+      <ion-range id="dual-range" dual-knobs pin color="primary" [(ngModel)]="dualValue2" min="0" max="100" step="1" snaps="true">
+        <ion-label slot="start" >0</ion-label>
+        <ion-label slot="end">100</ion-label>
+      </ion-range>
+    </ion-item> -->
+  <div *ngFor="let item of listings">   
+    <ion-card [routerLink]="['/user-listing']" [queryParams]="{ id: item.listingID }" routerDirection="forward">
+     <!-- <ion-item> 
        <ion-icon name="restaurant" slot="start"></ion-icon>
-       <ion-label class="ion-text-wrap">{{item.name}}</ion-label>
-     </ion-item>    
+       <ion-label class="ion-text-wrap">{{item.name}}</ion-label>   
+      </ion-item> 
+       <ion-card> -->
+        <!-- <img src="./madison.jpg" /> -->
+        
+        <img src={{item.url}} style="width:100%;"> 
+        <ion-card-header> 
+          <ion-card-title class="ion-text-wrap">{{item.name}}</ion-card-title>
+        </ion-card-header>
    
-     <ion-card-content>
+     <ion-card-content> 
+     
        <p> Price: ${{item.price | number:'1.2-2'}}</p>
        <p> Description: {{item.description}}</p>
        <p> Location: {{item.location}}</p>
        <p> Retailer Type: {{item.retailerType}}</p>
      </ion-card-content>
    </ion-card>
- </ion-item>
+  </div>
 </ion-content>

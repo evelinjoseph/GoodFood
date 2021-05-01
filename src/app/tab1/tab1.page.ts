@@ -1,9 +1,11 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { UserService } from '../user.service';
-import { AlertController, NavController } from '@ionic/angular';
+import { LoadingController, AlertController, NavController } from '@ionic/angular';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { first } from 'rxjs/operators';
+import { AngularFireStorage } from '@angular/fire/storage';
+import { ActivatedRoute } from '@angular/router';
+import { ListingsService} from '../listings.service';
 
 @Component({
   selector: 'app-tab1',
@@ -14,45 +16,60 @@ export class Tab1Page implements OnInit{
 
   public listings: any[];
   public listingsBackup: any[];
-  public retailers: any[];
-  public retailersBackup: any[];
+  deleteListings: any[];
   searchText = "Search By Food";
   searchBy = "Food";
+  dateNow;
+  url; 
+  retailerUID;
+  ID;
+  isReady: Boolean = false;
 
-  constructor(private nacCtrl: NavController, public afAuth: AngularFireAuth, public user: UserService, private firestore: AngularFirestore, private changeDetection: ChangeDetectorRef, public alertController: AlertController) {}
 
-  async logout() {
-    this.afAuth.signOut();
-    this.nacCtrl.navigateRoot(['./login'])
+  constructor(public listingService: ListingsService, private afStorage: AngularFireStorage, private activatedRoute: ActivatedRoute, private nacCtrl: NavController, public afAuth: AngularFireAuth, private firestore: AngularFirestore, private changeDetection: ChangeDetectorRef, public loadingController: LoadingController, public alertController: AlertController) {}
 
-  }
 
   async ngOnInit() {
+    this.presentLoading(); 
     this.listings = await this.initializeItems();
-    this.retailers = await this.initializeRetailers();
-  
-  }
+    
+}
 
-  async initializeItems(): Promise<any> {
-    const listing = await this.firestore.collection('listings')
-    .valueChanges().pipe(first()).toPromise();
 
-    console.log("reading db")
-    this.listingsBackup = listing;
-    return listing;
-  }
+async initializeItems(): Promise<any> {
+  let listing: any[] = await this.listingService.initializeItems();  
 
-  async initializeRetailers(): Promise<any> {
-    const retailers = await this.firestore.collection('users')
-    .valueChanges().pipe(first()).toPromise();
+  var self = this;
+  listing.forEach(async function(element, ind, array) { 
+  var retailerURL;
+    var storageRef =  await self.afStorage.ref(`images/${element.retailerUID}`).getDownloadURL().toPromise().then(function(url) {
+      retailerURL = url;
+   }).catch(function(error) {
+     retailerURL = 'assets/images/default.png';
+   });
+    const data = {
+      deleteDate: element.deleteDate,
+      description: element.description,
+      listingID: element.listingID,
+      location: element.location,
+      name: element.name,
+      price: element.price,
+      quantity: element.quantity,
+      retailerType: element.retailerType,     
+      retailerUID: element.retailerUID,
+      url: retailerURL      
+    }   
+    array[ind] = data 
+  });
 
-    this.retailersBackup = retailers;
-    return retailers;
-  }
+  this.listingsBackup = listing;  
+  return listing;
+}
+
+ 
 
   search(event){
     this.listings = this.listingsBackup;
-    this.retailers = this.retailersBackup;
     const searchTerm = event.srcElement.value;
 
     if(!searchTerm){
@@ -82,8 +99,7 @@ export class Tab1Page implements OnInit{
           return (currentListing.retailerType.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1);
         }
       });
-    }
-    console.log(this.listings)     
+    }     
     this.changeDetection.detectChanges(); 
   }
 
@@ -137,4 +153,24 @@ export class Tab1Page implements OnInit{
 
     await alert.present();
   }
+
+  async presentLoading() {
+    const loading = await this.loadingController.create({
+      duration: 700,
+      translucent: true,
+      cssClass: 'transparent',
+      backdropDismiss: false
+    });
+    await loading.present();
+
+    const { role, data } = await loading.onDidDismiss();
+    this.isReady = true; 
+    this.changeDetection.detectChanges(); 
+  }
+
+  async doRefresh(event) {
+    this.listings = await this.initializeItems();    
+    event.target.complete();
+  }
+
 }

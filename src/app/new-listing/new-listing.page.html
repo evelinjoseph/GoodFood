@@ -1,0 +1,42 @@
+<ion-header style="text-align: center">
+  <ion-toolbar color="primary" mode="ios">
+    <ion-buttons slot="start">
+      <ion-back-button [text]="Back" defaultHref="/retailertabs/retailertabs/retailertab2"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      Good Food
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen>
+      <br>
+      <p style="text-align: center;" > Please Enter a Name, Description, Price, and Quantity for the New Listing </p>
+        <ion-item>
+          <ion-label position="floating">Name</ion-label>
+          <ion-input autocapitalize='sentences' type="text" [(ngModel)]="name"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Description</ion-label>
+          <ion-input [(ngModel)]="description"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Price</ion-label>
+          <ion-input type="number" [(ngModel)]="price"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Quantity</ion-label>
+          <ion-input type="number" [(ngModel)]="quantity"></ion-input>
+        </ion-item>
+        <br>
+        <ion-footer class="ion-no-border">
+          <ion-toolbar position="bottom" style="text-align: center;">     
+            <ion-button onmouseover="" (click)="save()">Add Listing
+              <span></span>
+            </ion-button> 
+            <ion-button (click)="publish()">Add and Publish Listing</ion-button> 
+          </ion-toolbar>
+        </ion-footer>
+        
+</ion-content>
+

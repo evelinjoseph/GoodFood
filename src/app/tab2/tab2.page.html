@@ -1,15 +1,36 @@
 <ion-header color= "primary">
+  <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <ion-toolbar mode="ios" color="primary"> 
     <ion-title>Good Food</ion-title>
     <ion-buttons slot="start">
       <ion-menu-button autoHide="true"></ion-menu-button>
     </ion-buttons>
-  </ion-toolbar>
+  </ion-toolbar> 
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <app-explore-container name="Tab 2 page"></app-explore-container>
+<ion-content>     
+    <div id="mapId" ></div>
+    <div id="overMap">  
+      <ion-slides slidesPerView="1" (ionSlideDidChange)="slideChanged($event)">      
+        <ion-slide *ngFor="let item of restaurants; let i = index"> 
+          <ion-card>
+          <ion-card-header> 
+            <ion-card-title class="ion-text-wrap" style="font-weight: bold;">{{item.name}}</ion-card-title>
+          </ion-card-header>   
+      <ion-card-content> 
+        <p>{{item.location}}</p>
+        <ion-grid>
+          <ion-row class="ion-justify-content-center">                  
+        <div *ngFor="let listing of item.listings; let i = index" >
+          <ion-col size="auto">
+            <ion-text style="font-weight: 551;" *ngIf="listing.isListed" [routerLink]="['/user-listing']" [queryParams]="{ id: listing.listingID }" routerDirection="forward">{{listing.name}}</ion-text>
+          </ion-col>   
+        </div>
+      </ion-row>
+      </ion-grid> 
+      </ion-card-content>
+    </ion-card>
+    </ion-slide>
+    </ion-slides>
+    </div>   
 </ion-content>
-
-
-<ion-router-outlet id="main"></ion-router-outlet>

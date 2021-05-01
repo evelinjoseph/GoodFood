@@ -1,0 +1,52 @@
+<ion-header style="text-align: center">
+  <ion-toolbar color="primary" mode="ios">
+    <ion-buttons slot="start">
+      <ion-back-button [text]="Back" defaultHref="/tabs/tabs/tab3"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      Good Food
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div *ngFor="let item of cart">
+    <ion-card>      
+      <ion-card-header>
+        <ion-card-title>{{item.name}}</ion-card-title>      
+      </ion-card-header>
+      <ion-card-content>
+        <p> Quantity: {{item.quantityCart}} </p>
+        <p> Price: ${{item.totalPrice | number:'1.2-2'}} </p>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <ion-toolbar position="bottom" style="text-align: center">
+    <div class="ion-text-end" id="subtotal">
+      <ion-text > <p style="font-size: large;"> Subtotal ${{paymentAmount | number:'1.2-2'}} </p></ion-text> 
+      <ion-text > <p style="font-size: large;"> Tax $-</p></ion-text> 
+      <ion-text > <p id="total"> TOTAL ${{paymentAmount | number:'1.2-2'}} </p></ion-text> 
+    </div>  
+    <div id="paypal-button-container" ></div>  
+  </ion-toolbar>
+
+ 
+</ion-content>
+
+
+
+<!-- <ion-footer class="ion-no-border">
+   <ion-toolbar position="bottom" style="text-align: center;">
+    <div class="ion-text-end" id="subtotal">
+      <ion-text > <p style="font-size: large;"> Subtotal ${{paymentAmount | number:'1.2-2'}} </p></ion-text> 
+      <ion-text > <p style="font-size: large;"> Tax $-</p></ion-text> 
+      <ion-text > <p id="total"> TOTAL ${{paymentAmount | number:'1.2-2'}} </p></ion-text> 
+    </div>  
+    <div id="paypal-button-container"></div>   
+    <div class="paypal_div">
+    <ion-button class="paypal_button" expand="full" color="warning" (click)="payWithPayPal()">Pay with PayPal</ion-button>
+    
+  </div> 
+ </ion-toolbar>
+</ion-footer> -->

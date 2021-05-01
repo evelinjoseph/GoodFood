@@ -1,11 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { NavController } from '@ionic/angular';
-import { TabsPage } from '../tabs/tabs.page';
-import { UserService } from '../user.service';
-import * as firebase from 'firebase/app';
+import { LoadingController, NavController } from '@ionic/angular';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { LoginPage } from '../login/login.page';
+import { ListingsService} from '../listings.service';
 
 @Component({
   selector: 'app-initial-page',
@@ -13,23 +10,47 @@ import { LoginPage } from '../login/login.page';
   styleUrls: ['./initial-page.page.scss'],
 })
 export class InitialPagePage implements OnInit {
-  constructor(public nacCtrl: NavController, public afAuth: AngularFireAuth, public afstore: AngularFirestore, public user: UserService) {
-     afAuth.onAuthStateChanged(async function(users) {
-      if (users) {
-         var docRef = (await afstore.collection("users").doc(users.uid).get().toPromise()).data()
-         console.log(docRef)
-         if(docRef.isRetailer == false){
-            nacCtrl.navigateRoot(['./tabs'])
-          }
-          else{
-            nacCtrl.navigateRoot(['./retailertabs'])
-          }
-      } else {  
-           
-      }
-    });    
+  isReady: Boolean = false;
+
+  constructor(public listingService: ListingsService, public nacCtrl: NavController, public afAuth: AngularFireAuth, public afstore: AngularFirestore, public loadingController: LoadingController,  public changeDetection: ChangeDetectorRef) {
+    //this.presentLoading();
+    
    }   
 
   ngOnInit() {
+    
+    var self = this;
+   
+    this.afAuth.onAuthStateChanged(async function(users) {
+      if (users) {        
+        self.presentLoading();   
+        await self.listingService.initializeItems();     
+         var docRef = (await self.afstore.collection("users").doc(users.uid).get().toPromise()).data()
+         if(docRef.isRetailer == false){
+            self.nacCtrl.navigateRoot(['./tabs/tabs/tab1'])
+          }
+          else{
+            self.nacCtrl.navigateRoot(['./retailertabs/retailertabs/retailertab1'])
+          }
+      } else {         
+          self.isReady = true; 
+          self.changeDetection.detectChanges(); 
+      }
+    });    
+    
   }
+
+  async presentLoading() {
+    const loading = await this.loadingController.create({
+      duration: 600,
+      translucent: true,
+      cssClass: 'transparent',
+      backdropDismiss: false
+    });
+    await loading.present();
+
+    const { role, data } = await loading.onDidDismiss();
+    this.changeDetection.detectChanges(); 
+  }
+
 }

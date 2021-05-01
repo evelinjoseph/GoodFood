@@ -7,16 +7,20 @@ import { IonicModule } from '@ionic/angular';
 import { Retailertab3PageRoutingModule } from './retailertab3-routing.module';
 
 import { Retailertab3Page } from './retailertab3.page';
-import { ExploreContainerComponentModule } from '../explore-container/explore-container.module';
+
+import { FormatFileSizePipe } from './format-file-size.pipe';
+
 
 @NgModule({
   imports: [
     CommonModule,
-    FormsModule,    
-    ExploreContainerComponentModule,
+    FormsModule,
     IonicModule,
     Retailertab3PageRoutingModule
   ],
-  declarations: [Retailertab3Page]
+  declarations: [
+    Retailertab3Page,
+    FormatFileSizePipe
+  ]
 })
 export class Retailertab3PageModule {}

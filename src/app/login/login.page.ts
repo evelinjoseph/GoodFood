@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AlertController, NavController } from '@ionic/angular';
-import { TabsPage } from '../tabs/tabs.page';
-import { UserService } from '../user.service';
 import * as firebase from 'firebase/app';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { ListingsService} from '../listings.service'; 
 
 @Component({
   selector: 'app-login',
@@ -16,7 +15,7 @@ export class LoginPage implements OnInit {
   email: string = ""
   password: string = ""
 
-  constructor(private nacCtrl: NavController, public afAuth: AngularFireAuth, public user: UserService, public afstore: AngularFirestore,public alertController: AlertController) { }
+  constructor(public listingService: ListingsService, private nacCtrl: NavController, public afAuth: AngularFireAuth, public afstore: AngularFirestore,public alertController: AlertController) { }
 
   ngOnInit() {
   }
@@ -31,27 +30,23 @@ export class LoginPage implements OnInit {
       throw new Error('Please Enter Password');
     }
     var self = this;
-      this.afAuth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-      .then(function() {
+      this.afAuth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(function() {
                 // New sign-in will be persisted with local persistence.
-        return firebase.auth().signInWithEmailAndPassword(email, password);
+        return self.afAuth.signInWithEmailAndPassword(email, password);
       })
       .catch(function(error) {
         self.presentAlert(error.message)
       });
       
-      if(firebase.auth().currentUser){
-        this.user.setUser({
-          email: firebase.auth().currentUser.email,
-          uid:firebase.auth().currentUser.uid
-        })
-
-       var docRef = (await this.afstore.collection("users").doc(firebase.auth().currentUser.uid).get().toPromise()).data()
-        if(docRef.isRetailer == false){
-          this.nacCtrl.navigateRoot(['./tabs'])
+      if(firebase.auth().currentUser){ 
+        await this.listingService.initializeItems();      
+       var docRef = (await this.afstore.collection("users").doc(firebase.auth().currentUser.uid).get().toPromise()).data();
+       if(docRef.isRetailer == false){
+          this.nacCtrl.navigateRoot(['./tabs/tabs/tab1'])
         }
-        else{
-          this.nacCtrl.navigateRoot(['./retailertabs'])
+        else{         
+            this.nacCtrl.navigateRoot(['./retailertabs/retailertabs/retailertab1'])     
+          
         }
       }      
     }

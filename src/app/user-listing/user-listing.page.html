@@ -1,0 +1,42 @@
+<ion-header style="text-align: center">
+  <ion-toolbar color="primary" mode="ios">
+    <ion-buttons slot="start">
+      <ion-back-button [text]="Back" defaultHref="/tabs/tabs/tab1"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      Good Food
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [hidden]="!isReady" fullscreen>
+  <img [src]="url" style="width:100%;"> 
+
+  <h1 style="text-align: center; font-weight: bold"> {{ retailer }}: {{ name }}</h1>
+  <hr>
+  <ion-text color="primary">
+  <h3 style="text-align: center; font-weight: bold;" > ${{ price | number:'1.2-2' }}</h3>
+  </ion-text> 
+
+  <div style="text-align: center; font-size: large;">
+    <ion-icon name="location-outline"></ion-icon> 
+    {{ location }}
+  </div>
+
+  <p style="text-align: center; font-weight: bold;"> {{ quantity }} meals left</p>  
+  <hr> 
+  <div style="text-align: center;">
+    <ion-icon name="time-outline"></ion-icon>
+   Pick Up By: {{deleteDate}}
+  </div>
+  <hr>
+  <p style="text-align: center; font-size: large;"> {{ description }} </p>
+  <p style="text-align: center; font-weight: bold;" > Please keep in mind that because the Good Food application deals with surplus food, all options vary on availability. Thank you!</p> 
+  
+  <ion-toolbar [hidden]="!isReady" position="bottom" style="text-align: center;" color="translucent"> 
+    <ion-button expand="block" size ="large" (click)="cart(listing)">Add To Cart</ion-button>
+  </ion-toolbar>
+</ion-content>
+
+
+

@@ -1,4 +1,4 @@
-<ion-header [translucent]="true">
+<ion-header style="text-align: center">
   <ion-toolbar mode="ios" color="primary">
     <ion-title>Good Food</ion-title>
     <ion-buttons slot="start">
@@ -7,6 +7,40 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <app-explore-container name="Tab 3 page"></app-explore-container>
+<ion-content fullscreen [hidden]="!isReady">
+  <div *ngFor="let item of cart">
+    <ion-card>
+     <ion-item>
+      <ion-card-title class="ion-text-wrap">{{item.name}}</ion-card-title>
+      <ion-button  (click)="delete(item)" fill="outline" slot="end">Delete</ion-button> 
+    </ion-item>
+   
+     <ion-card-content> 
+        <p style="font-size: large;" > Quantity: 
+          <ion-button (click)="dec(item)" size="small" fill="clear"> 
+            <ion-icon name="remove-circle-outline"></ion-icon> 
+          </ion-button>
+          {{item.quantityCart}}
+          <ion-button (click)="inc(item)" size="small" fill="clear"> 
+            <ion-icon name="add-circle-outline"></ion-icon> 
+          </ion-button></p>
+          <p style="font-size: large;"> Price: ${{item.totalPrice | number:'1.2-2'}}</p>
+        <p style="font-size: large;"> Description: {{item.description}}</p>
+     </ion-card-content>
+   </ion-card>
+  </div>
+  <ion-text class="centerText" *ngIf="((userItems | async)?.cart).length <= 0" color="primary" style="text-align: center">
+      <p>There are no items in the cart.</p>
+  </ion-text>  
 </ion-content>
+
+<ion-footer *ngIf="((userItems | async)?.cart).length > 0" >
+  <!-- class="ion-no-border" -->
+ 
+  <ion-toolbar *ngIf="userItems | async as cartData"  position="bottom" style="text-align: center;">
+    <div class="ion-text-end" id="subtotal">
+      <ion-text > <p style="font-size: large;"> Subtotal: ${{subtotal | number:'1.2-2'}} </p></ion-text> 
+    </div>     
+    <ion-button expand="block" (click)="checkOut(cartData.cart)" size="large">Checkout</ion-button>
+ </ion-toolbar>
+</ion-footer>

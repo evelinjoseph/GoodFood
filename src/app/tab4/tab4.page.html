@@ -1,4 +1,4 @@
-<ion-header [translucent]="true">
+<ion-header style="text-align: center">
   <ion-toolbar mode="ios" color="primary">
     <ion-title>Good Food</ion-title>
     <ion-buttons slot="start">
@@ -7,6 +7,27 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <app-explore-container name="Tab 4 page"></app-explore-container>
+<ion-content fullscreen [hidden]="!isReady">
+  <div *ngFor="let item of ((userItems | async)?.orders).sort().reverse()">
+    <ion-card>
+
+     <ion-item>
+      <ion-card-title class="ion-text-wrap">{{item.name}}</ion-card-title>
+    </ion-item>
+   
+     <ion-card-content> 
+        <p> Description: {{item.description}}</p>
+        <p> Ordered: {{item.date.toDate().toLocaleString()}}</p>
+        <p> Retailer: {{getRetailer(item.retailerUID)}}</p>
+      
+     </ion-card-content>
+   </ion-card>
+  </div>
+
+  
+  
+    <ion-text *ngIf="((userItems | async)?.orders).length <= 0" class="centerText" color="primary" style="text-align: center">
+      <p>There are no orders currently.</p>
+    </ion-text>
+  
 </ion-content>

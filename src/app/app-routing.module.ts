@@ -38,7 +38,8 @@ const routes: Routes = [
   {
     path: 'tab4',
     loadChildren: () => import('./tab4/tab4.module').then( m => m.Tab4PageModule)
-  },  {
+  },
+  {
     path: 'retailertabs',
     loadChildren: () => import('./retailertabs/retailertabs.module').then( m => m.RetailertabsPageModule)
   },
@@ -53,6 +54,41 @@ const routes: Routes = [
   {
     path: 'retailertab3',
     loadChildren: () => import('./retailertab3/retailertab3.module').then( m => m.Retailertab3PageModule)
+  },
+  {
+    path: 'user-listing',
+    loadChildren: () => import('./user-listing/user-listing.module').then( m => m.UserListingPageModule)
+  },
+  {
+    path: 'account',
+    loadChildren: () => import('./account/account.module').then( m => m.AccountPageModule)
+  },
+  {
+    path: 'new-listing',
+    loadChildren: () => import('./new-listing/new-listing.module').then( m => m.NewListingPageModule)
+  },
+  {
+    path: 'retailer-listing',
+    loadChildren: () => import('./retailer-listing/retailer-listing.module').then( m => m.RetailerListingPageModule)
+  },
+  {
+    path: 'paypal',
+    loadChildren: () => import('./paypal/paypal.module').then( m => m.PaypalPageModule)
+  },
+  {
+    path: 'password-reset',
+    loadChildren: () => import('./password-reset/password-reset.module').then( m => m.PasswordResetPageModule)
+  },
+  {
+    path: 'update-password',
+    loadChildren: () => import('./update-password/update-password.module').then( m => m.UpdatePasswordPageModule)
+  },
+  {
+    path: 'retailer-update-password',
+    loadChildren: () => import('./retailer-update-password/retailer-update-password.module').then( m => m.RetailerUpdatePasswordPageModule)
+  },  {
+    path: 'about',
+    loadChildren: () => import('./about/about.module').then( m => m.AboutPageModule)
   }
 
 ];

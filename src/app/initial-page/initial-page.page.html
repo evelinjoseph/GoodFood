@@ -1,5 +1,4 @@
-<body>  
-<ion-header style="text-align: center" [translucent]="true">
+<ion-header style="text-align: center" [hidden]="!isReady">
   <ion-toolbar color="primary" mode="ios">
     <ion-title>
       Good Food
@@ -7,15 +6,15 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content color = "white">  
+<ion-content color="white" [hidden]="!isReady">  
   <img class="displayed"  height="250 px" width="250 px" src="assets/images/GoodFoodLogo.png" alt="logo">
          
- <div style="text-align: center"> 
+ <div style="text-align: center" > 
   <section >
-    <ion-button size="large" color = "primary" [routerDirection] = "'forward'" [routerLink]="['/register']">Create Account</ion-button>
+    <ion-button size="large" color="primary" [routerDirection] = "'forward'" [routerLink]="['/register']">Create Account</ion-button>
   </section>
   <section >  
-    <ion-button size="large" color = "secondary" [routerDirection] = "'forward'" [routerLink]="['/retailer-register']">I'm a Retailer</ion-button>
+    <ion-button size="large" color="secondary" [routerDirection] = "'forward'" [routerLink]="['/retailer-register']">I'm a Retailer</ion-button>
   </section>
   <section > 
     <br>
@@ -23,7 +22,7 @@
   <ion-text color="primary">
     Already have an account?
   </ion-text>
-  <ion-text [routerDirection] = "'forward'" [routerLink]="['/login']" color="primary">
+  <ion-text id="login1"  [routerDirection] = "'forward'" [routerLink]="['/login']" color="primary">
     <a><u>Log In</u></a>
   </ion-text>
 </section > 
@@ -31,5 +30,4 @@
 </div>
   
 </ion-content>
-</body>
 

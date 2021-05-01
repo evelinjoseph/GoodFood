@@ -1,0 +1,57 @@
+<ion-header style="text-align: center">
+  <ion-toolbar color="primary" mode="ios">
+    <ion-buttons slot="start">
+      <ion-back-button [text]="Back" defaultHref="/retailertabs/retailertabs/retailertab2"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      Good Food
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [hidden]="!isReady" fullscreen >
+  <div *ngFor="let item of listing"> 
+  <img [src]="url" style="width:100%;"> 
+
+  <h1 style="text-align: center; font-weight: bold"> {{ retailer }}: {{ item.name }}</h1>
+  <hr>
+  <ion-text color="primary">
+  <h3 style="text-align: center; font-weight: bold;" > ${{ item.price | number:'1.2-2' }}</h3>
+  </ion-text> 
+
+  <div style="text-align: center; font-size: large;">
+    <ion-icon name="location-outline"></ion-icon> 
+    {{ location }}
+  </div>
+
+  <p style="text-align: center"> {{ item.quantity }} meals left</p>  
+  <hr>
+  <div style="text-align: center" *ngIf="!item.isListed">
+  <ion-icon name="time-outline"></ion-icon>
+  Pickup Time: {{pickupTime | date:'h:mm a'}}
+  </div>
+
+  <div style="text-align: center" *ngIf="item.isListed">
+    <ion-icon name="time-outline"></ion-icon>
+    Listing Delete Date: {{pickupTime}}
+    </div>
+  <hr>
+  <!-- after publish and clicking on edit -->
+  <ion-item [hidden]="isRead">
+    <ion-label>Delete Date</ion-label>
+    <ion-datetime value={{pickupTime}} [(ngModel)]="pDate" (ionChange)="setPickupDate(this.pDate)"></ion-datetime>
+  </ion-item>
+  <ion-item [hidden]="isRead">
+    <ion-label>Delete/Pick Up Time</ion-label>
+    <ion-datetime value={{pickupTime}} display-format="h:mm A" picker-format="h:mm A" [(ngModel)]="time" (ionChange)="setPickupTime(this.time)"></ion-datetime>
+  </ion-item> 
+  <p style="text-align: center; font-size: large;"> {{ item.description }} </p>
+</div>
+</ion-content>
+
+<ion-toolbar [hidden]="!isReady" position="bottom" style="text-align: center;" color="translucent" *ngFor="let item of listing"> 
+  <ion-button *ngIf="!item.isListed" size ="large" (click)="publish(item)">Publish</ion-button>
+  <ion-button *ngIf="item.isListed" size ="large" (click)="edit(item)">{{buttonText}}</ion-button>
+  <ion-button *ngIf="item.isListed" size ="large" (click)="unpublish(item)">Unpublish</ion-button>
+</ion-toolbar>
+

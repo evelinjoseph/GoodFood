@@ -1,10 +1,10 @@
-<ion-header [translucent]="true">
+<ion-header style="text-align: center">
   <ion-toolbar color="primary" mode="ios">
     <ion-buttons slot="start">
       <ion-back-button [text]="Back" defaultHref="initial-page"></ion-back-button>
     </ion-buttons> 
     <ion-title>
-      Good Food Registration
+     Registration
     </ion-title>     
   </ion-toolbar>
 </ion-header>
@@ -16,14 +16,14 @@
       <ion-label position = "floating">
           First Name
         </ion-label>
-        <ion-input type = "text" [(ngModel)]="firstname"></ion-input>
+        <ion-input autocapitalize='sentences' type = "text" [(ngModel)]="firstname"></ion-input>
     </ion-item>
     <br>
     <ion-item>
       <ion-label position = "floating">
           Last Name
         </ion-label>
-        <ion-input type = "text" [(ngModel)]="lastname"></ion-input>
+        <ion-input autocapitalize='sentences' type = "text" [(ngModel)]="lastname"></ion-input>
     </ion-item>
     <br>
   <ion-item>
@@ -50,7 +50,7 @@
   
 <div style="text-align: center">
   <br>
-<ion-button fill="solid" Size = "large" color="primary" (click)="register()">Sign Up</ion-button>
+<ion-button expand="block" fill="solid" Size = "large" color="primary" (click)="register()">Sign Up</ion-button>
 </div>
 </ion-content>
 

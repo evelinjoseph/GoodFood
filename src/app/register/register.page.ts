@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore'
-import { UserService } from '../user.service';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { NavController } from '@ionic/angular';
-import { AlertController } from '@ionic/angular';
+import {  AlertController , NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-register',
@@ -18,7 +16,7 @@ export class RegisterPage implements OnInit {
   password: string = "";
   cpassword: string = "";
 
-  constructor(private nacCtrl: NavController, public afAuth: AngularFireAuth, public afstore: AngularFirestore, public user:UserService, public alertController: AlertController) { }
+  constructor(private nacCtrl: NavController, public afAuth: AngularFireAuth, public afstore: AngularFirestore, public alertController: AlertController) { }
 
   ngOnInit() {
   }
@@ -41,14 +39,13 @@ export class RegisterPage implements OnInit {
         firstname,
         lastname,
         password,
-        isRetailer: false
+        isRetailer: false,
+        cart: [],
+        orders: [],
+        userUID: res.user.uid
       })
 
-      this.user.setUser({
-        email,
-        uid: res.user.uid
-    })
-    this.nacCtrl.navigateRoot(["./tabs"])
+    this.nacCtrl.navigateRoot(["./tabs/tabs/tab1"])
   }catch(error){
     this.presentAlert(error.message);
   }
