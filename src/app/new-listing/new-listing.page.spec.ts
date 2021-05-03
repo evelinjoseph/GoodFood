@@ -61,10 +61,7 @@ describe('NewListingPage', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-
   
-
-
   it('should present error for price', () => {
     component.description = "test";
     component.price = 0;

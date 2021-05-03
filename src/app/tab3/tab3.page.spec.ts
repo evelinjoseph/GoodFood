@@ -8,21 +8,26 @@ import { of } from 'rxjs';
 
 import { Tab3Page } from './tab3.page';
 import { RouterTestingModule } from '@angular/router/testing';
+import { filter } from 'rxjs/operators';
 
 
 describe('Tab3Page', () => {
   let component: Tab3Page;
   let fixture: ComponentFixture<Tab3Page>;
 
-  const FirestoreStub = {
-    collection: (name: string) => ({   
-      valueChanges: () => of({ foo: 'bar' }), 
-      doc: (_id: string) => ({
-        valueChanges: () => of({ foo: 'bar' }),
-        set: (_d: any) => Promise.resolve(),
-      }),
-    })
-  };
+  let AngularFireAuthMock = {
+    
+    onAuthStateChanged(users) { 
+      return of({
+        uid: "testuid"
+      }) 
+      
+    },
+    currentUser: () => of({uid: "testuid"}),
+    signInWithEmailAndPassword() {
+      return Promise.resolve();
+    }
+  }
 
   const fireStub: any = {
     authState: {},
@@ -41,17 +46,39 @@ describe('Tab3Page', () => {
     }
   };
 
+  let afSpy: any;
+  let filterSpy: any;
+
   beforeEach(async(() => {
+
+    afSpy = jasmine.createSpyObj('AngularFirestore', ['collection', 
+    'valueChanges', 'snapshotChanges', 'ref', 'doc','add','update', 
+    'then', 'catch', 'finally', 'firestore', 'get', 'subscribe']);
+    afSpy.collection.and.returnValue(afSpy);
+    afSpy.valueChanges.and.returnValue(afSpy);
+    afSpy.snapshotChanges.and.returnValue(afSpy); 
+    afSpy.ref.and.returnValue(afSpy); 
+    afSpy.doc.and.returnValue(afSpy); 
+    afSpy.add.and.returnValue(afSpy);
+    afSpy.update.and.returnValue(Promise.resolve()); 
+    afSpy.then.and.returnValue(Promise.resolve('hello world')); 
+    afSpy.catch.and.returnValue(afSpy); 
+    afSpy.finally.and.callThrough()
+    afSpy.firestore.and.returnValue(afSpy); 
+    afSpy.get.and.returnValue(afSpy);
+    afSpy.subscribe.and.returnValue(afSpy);
+
+    filterSpy = jasmine.createSpyObj('filter', ['filter']);
+    filterSpy.filter.and.returnValue(filterSpy);
+    
+
     TestBed.configureTestingModule({
       declarations: [Tab3Page],
       imports: [IonicModule.forRoot(), RouterTestingModule],
       providers:[
-        { provide: AngularFireAuth, useClass:  class {
-          onAuthStateChanged(){
-            return of({uid: '1234'})
-          }
-        }},
-        { provide: AngularFirestore, useValue: fireStub }
+        { provide: AngularFireAuth, useValue: AngularFireAuthMock},
+        { provide: AngularFirestore, useValue: afSpy },
+        { provide: filter, useValue: filterSpy },
     ]     
     }).compileComponents();
 

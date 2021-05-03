@@ -19,6 +19,10 @@ describe('RetailerListingPage', () => {
     auth: {
       signInWithEmailAndPassword() {
         return Promise.resolve();
+      },
+      onAuthStateChanged() { 
+       return "test" 
+        
       }
     },
     firestore: {
@@ -28,17 +32,44 @@ describe('RetailerListingPage', () => {
     }
   };
 
+  let AngularFireAuthMock = {
+   
+    signInWithEmailAndPassword(email, password) {
+      return Promise.resolve();
+    },
+    onAuthStateChanged() { 
+     return "test" 
+      
+    }
+  }
+
+  let afSpy:any;
+
   beforeEach(async(() => {
+
+    afSpy = jasmine.createSpyObj('AngularFirestore', ['collection', 
+    'valueChanges', 'snapshotChanges', 'ref', 'doc','add','update', 
+    'then', 'catch', 'finally', 'firestore', 'get', 'subscribe']);
+    afSpy.collection.and.returnValue(afSpy);
+    afSpy.valueChanges.and.returnValue(afSpy);
+    afSpy.snapshotChanges.and.returnValue(afSpy); 
+    afSpy.ref.and.returnValue(afSpy); 
+    afSpy.doc.and.returnValue(afSpy); 
+    afSpy.add.and.returnValue(afSpy);
+    afSpy.update.and.returnValue(Promise.resolve()); 
+    afSpy.then.and.returnValue(Promise.resolve('hello world')); 
+    afSpy.catch.and.returnValue(afSpy); 
+    afSpy.finally.and.callThrough()
+    afSpy.firestore.and.returnValue(afSpy); 
+    afSpy.get.and.returnValue(afSpy);
+    afSpy.subscribe.and.returnValue(afSpy);
+
     TestBed.configureTestingModule({
       declarations: [ RetailerListingPage ],
       imports: [IonicModule.forRoot(), RouterTestingModule],
       providers:[
-        { provide: AngularFireAuth, useClass:  class {
-          onAuthStateChanged(){
-            return of({uid: '1234'})
-          }
-        }},
-        { provide: AngularFirestore, useValue: fireStub },
+        { provide: AngularFireAuth, useValue: AngularFireAuthMock},
+        { provide: AngularFirestore, useValue: afSpy },
         { provide: AngularFireStorage, useValue: fireStub}
     ]     
     }).compileComponents();

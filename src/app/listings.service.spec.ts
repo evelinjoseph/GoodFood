@@ -11,7 +11,7 @@ describe('ListingsService', () => {
 
     afSpy = jasmine.createSpyObj('AngularFirestore', ['collection', 
     'valueChanges', 'snapshotChanges', 'ref', 'doc','add','update', 
-    'then', 'catch', 'finally', 'firestore', 'get']);
+    'then', 'catch', 'finally', 'firestore', 'get', 'subscribe']);
     afSpy.collection.and.returnValue(afSpy);
     afSpy.valueChanges.and.returnValue(afSpy);
     afSpy.snapshotChanges.and.returnValue(afSpy); 
@@ -24,6 +24,7 @@ describe('ListingsService', () => {
     afSpy.finally.and.callThrough()
     afSpy.firestore.and.returnValue(afSpy); 
     afSpy.get.and.returnValue(afSpy);
+    afSpy.subscribe.and.returnValue(afSpy);
 
     TestBed.configureTestingModule({
       providers:[
