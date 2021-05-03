@@ -12,14 +12,12 @@
     <ion-card>
 
      <ion-item>
-      <ion-card-title class="ion-text-wrap">{{item.name}}</ion-card-title>
+      <ion-card-title class="ion-text-wrap">{{getRetailer(item.retailerUID)}}</ion-card-title>
     </ion-item>
    
      <ion-card-content> 
-        <p> Description: {{item.description}}</p>
-        <p> Ordered: {{item.date.toDate().toLocaleString()}}</p>
-        <p> Retailer: {{getRetailer(item.retailerUID)}}</p>
-      
+        <p> Ordered: {{item.date.toDate().toLocaleString()}}</p> 
+        <!-- <p> Quantity: {{item.quantity}}</p>       -->
      </ion-card-content>
    </ion-card>
   </div>

@@ -24,6 +24,7 @@ export class UserListingPage implements OnInit {
   isReady: Boolean = false;
   listingSub;
   deleteDate;
+  userCart=[];
 
   constructor(private nacCtrl: NavController, public alertController: AlertController, private activatedRoute: ActivatedRoute, private firestore: AngularFirestore, private afStorage: AngularFireStorage, private changeDetection: ChangeDetectorRef, public loadingController: LoadingController) { }
 
@@ -75,21 +76,47 @@ export class UserListingPage implements OnInit {
 }
 
   async cart(listing){
-    this.firestore.doc(`users/${firebase.auth().currentUser.uid}`).update({
-      cart: firebase.firestore.FieldValue.arrayUnion({
-        description: listing.description,
-        listingID: listing.listingID,
-        retailerUID: listing.retailerUID,
-        quantity: listing.quantity,
-        quantityCart: 1,
-        price: listing.price,
-        totalPrice: listing.price
-      })
+
+    var self = this;
+    await this.firestore.doc(`users/${firebase.auth().currentUser.uid}`).get().toPromise().then(function(querySnapshot) {
+      self.userCart = [];      
+      var cart1 = querySnapshot.get("cart");
+      self.changeDetection.detectChanges(); 
+      cart1.forEach(element => {
+        self.userCart.push(element);            
+        });            
     })
+    .catch(function(error) {
+        console.log("Error getting documents");
+    }); 
 
-    const confirm = await this.presentAlert()
+    this.userCart = this.userCart.filter(cartItem => {
+      if (cartItem.listingID && listing.listingID) {
+        return (cartItem.listingID.toLowerCase() === listing.listingID.toLowerCase());
+      }
+    });
 
-    this.nacCtrl.navigateRoot(['tabs/tabs/tab3']);
+    if(this.userCart.length>0){
+      const confirm = await this.presentAlert('Item Previously Added to Cart!');
+      this.nacCtrl.navigateRoot(['tabs/tabs/tab3']);
+    }
+    else{
+      this.firestore.doc(`users/${firebase.auth().currentUser.uid}`).update({
+        cart: firebase.firestore.FieldValue.arrayUnion({
+          description: listing.description,
+          listingID: listing.listingID,
+          retailerUID: listing.retailerUID,
+          quantity: listing.quantity,
+          quantityCart: 1,
+          price: listing.price,
+          totalPrice: listing.price
+        })
+      })
+  
+      const confirm = await this.presentAlert('Successfully Added to Cart!');
+      this.nacCtrl.navigateRoot(['tabs/tabs/tab3']);
+
+    }
 
   }
 
@@ -108,14 +135,14 @@ export class UserListingPage implements OnInit {
     this.changeDetection.detectChanges(); 
   }
 
-  public async presentAlert() : Promise<boolean> {
+  public async presentAlert(message) : Promise<boolean> {
     let resolveFunction: (confirm: boolean) => void;
     const promise = new Promise<boolean>(resolve => {
       resolveFunction = resolve;
     });
     
     const alert = await this.alertController.create({
-      header: 'Successfully Added to Cart!',
+      header: message,
       buttons: [
         {
           text: 'OK',

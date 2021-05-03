@@ -28,10 +28,7 @@ export class RetailerListingPage implements OnInit {
   time;
   pDate;
   buttonText: string = "Edit";
-  isRead: boolean = true;
-   
-
-  // TODO: add the option to remove the listing that is currently published from the user view without deleting it for the retailer
+  isRead: boolean = true;  
 
   constructor(public listingService: ListingsService,private nacCtrl: NavController, private activatedRoute: ActivatedRoute, public afAuth: AngularFireAuth, private afstore: AngularFirestore, private afStorage: AngularFireStorage, private changeDetection: ChangeDetectorRef,public loadingController: LoadingController, public alertController: AlertController) { }
 
@@ -181,7 +178,6 @@ export class RetailerListingPage implements OnInit {
       })
     })
 
-    // TODO: may need to delete from carts?
     await this.listingService.deleteListing(listing)
     this.afstore.collection('listings').doc(listing.listingID).delete();
     this.nacCtrl.navigateRoot(["./retailertabs/retailertabs/retailertab2"]);

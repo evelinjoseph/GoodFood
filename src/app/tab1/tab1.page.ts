@@ -2,7 +2,6 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { LoadingController, AlertController, NavController } from '@ionic/angular';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { first } from 'rxjs/operators';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { ActivatedRoute } from '@angular/router';
 import { ListingsService} from '../listings.service';
@@ -17,8 +16,8 @@ export class Tab1Page implements OnInit{
   public listings: any[];
   public listingsBackup: any[];
   deleteListings: any[];
-  searchText = "Search By Food";
-  searchBy = "Food";
+  searchText = "Search By Retailer";
+  searchBy = "Retailer";
   dateNow;
   url; 
   retailerUID;
@@ -34,8 +33,7 @@ export class Tab1Page implements OnInit{
     this.presentLoading(); 
     this.listings = await this.initializeItems();
     
-}
-
+  }
 
 async initializeItems(): Promise<any> {
   let listing: any[] = await this.listingService.initializeItems();  
@@ -70,8 +68,6 @@ async initializeItems(): Promise<any> {
   return listing;
 }
 
- 
-
   search(event){
     this.listings = this.listingsBackup;
     const searchTerm = event.srcElement.value;
@@ -81,12 +77,23 @@ async initializeItems(): Promise<any> {
       return;
     }
 
-    if(this.searchBy == "Food"){
-      this.listings = this.listings.filter(currentListing => {
-        if (currentListing.name && searchTerm) {
-          return (currentListing.name.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1);
-        }
-      });  
+    if(this.searchBy == "Retailer"){
+      let matchingRetailers = [];
+      matchingRetailers = this.retailers.filter(retailer => {
+        return (retailer.name.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1);
+      });     
+      
+        this.listings = this.listings.filter(currentListing => {
+          if(matchingRetailers.length>0 && currentListing.retailerUID){
+            for(var i = 0; i<matchingRetailers.length; i++){
+              if(currentListing.retailerUID.toLowerCase().indexOf(matchingRetailers[i].retailerUID.toLowerCase())> -1){
+                return true;
+              }
+            } 
+          }                         
+          
+        });
+      
     }
 
     else if(this.searchBy == "Location"){
@@ -122,7 +129,7 @@ async initializeItems(): Promise<any> {
           type: 'radio',
           label: 'Retailer',
           value: 'Retailer',
-          checked: true
+          checked: true 
         },
         {
           name: 'radio2',
@@ -173,6 +180,8 @@ async initializeItems(): Promise<any> {
   }
 
   async doRefresh(event) {
+    // this.isReady = false;
+    // this.presentLoading();
     this.listings = await this.initializeItems();    
     event.target.complete();
   }

@@ -52,11 +52,12 @@ export class Tab3Page implements OnInit{
     });    
   }
 
-  ionViewWillEnter(){
+  async ionViewWillEnter(){
     this.cart = []
     this.subtotal = 0;
     if(this.items){
       this.userItems = this.items.valueChanges();
+      await this.listingService.initializeItems();
       this.retailers = this.listingService.getUsers().filter(currentListing => {
         if (currentListing.isRetailer) {
           return (currentListing.isRetailer);

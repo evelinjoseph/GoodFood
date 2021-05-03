@@ -68,9 +68,9 @@ export class Retailertab2Page implements OnInit {
     })
     
     this.afstore.collection('listings').doc(listing.listingID).delete();
-    //TODO: add to archive when deleted
-    this.afstore.collection('archive').doc(listing.listingID).set({
-      
+
+    //adding to archive after deletion
+    this.afstore.collection('archive').doc(listing.listingID).set({      
       description: listing.description,
       listingID: listing.listingID,
       price: listing.price,
@@ -84,7 +84,7 @@ export class Retailertab2Page implements OnInit {
         console.error("Error writing document: ", error);
     });
 
-    // TODO: may need to delete from carts?
+    //deleting from carts after deletion
     await this.listingService.deleteListing(listing)
   }
   }
@@ -95,8 +95,7 @@ export class Retailertab2Page implements OnInit {
     if (confirm) {
 
       this.afstore.doc(`users/${this.retailerUID}`).update({
-        listings: firebase.firestore.FieldValue.arrayUnion({
-          
+        listings: firebase.firestore.FieldValue.arrayUnion({          
           description: listing.description,
           listingID: listing.listingID,
           price: listing.price,
@@ -106,8 +105,7 @@ export class Retailertab2Page implements OnInit {
       })
 
     this.afstore.doc(`users/${this.retailerUID}`).update({
-      listings: firebase.firestore.FieldValue.arrayRemove({
-        
+      listings: firebase.firestore.FieldValue.arrayRemove({        
         description: listing.description,
         listingID: listing.listingID,
         price: listing.price,
@@ -116,7 +114,7 @@ export class Retailertab2Page implements OnInit {
       })
     })
     
-    // TODO: may need to delete from carts?
+    // delete from carts
     await this.listingService.deleteListing(listing)
     this.afstore.collection('listings').doc(listing.listingID).delete();
 

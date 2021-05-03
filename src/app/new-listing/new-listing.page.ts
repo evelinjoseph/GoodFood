@@ -54,8 +54,6 @@ save()
       if(this.quantity<=0){
         throw new Error('Please Enter Quantity');
       }
-
-      //TODO: make error checks better
       
     this.listingID = Guid.create().toShortString();
     this.afstore.doc(`users/${this.retailerUID}`).update({
@@ -89,8 +87,6 @@ save()
       if(this.quantity==0){
         throw new Error('Please Enter Quantity');
       }
-
-      //TODO: make error checks better
       this.listingID = Guid.create().toShortString();
       this.date = new Date();
       this.pickupDate = new Date(this.pickupTime.toDate());

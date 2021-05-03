@@ -13,7 +13,7 @@
   <div *ngFor="let item of cart">
     <ion-card>      
       <ion-card-header>
-        <ion-card-title>{{item.name}}</ion-card-title>      
+        <ion-card-title>{{getRetailer(item.retailerUID)}}</ion-card-title>      
       </ion-card-header>
       <ion-card-content>
         <p> Quantity: {{item.quantityCart}} </p>

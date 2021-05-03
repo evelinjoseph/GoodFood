@@ -129,8 +129,7 @@ export class ListingsService {
         console.log(deleteUserListing);
         deleteUserListing.forEach(listing => {
           this.firestore.doc(`users/${user.userUID}`).update({
-            cart: firebase.firestore.FieldValue.arrayRemove({
-              
+            cart: firebase.firestore.FieldValue.arrayRemove({              
               description: listing.description,
               listingID: listing.listingID,
               price: listing.price,
@@ -162,8 +161,7 @@ export class ListingsService {
 
       deleteUserListing.forEach(listing => {
         this.firestore.doc(`users/${user.userUID}`).update({
-          cart: firebase.firestore.FieldValue.arrayRemove({
-            name: listing.name,
+          cart: firebase.firestore.FieldValue.arrayRemove({            
             description: listing.description,
             listingID: listing.listingID,
             price: listing.price,
