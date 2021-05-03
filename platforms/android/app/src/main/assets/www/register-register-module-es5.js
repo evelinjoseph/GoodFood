@@ -292,7 +292,6 @@
                         email: email,
                         firstname: firstname,
                         lastname: lastname,
-                        password: password,
                         isRetailer: false,
                         cart: [],
                         orders: [],

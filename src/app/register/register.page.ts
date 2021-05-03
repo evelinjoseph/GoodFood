@@ -38,7 +38,6 @@ export class RegisterPage implements OnInit {
         email,
         firstname,
         lastname,
-        password,
         isRetailer: false,
         cart: [],
         orders: [],

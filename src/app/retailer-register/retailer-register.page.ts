@@ -54,7 +54,6 @@ export class RetailerRegisterPage implements OnInit {
         this.afstore.doc(`users/${res.user.uid}`).set({
           email,
           name,
-          password,
           isVerified: false,
           isRetailer: true,
           retailerUID: res.user.uid,

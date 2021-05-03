@@ -9,7 +9,7 @@
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<ion-header style=\"text-align: center\">\r\n  <ion-toolbar color=\"primary\" mode=\"ios\">\r\n    <ion-buttons slot=\"start\">\r\n      <ion-back-button [text]=\"Back\" defaultHref=\"/retailertabs/retailertabs/retailertab2\"></ion-back-button>\r\n    </ion-buttons>\r\n    <ion-title>\r\n      Good Food\r\n    </ion-title>\r\n  </ion-toolbar>\r\n</ion-header>\r\n\r\n<ion-content [hidden]=\"!isReady\" fullscreen >\r\n  <div *ngFor=\"let item of listing\"> \r\n  <img [src]=\"url\" style=\"width:100%;\"> \r\n\r\n  <h1 style=\"text-align: center; font-weight: bold\"> {{ retailer }}: {{ item.name }}</h1>\r\n  <hr>\r\n  <ion-text color=\"primary\">\r\n  <h3 style=\"text-align: center; font-weight: bold;\" > ${{ item.price | number:'1.2-2' }}</h3>\r\n  </ion-text> \r\n\r\n  <div style=\"text-align: center; font-size: large;\">\r\n    <ion-icon name=\"location-outline\"></ion-icon> \r\n    {{ location }}\r\n  </div>\r\n\r\n  <p style=\"text-align: center\"> {{ item.quantity }} meals left</p>  \r\n  <hr>\r\n  <div style=\"text-align: center\" *ngIf=\"!item.isListed\">\r\n  <ion-icon name=\"time-outline\"></ion-icon>\r\n  Pickup Time: {{pickupTime | date:'h:mm a'}}\r\n  </div>\r\n\r\n  <div style=\"text-align: center\" *ngIf=\"item.isListed\">\r\n    <ion-icon name=\"time-outline\"></ion-icon>\r\n    Listing Delete Date: {{pickupTime}}\r\n    </div>\r\n  <hr>\r\n  <!-- after publish and clicking on edit -->\r\n  <ion-item [hidden]=\"isRead\">\r\n    <ion-label>Delete Date</ion-label>\r\n    <ion-datetime value={{pickupTime}} [(ngModel)]=\"pDate\" (ionChange)=\"setPickupDate(this.pDate)\"></ion-datetime>\r\n  </ion-item>\r\n  <ion-item [hidden]=\"isRead\">\r\n    <ion-label>Delete/Pick Up Time</ion-label>\r\n    <ion-datetime value={{pickupTime}} display-format=\"h:mm A\" picker-format=\"h:mm A\" [(ngModel)]=\"time\" (ionChange)=\"setPickupTime(this.time)\"></ion-datetime>\r\n  </ion-item> \r\n  <p style=\"text-align: center; font-size: large;\"> {{ item.description }} </p>\r\n</div>\r\n</ion-content>\r\n\r\n<ion-toolbar [hidden]=\"!isReady\" position=\"bottom\" style=\"text-align: center;\" color=\"translucent\" *ngFor=\"let item of listing\"> \r\n  <ion-button *ngIf=\"!item.isListed\" size =\"large\" (click)=\"publish(item)\">Publish</ion-button>\r\n  <ion-button *ngIf=\"item.isListed\" size =\"large\" (click)=\"edit(item)\">{{buttonText}}</ion-button>\r\n  <ion-button *ngIf=\"item.isListed\" size =\"large\" (click)=\"unpublish(item)\">Unpublish</ion-button>\r\n</ion-toolbar>\r\n\r\n");
+/* harmony default export */ __webpack_exports__["default"] = ("<ion-header style=\"text-align: center\">\r\n  <ion-toolbar color=\"primary\" mode=\"ios\">\r\n    <ion-buttons slot=\"start\">\r\n      <ion-back-button [text]=\"Back\" defaultHref=\"/retailertabs/retailertabs/retailertab2\"></ion-back-button>\r\n    </ion-buttons>\r\n    <ion-title>\r\n      Good Food\r\n    </ion-title>\r\n  </ion-toolbar>\r\n</ion-header>\r\n\r\n<ion-content [hidden]=\"!isReady\" fullscreen >\r\n  <div *ngFor=\"let item of listing\"> \r\n  <img [src]=\"url\" style=\"width:100%;\"> \r\n\r\n  <h1 style=\"text-align: center; font-weight: bold\"> {{ retailer }}</h1>\r\n  <hr>\r\n  <ion-text color=\"primary\">\r\n  <h3 style=\"text-align: center; font-weight: bold;\" > ${{ item.price | number:'1.2-2' }}</h3>\r\n  </ion-text> \r\n\r\n  <div style=\"text-align: center; font-size: large;\">\r\n    <ion-icon name=\"location-outline\"></ion-icon> \r\n    {{ location }}\r\n  </div>\r\n\r\n  <p style=\"text-align: center\"> {{ item.quantity }} meals left</p>  \r\n  <hr>\r\n  <div style=\"text-align: center\" *ngIf=\"!item.isListed\">\r\n  <ion-icon name=\"time-outline\"></ion-icon>\r\n  Pickup Time: {{pickupTime | date:'h:mm a'}}\r\n  </div>\r\n\r\n  <div style=\"text-align: center\" *ngIf=\"item.isListed\">\r\n    <ion-icon name=\"time-outline\"></ion-icon>\r\n    Listing Delete Date: {{pickupTime}}\r\n    </div>\r\n  <hr>\r\n  <!-- after publish and clicking on edit -->\r\n  <ion-item [hidden]=\"isRead\">\r\n    <ion-label>Delete Date</ion-label>\r\n    <ion-datetime value={{pickupTime}} [(ngModel)]=\"pDate\" (ionChange)=\"setPickupDate(this.pDate)\"></ion-datetime>\r\n  </ion-item>\r\n  <ion-item [hidden]=\"isRead\">\r\n    <ion-label>Delete/Pick Up Time</ion-label>\r\n    <ion-datetime value={{pickupTime}} display-format=\"h:mm A\" picker-format=\"h:mm A\" [(ngModel)]=\"time\" (ionChange)=\"setPickupTime(this.time)\"></ion-datetime>\r\n  </ion-item> \r\n  <p style=\"text-align: center; font-size: large;\"> {{ item.description }} </p>\r\n</div>\r\n</ion-content>\r\n\r\n<ion-toolbar [hidden]=\"!isReady\" position=\"bottom\" style=\"text-align: center;\" color=\"translucent\" *ngFor=\"let item of listing\"> \r\n  <ion-button *ngIf=\"!item.isListed\" size =\"large\" (click)=\"publish(item)\">Publish</ion-button>\r\n  <ion-button *ngIf=\"item.isListed\" size =\"large\" (click)=\"edit(item)\">{{buttonText}}</ion-button>\r\n  <ion-button *ngIf=\"item.isListed\" size =\"large\" (click)=\"unpublish(item)\">Unpublish</ion-button>\r\n</ion-toolbar>\r\n\r\n");
 
 /***/ }),
 
@@ -135,7 +135,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 let RetailerListingPage = class RetailerListingPage {
-    // TODO: add the option to remove the listing that is currently published from the user view without deleting it for the retailer
     constructor(listingService, nacCtrl, activatedRoute, afAuth, afstore, afStorage, changeDetection, loadingController, alertController) {
         this.listingService = listingService;
         this.nacCtrl = nacCtrl;
@@ -206,7 +205,6 @@ let RetailerListingPage = class RetailerListingPage {
         const data = {
             description: listing.description,
             listingID: listing.listingID,
-            name: listing.name,
             price: listing.price,
             quantity: listing.quantity,
             retailerType: this.retailerType,
@@ -220,7 +218,6 @@ let RetailerListingPage = class RetailerListingPage {
                 quantity: listing.quantity,
                 price: listing.price,
                 description: listing.description,
-                name: listing.name,
                 listingID: listing.listingID,
                 isListed: true
             })
@@ -230,7 +227,6 @@ let RetailerListingPage = class RetailerListingPage {
                 quantity: listing.quantity,
                 price: listing.price,
                 description: listing.description,
-                name: listing.name,
                 listingID: listing.listingID,
                 isListed: false
             })
@@ -265,7 +261,6 @@ let RetailerListingPage = class RetailerListingPage {
             if (confirm) {
                 this.afstore.doc(`users/${this.retailerUID}`).update({
                     listings: firebase_app__WEBPACK_IMPORTED_MODULE_7__["firestore"].FieldValue.arrayUnion({
-                        name: listing.name,
                         description: listing.description,
                         listingID: listing.listingID,
                         price: listing.price,
@@ -275,7 +270,6 @@ let RetailerListingPage = class RetailerListingPage {
                 });
                 this.afstore.doc(`users/${this.retailerUID}`).update({
                     listings: firebase_app__WEBPACK_IMPORTED_MODULE_7__["firestore"].FieldValue.arrayRemove({
-                        name: listing.name,
                         description: listing.description,
                         listingID: listing.listingID,
                         price: listing.price,
@@ -283,7 +277,6 @@ let RetailerListingPage = class RetailerListingPage {
                         isListed: listing.isListed
                     })
                 });
-                // TODO: may need to delete from carts?
                 yield this.listingService.deleteListing(listing);
                 this.afstore.collection('listings').doc(listing.listingID).delete();
                 this.nacCtrl.navigateRoot(["./retailertabs/retailertabs/retailertab2"]);
@@ -341,7 +334,6 @@ let RetailerListingPage = class RetailerListingPage {
             const data = {
                 description: listing.description,
                 listingID: listing.listingID,
-                name: listing.name,
                 price: listing.price,
                 quantity: listing.quantity,
                 retailerType: this.retailerType,

@@ -9,7 +9,7 @@
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<ion-header style=\"text-align: center\">\r\n  <ion-toolbar color=\"primary\" mode=\"ios\">\r\n    <ion-buttons slot=\"start\">\r\n      <ion-back-button [text]=\"Back\" defaultHref=\"/tabs/tabs/tab1\"></ion-back-button>\r\n    </ion-buttons>\r\n    <ion-title>\r\n      Good Food\r\n    </ion-title>\r\n  </ion-toolbar>\r\n</ion-header>\r\n\r\n<ion-content [hidden]=\"!isReady\" fullscreen>\r\n  <img [src]=\"url\" style=\"width:100%;\"> \r\n\r\n  <h1 style=\"text-align: center; font-weight: bold\"> {{ retailer }}: {{ name }}</h1>\r\n  <hr>\r\n  <ion-text color=\"primary\">\r\n  <h3 style=\"text-align: center; font-weight: bold;\" > ${{ price | number:'1.2-2' }}</h3>\r\n  </ion-text> \r\n\r\n  <div style=\"text-align: center; font-size: large;\">\r\n    <ion-icon name=\"location-outline\"></ion-icon> \r\n    {{ location }}\r\n  </div>\r\n\r\n  <p style=\"text-align: center; font-weight: bold;\"> {{ quantity }} meals left</p>  \r\n  <hr> \r\n  <div style=\"text-align: center;\">\r\n    <ion-icon name=\"time-outline\"></ion-icon>\r\n   Pick Up By: {{deleteDate}}\r\n  </div>\r\n  <hr>\r\n  <p style=\"text-align: center; font-size: large;\"> {{ description }} </p>\r\n  <p style=\"text-align: center; font-weight: bold;\" > Please keep in mind that because the Good Food application deals with surplus food, all options vary on availability. Thank you!</p> \r\n  \r\n  <ion-toolbar [hidden]=\"!isReady\" position=\"bottom\" style=\"text-align: center;\" color=\"translucent\"> \r\n    <ion-button expand=\"block\" size =\"large\" (click)=\"cart(listing)\">Add To Cart</ion-button>\r\n  </ion-toolbar>\r\n</ion-content>\r\n\r\n\r\n\r\n");
+/* harmony default export */ __webpack_exports__["default"] = ("<ion-header style=\"text-align: center\">\r\n  <ion-toolbar color=\"primary\" mode=\"ios\">\r\n    <ion-buttons slot=\"start\">\r\n      <ion-back-button [text]=\"Back\" defaultHref=\"/tabs/tabs/tab1\"></ion-back-button>\r\n    </ion-buttons>\r\n    <ion-title>\r\n      Good Food\r\n    </ion-title>\r\n  </ion-toolbar>\r\n</ion-header>\r\n\r\n<ion-content [hidden]=\"!isReady\" fullscreen>\r\n  <img [src]=\"url\" style=\"width:100%;\"> \r\n\r\n  <h1 style=\"text-align: center; font-weight: bold\"> {{ retailer }}</h1>\r\n  <hr>\r\n  <ion-text color=\"primary\">\r\n  <h3 style=\"text-align: center; font-weight: bold;\" > ${{ price | number:'1.2-2' }}</h3>\r\n  </ion-text> \r\n\r\n  <div style=\"text-align: center; font-size: large;\">\r\n    <ion-icon name=\"location-outline\"></ion-icon> \r\n    {{ location }}\r\n  </div>\r\n\r\n  <p style=\"text-align: center; font-weight: bold;\"> {{ quantity }} meals left</p>  \r\n  <hr> \r\n  <div style=\"text-align: center;\">\r\n    <ion-icon name=\"time-outline\"></ion-icon>\r\n   Pick Up By: {{deleteDate}}\r\n  </div>\r\n  <hr>\r\n  <!-- TODO: might need to change this, talk to carolina -->\r\n  <p style=\"text-align: center; font-size: large;\"> {{ description }} </p>\r\n  <p style=\"text-align: center; font-weight: bold;\" > Please keep in mind that because the Good Food application deals with surplus food, all options vary on availability. Thank you!</p> \r\n  \r\n  <ion-toolbar [hidden]=\"!isReady\" position=\"bottom\" style=\"text-align: center;\" color=\"translucent\"> \r\n    <ion-button expand=\"block\" size =\"large\" (click)=\"cart(listing)\">Add To Cart</ion-button>\r\n  </ion-toolbar>\r\n</ion-content>\r\n\r\n\r\n\r\n");
 
 /***/ }),
 
@@ -140,6 +140,7 @@ let UserListingPage = class UserListingPage {
         this.changeDetection = changeDetection;
         this.loadingController = loadingController;
         this.isReady = false;
+        this.userCart = [];
     }
     ngOnInit() {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
@@ -150,7 +151,6 @@ let UserListingPage = class UserListingPage {
                 //collection.doc.id  ??to add to db when we get to it
                 this.listingSub = this.firestore.collection("listings").doc(this.ID).valueChanges().subscribe(data => {
                     this.listing = data;
-                    this.name = this.listing.name;
                     this.description = this.listing.description;
                     this.location = this.listing.location;
                     this.price = this.listing.price;
@@ -186,20 +186,42 @@ let UserListingPage = class UserListingPage {
     }
     cart(listing) {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
-            this.firestore.doc(`users/${firebase_app__WEBPACK_IMPORTED_MODULE_5__["auth"]().currentUser.uid}`).update({
-                cart: firebase_app__WEBPACK_IMPORTED_MODULE_5__["firestore"].FieldValue.arrayUnion({
-                    name: listing.name,
-                    description: listing.description,
-                    listingID: listing.listingID,
-                    retailerUID: listing.retailerUID,
-                    quantity: listing.quantity,
-                    quantityCart: 1,
-                    price: listing.price,
-                    totalPrice: listing.price
-                })
+            var self = this;
+            yield this.firestore.doc(`users/${firebase_app__WEBPACK_IMPORTED_MODULE_5__["auth"]().currentUser.uid}`).get().toPromise().then(function (querySnapshot) {
+                self.userCart = [];
+                var cart1 = querySnapshot.get("cart");
+                self.changeDetection.detectChanges();
+                cart1.forEach(element => {
+                    self.userCart.push(element);
+                });
+            })
+                .catch(function (error) {
+                console.log("Error getting documents");
             });
-            const confirm = yield this.presentAlert();
-            this.nacCtrl.navigateRoot(['tabs/tabs/tab3']);
+            this.userCart = this.userCart.filter(cartItem => {
+                if (cartItem.listingID && listing.listingID) {
+                    return (cartItem.listingID.toLowerCase() === listing.listingID.toLowerCase());
+                }
+            });
+            if (this.userCart.length > 0) {
+                const confirm = yield this.presentAlert('Item Previously Added to Cart!');
+                this.nacCtrl.navigateRoot(['tabs/tabs/tab3']);
+            }
+            else {
+                this.firestore.doc(`users/${firebase_app__WEBPACK_IMPORTED_MODULE_5__["auth"]().currentUser.uid}`).update({
+                    cart: firebase_app__WEBPACK_IMPORTED_MODULE_5__["firestore"].FieldValue.arrayUnion({
+                        description: listing.description,
+                        listingID: listing.listingID,
+                        retailerUID: listing.retailerUID,
+                        quantity: listing.quantity,
+                        quantityCart: 1,
+                        price: listing.price,
+                        totalPrice: listing.price
+                    })
+                });
+                const confirm = yield this.presentAlert('Successfully Added to Cart!');
+                this.nacCtrl.navigateRoot(['tabs/tabs/tab3']);
+            }
         });
     }
     presentLoading() {
@@ -216,14 +238,14 @@ let UserListingPage = class UserListingPage {
             this.changeDetection.detectChanges();
         });
     }
-    presentAlert() {
+    presentAlert(message) {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
             let resolveFunction;
             const promise = new Promise(resolve => {
                 resolveFunction = resolve;
             });
             const alert = yield this.alertController.create({
-                header: 'Successfully Added to Cart!',
+                header: message,
                 buttons: [
                     {
                         text: 'OK',
