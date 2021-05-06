@@ -22,7 +22,7 @@
       /* harmony default export */
 
 
-      __webpack_exports__["default"] = "<ion-header style=\"text-align: center\">\n  <ion-toolbar color=\"primary\" mode=\"ios\">\n    <ion-buttons slot=\"start\">\n      <ion-back-button [text]=\"Back\" defaultHref=\"/retailertabs/retailertabs/retailertab2\"></ion-back-button>\n    </ion-buttons>\n    <ion-title>\n      Good Food\n    </ion-title>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content [hidden]=\"!isReady\" fullscreen >\n  <div *ngFor=\"let item of listing\"> \n  <img [src]=\"url\" style=\"width:100%;\"> \n\n  <h1 style=\"text-align: center; font-weight: bold\"> {{ retailer }}: {{ item.name }}</h1>\n  <hr>\n  <ion-text color=\"primary\">\n  <h3 style=\"text-align: center; font-weight: bold;\" > ${{ item.price | number:'1.2-2' }}</h3>\n  </ion-text> \n\n  <div style=\"text-align: center; font-size: large;\">\n    <ion-icon name=\"location-outline\"></ion-icon> \n    {{ location }}\n  </div>\n\n  <p style=\"text-align: center\"> {{ item.quantity }} meals left</p>  \n  <hr>\n  <div style=\"text-align: center\" *ngIf=\"!item.isListed\">\n  <ion-icon name=\"time-outline\"></ion-icon>\n  Pickup Time: {{pickupTime | date:'h:mm a'}}\n  </div>\n\n  <div style=\"text-align: center\" *ngIf=\"item.isListed\">\n    <ion-icon name=\"time-outline\"></ion-icon>\n    Listing Delete Date: {{pickupTime}}\n    </div>\n  <hr>\n  <!-- after publish and clicking on edit -->\n  <ion-item [hidden]=\"isRead\">\n    <ion-label>Delete Date</ion-label>\n    <ion-datetime value={{pickupTime}} [(ngModel)]=\"pDate\" (ionChange)=\"setPickupDate(this.pDate)\"></ion-datetime>\n  </ion-item>\n  <ion-item [hidden]=\"isRead\">\n    <ion-label>Delete/Pick Up Time</ion-label>\n    <ion-datetime value={{pickupTime}} display-format=\"h:mm A\" picker-format=\"h:mm A\" [(ngModel)]=\"time\" (ionChange)=\"setPickupTime(this.time)\"></ion-datetime>\n  </ion-item> \n  <p style=\"text-align: center; font-size: large;\"> {{ item.description }} </p>\n</div>\n</ion-content>\n\n<ion-toolbar [hidden]=\"!isReady\" position=\"bottom\" style=\"text-align: center;\" color=\"translucent\" *ngFor=\"let item of listing\"> \n  <ion-button *ngIf=\"!item.isListed\" size =\"large\" (click)=\"publish(item)\">Publish</ion-button>\n  <ion-button *ngIf=\"item.isListed\" size =\"large\" (click)=\"edit(item)\">{{buttonText}}</ion-button>\n  <ion-button *ngIf=\"item.isListed\" size =\"large\" (click)=\"unpublish(item)\">Unpublish</ion-button>\n</ion-toolbar>\n\n";
+      __webpack_exports__["default"] = "<ion-header style=\"text-align: center\">\n  <ion-toolbar color=\"primary\" mode=\"ios\">\n    <ion-buttons slot=\"start\">\n      <ion-back-button [text]=\"Back\" defaultHref=\"/retailertabs/retailertabs/retailertab2\"></ion-back-button>\n    </ion-buttons>\n    <ion-title>\n      Good Food\n    </ion-title>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content [hidden]=\"!isReady\" fullscreen >\n  <div *ngFor=\"let item of listing\"> \n  <img [src]=\"url\" style=\"width:100%;\"> \n\n  <h1 style=\"text-align: center; font-weight: bold\"> {{ retailer }}</h1>\n  <hr>\n  <ion-text color=\"primary\">\n  <h3 style=\"text-align: center; font-weight: bold;\" > ${{ item.price | number:'1.2-2' }}</h3>\n  </ion-text> \n\n  <div style=\"text-align: center; font-size: large;\">\n    <ion-icon name=\"location-outline\"></ion-icon> \n    {{ location }}\n  </div>\n\n  <p style=\"text-align: center\"> {{ item.quantity }} meals left</p>  \n  <hr>\n  <div style=\"text-align: center\" *ngIf=\"!item.isListed\">\n  <ion-icon name=\"time-outline\"></ion-icon>\n  Pickup Time: {{pickupTime | date:'h:mm a'}}\n  </div>\n\n  <div style=\"text-align: center\" *ngIf=\"item.isListed\">\n    <ion-icon name=\"time-outline\"></ion-icon>\n    Listing Delete Date: {{pickupTime}}\n    </div>\n  <hr>\n  <!-- after publish and clicking on edit -->\n  <ion-item [hidden]=\"isRead\">\n    <ion-label>Delete Date</ion-label>\n    <ion-datetime value={{pickupTime}} [(ngModel)]=\"pDate\" (ionChange)=\"setPickupDate(this.pDate)\"></ion-datetime>\n  </ion-item>\n  <ion-item [hidden]=\"isRead\">\n    <ion-label>Delete/Pick Up Time</ion-label>\n    <ion-datetime value={{pickupTime}} display-format=\"h:mm A\" picker-format=\"h:mm A\" [(ngModel)]=\"time\" (ionChange)=\"setPickupTime(this.time)\"></ion-datetime>\n  </ion-item> \n \n  <p style=\"text-align: center; font-size: large;\"> {{ item.description }} </p>\n</div>\n</ion-content>\n\n<ion-toolbar [hidden]=\"!isReady\" position=\"bottom\" style=\"text-align: center;\" color=\"translucent\" *ngFor=\"let item of listing\"> \n  <ion-button *ngIf=\"!item.isListed\" size =\"large\" (click)=\"publish(item)\">Publish</ion-button>\n  <ion-button *ngIf=\"item.isListed\" size =\"large\" (click)=\"edit(item)\">{{buttonText}}</ion-button>\n  <ion-button *ngIf=\"item.isListed\" size =\"large\" (click)=\"unpublish(item)\">Unpublish</ion-button>\n</ion-toolbar>\n\n";
       /***/
     },
 
@@ -258,7 +258,6 @@
       "./src/app/listings.service.ts");
 
       var RetailerListingPage = /*#__PURE__*/function () {
-        // TODO: add the option to remove the listing that is currently published from the user view without deleting it for the retailer
         function RetailerListingPage(listingService, nacCtrl, activatedRoute, afAuth, afstore, afStorage, changeDetection, loadingController, alertController) {
           _classCallCheck(this, RetailerListingPage);
 
@@ -395,7 +394,6 @@
             var data = {
               description: listing.description,
               listingID: listing.listingID,
-              name: listing.name,
               price: listing.price,
               quantity: listing.quantity,
               retailerType: this.retailerType,
@@ -409,7 +407,6 @@
                 quantity: listing.quantity,
                 price: listing.price,
                 description: listing.description,
-                name: listing.name,
                 listingID: listing.listingID,
                 isListed: true
               })
@@ -419,7 +416,6 @@
                 quantity: listing.quantity,
                 price: listing.price,
                 description: listing.description,
-                name: listing.name,
                 listingID: listing.listingID,
                 isListed: false
               })
@@ -490,7 +486,6 @@
 
                       this.afstore.doc("users/".concat(this.retailerUID)).update({
                         listings: firebase_app__WEBPACK_IMPORTED_MODULE_7__["firestore"].FieldValue.arrayUnion({
-                          name: listing.name,
                           description: listing.description,
                           listingID: listing.listingID,
                           price: listing.price,
@@ -500,15 +495,13 @@
                       });
                       this.afstore.doc("users/".concat(this.retailerUID)).update({
                         listings: firebase_app__WEBPACK_IMPORTED_MODULE_7__["firestore"].FieldValue.arrayRemove({
-                          name: listing.name,
                           description: listing.description,
                           listingID: listing.listingID,
                           price: listing.price,
                           quantity: listing.quantity,
                           isListed: listing.isListed
                         })
-                      }); // TODO: may need to delete from carts?
-
+                      });
                       _context4.next = 8;
                       return this.listingService.deleteListing(listing);
 
@@ -602,7 +595,6 @@
               var data = {
                 description: listing.description,
                 listingID: listing.listingID,
-                name: listing.name,
                 price: listing.price,
                 quantity: listing.quantity,
                 retailerType: this.retailerType,

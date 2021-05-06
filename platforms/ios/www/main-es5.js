@@ -133,7 +133,7 @@
       /* harmony default export */
 
 
-      __webpack_exports__["default"] = "<ion-app>\n  <ion-menu side=\"start\" menuId=\"first\" contentId=\"main\">\n    <ion-header>\n      <ion-toolbar color=\"primary\" mode=\"ios\">\n        <ion-title>Good Food</ion-title>\n      </ion-toolbar>\n    </ion-header>\n    <ion-content>\n      <ion-list>\n        <ion-menu-toggle auto-hide=\"true\">        \n        <ion-item (click)=\"account()\">Account Settings</ion-item>\n        <ion-item>Notification Settings</ion-item>\n        <ion-item>About</ion-item>\n        <ion-item (click)=\"logout()\">Logout</ion-item>\n      </ion-menu-toggle>\n      </ion-list>\n    </ion-content>\n  </ion-menu>\n\n  <ion-router-outlet id=\"main\"></ion-router-outlet>\n</ion-app>\n";
+      __webpack_exports__["default"] = "<ion-app>\n  <ion-menu side=\"start\" menuId=\"first\" contentId=\"main\">\n    <ion-header>\n      <ion-toolbar color=\"primary\" mode=\"ios\">\n        <ion-title>Good Food</ion-title>\n      </ion-toolbar>\n    </ion-header>\n    <ion-content>\n      <ion-list>\n        <ion-menu-toggle auto-hide=\"true\">        \n        <ion-item (click)=\"account()\">Account Settings</ion-item>\n        <!-- <ion-item>Notification Settings</ion-item> -->\n        <ion-item (click)=\"about()\">About</ion-item>\n        <ion-item (click)=\"logout()\">Logout</ion-item>\n      </ion-menu-toggle>\n      </ion-list>\n    </ion-content>\n  </ion-menu>\n\n  <ion-router-outlet id=\"main\"></ion-router-outlet>\n</ion-app>\n";
       /***/
     },
 
@@ -204,9 +204,9 @@
       }, {
         path: 'tab3',
         loadChildren: function loadChildren() {
-          return __webpack_require__.e(
+          return Promise.all(
           /*! import() | tab3-tab3-module */
-          "tab3-tab3-module").then(__webpack_require__.bind(null,
+          [__webpack_require__.e("common"), __webpack_require__.e("tab3-tab3-module")]).then(__webpack_require__.bind(null,
           /*! ./tab3/tab3.module */
           "./src/app/tab3/tab3.module.ts")).then(function (m) {
             return m.Tab3PageModule;
@@ -410,6 +410,17 @@
             return m.RetailerUpdatePasswordPageModule;
           });
         }
+      }, {
+        path: 'about',
+        loadChildren: function loadChildren() {
+          return __webpack_require__.e(
+          /*! import() | about-about-module */
+          "about-about-module").then(__webpack_require__.bind(null,
+          /*! ./about/about.module */
+          "./src/app/about/about.module.ts")).then(function (m) {
+            return m.AboutPageModule;
+          });
+        }
       }];
 
       var AppRoutingModule = function AppRoutingModule() {
@@ -565,6 +576,11 @@
                 }, _callee);
               }));
             });
+          }
+        }, {
+          key: "about",
+          value: function about() {
+            this.nacCtrl.navigateRoot(['/about']);
           }
         }, {
           key: "logout",

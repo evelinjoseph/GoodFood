@@ -270,7 +270,7 @@ module.exports = webpackAsyncContext;
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<ion-app>\n  <ion-menu side=\"start\" menuId=\"first\" contentId=\"main\">\n    <ion-header>\n      <ion-toolbar color=\"primary\" mode=\"ios\">\n        <ion-title>Good Food</ion-title>\n      </ion-toolbar>\n    </ion-header>\n    <ion-content>\n      <ion-list>\n        <ion-menu-toggle auto-hide=\"true\">        \n        <ion-item (click)=\"account()\">Account Settings</ion-item>\n        <ion-item>Notification Settings</ion-item>\n        <ion-item>About</ion-item>\n        <ion-item (click)=\"logout()\">Logout</ion-item>\n      </ion-menu-toggle>\n      </ion-list>\n    </ion-content>\n  </ion-menu>\n\n  <ion-router-outlet id=\"main\"></ion-router-outlet>\n</ion-app>\n");
+/* harmony default export */ __webpack_exports__["default"] = ("<ion-app>\n  <ion-menu side=\"start\" menuId=\"first\" contentId=\"main\">\n    <ion-header>\n      <ion-toolbar color=\"primary\" mode=\"ios\">\n        <ion-title>Good Food</ion-title>\n      </ion-toolbar>\n    </ion-header>\n    <ion-content>\n      <ion-list>\n        <ion-menu-toggle auto-hide=\"true\">        \n        <ion-item (click)=\"account()\">Account Settings</ion-item>\n        <!-- <ion-item>Notification Settings</ion-item> -->\n        <ion-item (click)=\"about()\">About</ion-item>\n        <ion-item (click)=\"logout()\">Logout</ion-item>\n      </ion-menu-toggle>\n      </ion-list>\n    </ion-content>\n  </ion-menu>\n\n  <ion-router-outlet id=\"main\"></ion-router-outlet>\n</ion-app>\n");
 
 /***/ }),
 
@@ -302,7 +302,7 @@ const routes = [
     },
     {
         path: 'tab3',
-        loadChildren: () => __webpack_require__.e(/*! import() | tab3-tab3-module */ "tab3-tab3-module").then(__webpack_require__.bind(null, /*! ./tab3/tab3.module */ "./src/app/tab3/tab3.module.ts")).then(m => m.Tab3PageModule)
+        loadChildren: () => Promise.all(/*! import() | tab3-tab3-module */[__webpack_require__.e("common"), __webpack_require__.e("tab3-tab3-module")]).then(__webpack_require__.bind(null, /*! ./tab3/tab3.module */ "./src/app/tab3/tab3.module.ts")).then(m => m.Tab3PageModule)
     },
     {
         path: 'tabs',
@@ -375,6 +375,10 @@ const routes = [
     {
         path: 'retailer-update-password',
         loadChildren: () => Promise.all(/*! import() | retailer-update-password-retailer-update-password-module */[__webpack_require__.e("default~firebase-auth~retailer-update-password-retailer-update-password-module~update-password-updat~c63c26d4"), __webpack_require__.e("default~retailer-update-password-retailer-update-password-module~update-password-update-password-module"), __webpack_require__.e("retailer-update-password-retailer-update-password-module")]).then(__webpack_require__.bind(null, /*! ./retailer-update-password/retailer-update-password.module */ "./src/app/retailer-update-password/retailer-update-password.module.ts")).then(m => m.RetailerUpdatePasswordPageModule)
+    },
+    {
+        path: 'about',
+        loadChildren: () => __webpack_require__.e(/*! import() | about-about-module */ "about-about-module").then(__webpack_require__.bind(null, /*! ./about/about.module */ "./src/app/about/about.module.ts")).then(m => m.AboutPageModule)
     }
 ];
 let AppRoutingModule = class AppRoutingModule {
@@ -459,6 +463,9 @@ let AppComponent = class AppComponent {
                 }
             });
         });
+    }
+    about() {
+        this.nacCtrl.navigateRoot(['/about']);
     }
     logout() {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {

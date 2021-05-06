@@ -94,9 +94,9 @@
         }, {
           path: 'tab3',
           loadChildren: function loadChildren() {
-            return __webpack_require__.e(
+            return Promise.all(
             /*! import() | tab3-tab3-module */
-            "tab3-tab3-module").then(__webpack_require__.bind(null,
+            [__webpack_require__.e("common"), __webpack_require__.e("tab3-tab3-module")]).then(__webpack_require__.bind(null,
             /*! ../tab3/tab3.module */
             "./src/app/tab3/tab3.module.ts")).then(function (m) {
               return m.Tab3PageModule;
