@@ -458,6 +458,7 @@ __webpack_require__.r(__webpack_exports__);
 let ListingsService = class ListingsService {
     constructor(firestore) {
         this.firestore = firestore;
+        this.initializeItems();
     }
     initializeItems() {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
@@ -482,7 +483,6 @@ let ListingsService = class ListingsService {
                 this.firestore.collection('listings').doc(element.listingID).delete();
                 //add to archive    
                 this.firestore.collection('archive').doc(element.listingID).set({
-                    name: element.name,
                     description: element.description,
                     listingID: element.listingID,
                     price: element.price,
@@ -513,7 +513,6 @@ let ListingsService = class ListingsService {
                 });
                 this.firestore.doc(`users/${element.retailerUID}`).update({
                     listings: firebase_app__WEBPACK_IMPORTED_MODULE_4__["firestore"].FieldValue.arrayUnion({
-                        name: element.name,
                         description: element.description,
                         listingID: element.listingID,
                         price: element.price,
@@ -523,7 +522,6 @@ let ListingsService = class ListingsService {
                 });
                 this.firestore.doc(`users/${element.retailerUID}`).update({
                     listings: firebase_app__WEBPACK_IMPORTED_MODULE_4__["firestore"].FieldValue.arrayRemove({
-                        name: element.name,
                         description: element.description,
                         listingID: element.listingID,
                         price: element.price,
@@ -557,7 +555,6 @@ let ListingsService = class ListingsService {
                         deleteUserListing.forEach(listing => {
                             this.firestore.doc(`users/${user.userUID}`).update({
                                 cart: firebase_app__WEBPACK_IMPORTED_MODULE_4__["firestore"].FieldValue.arrayRemove({
-                                    name: listing.name,
                                     description: listing.description,
                                     listingID: listing.listingID,
                                     price: listing.price,
@@ -589,7 +586,6 @@ let ListingsService = class ListingsService {
                     deleteUserListing.forEach(listing => {
                         this.firestore.doc(`users/${user.userUID}`).update({
                             cart: firebase_app__WEBPACK_IMPORTED_MODULE_4__["firestore"].FieldValue.arrayRemove({
-                                name: listing.name,
                                 description: listing.description,
                                 listingID: listing.listingID,
                                 price: listing.price,

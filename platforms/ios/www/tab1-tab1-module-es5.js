@@ -22,7 +22,7 @@
       /* harmony default export */
 
 
-      __webpack_exports__["default"] = "<ion-header>\n  <ion-toolbar mode=\"ios\" color=\"primary\">\n    <ion-title>Good Food</ion-title>\n    <ion-buttons slot=\"start\">\n      <ion-menu-button autoHide=\"false\"></ion-menu-button>\n    </ion-buttons>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content fullscreen [hidden]=\"!isReady\"> \n\n  <ion-refresher slot=\"fixed\" (ionRefresh)=\"doRefresh($event)\">\n    <ion-refresher-content></ion-refresher-content>\n  </ion-refresher>\n  \n  <br>\n  <ion-toolbar> \n    <ion-row>\n      <ion-col size=\"10\">\n      <ion-searchbar mode=\"ios\" (ionInput)=\"search($event)\" placeholder = {{searchText}}></ion-searchbar>\n    </ion-col>\n      <ion-col size=\"1\">\n      <ion-icon size=\"4\" name=\"options\" (click)=\"filterSearch()\"></ion-icon>\n    </ion-col>\n  </ion-row> \n    </ion-toolbar> \n    <!-- \n    <ion-item>\n      <ion-range id=\"dual-range\" dual-knobs pin color=\"primary\" [(ngModel)]=\"dualValue2\" min=\"0\" max=\"100\" step=\"1\" snaps=\"true\">\n        <ion-label slot=\"start\" >0</ion-label>\n        <ion-label slot=\"end\">100</ion-label>\n      </ion-range>\n    </ion-item> -->\n  <div *ngFor=\"let item of listings\">   \n    <ion-card [routerLink]=\"['/user-listing']\" [queryParams]=\"{ id: item.listingID }\" routerDirection=\"forward\">\n     <!-- <ion-item> \n       <ion-icon name=\"restaurant\" slot=\"start\"></ion-icon>\n       <ion-label class=\"ion-text-wrap\">{{item.name}}</ion-label>   \n      </ion-item> \n       <ion-card> -->\n        <!-- <img src=\"./madison.jpg\" /> -->\n        \n        <img src={{item.url}} style=\"width:100%;\"> \n        <ion-card-header> \n          <ion-card-title class=\"ion-text-wrap\">{{item.name}}</ion-card-title>\n        </ion-card-header>\n   \n     <ion-card-content> \n     \n       <p> Price: ${{item.price | number:'1.2-2'}}</p>\n       <p> Description: {{item.description}}</p>\n       <p> Location: {{item.location}}</p>\n       <p> Retailer Type: {{item.retailerType}}</p>\n     </ion-card-content>\n   </ion-card>\n  </div>\n</ion-content>";
+      __webpack_exports__["default"] = "<ion-header>\n  <ion-toolbar mode=\"ios\" color=\"primary\">\n    <ion-title>Good Food</ion-title>\n    <ion-buttons slot=\"start\">\n      <ion-menu-button autoHide=\"false\"></ion-menu-button>\n    </ion-buttons>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content fullscreen [hidden]=\"!isReady\"> \n\n  <ion-refresher slot=\"fixed\" (ionRefresh)=\"doRefresh($event)\">\n    <ion-refresher-content></ion-refresher-content>\n  </ion-refresher>\n  \n  <br>\n  <ion-toolbar> \n    <ion-row>\n      <ion-col size=\"10\">\n      <ion-searchbar mode=\"ios\" (ionInput)=\"search($event)\" placeholder = {{searchText}}></ion-searchbar>\n    </ion-col>\n      <ion-col size=\"1\">\n      <ion-icon size=\"4\" name=\"options\" (click)=\"filterSearch()\"></ion-icon>\n    </ion-col>\n  </ion-row> \n    </ion-toolbar> \n    \n  <div *ngFor=\"let item of listings\">   \n    <ion-card [routerLink]=\"['/user-listing']\" [queryParams]=\"{ id: item.listingID }\" routerDirection=\"forward\">\n             \n        <img src={{item.url}} style=\"width:100%;\"> \n        <ion-card-header> \n          <ion-card-title class=\"ion-text-wrap\">{{getRetailer(item.retailerUID)}}</ion-card-title> \n        </ion-card-header>\n   \n     <ion-card-content> \n      <p style=\"font-weight: bold; color:black\"> {{item.quantity}} meals left</p>\n       <p> Price: ${{item.price | number:'1.2-2'}}</p>\n       <p> Location: {{item.location}}</p>\n       <p> Retailer Type: {{item.retailerType}}</p>\n     </ion-card-content>\n   </ion-card>\n  </div>\n</ion-content>";
       /***/
     },
 
@@ -260,8 +260,8 @@
           this.changeDetection = changeDetection;
           this.loadingController = loadingController;
           this.alertController = alertController;
-          this.searchText = "Search By Food";
-          this.searchBy = "Food";
+          this.searchText = "Search By Retailer";
+          this.searchBy = "Retailer";
           this.isReady = false;
         }
 
@@ -302,6 +302,11 @@
 
                     case 2:
                       listing = _context3.sent;
+                      this.retailers = this.listingService.getUsers().filter(function (currentListing) {
+                        if (currentListing.isRetailer) {
+                          return currentListing.isRetailer;
+                        }
+                      });
                       self = this;
                       listing.forEach(function (element, ind, array) {
                         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
@@ -324,7 +329,6 @@
                                     description: element.description,
                                     listingID: element.listingID,
                                     location: element.location,
-                                    name: element.name,
                                     price: element.price,
                                     quantity: element.quantity,
                                     retailerType: element.retailerType,
@@ -344,7 +348,7 @@
                       this.listingsBackup = listing;
                       return _context3.abrupt("return", listing);
 
-                    case 7:
+                    case 8:
                     case "end":
                       return _context3.stop();
                   }
@@ -363,10 +367,18 @@
               return;
             }
 
-            if (this.searchBy == "Food") {
+            if (this.searchBy == "Retailer") {
+              var matchingRetailers = [];
+              matchingRetailers = this.retailers.filter(function (retailer) {
+                return retailer.name.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1;
+              });
               this.listings = this.listings.filter(function (currentListing) {
-                if (currentListing.name && searchTerm) {
-                  return currentListing.name.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1;
+                if (matchingRetailers.length > 0 && currentListing.retailerUID) {
+                  for (var i = 0; i < matchingRetailers.length; i++) {
+                    if (currentListing.retailerUID.toLowerCase().indexOf(matchingRetailers[i].retailerUID.toLowerCase()) > -1) {
+                      return true;
+                    }
+                  }
                 }
               });
             } else if (this.searchBy == "Location") {
@@ -375,7 +387,7 @@
                   return currentListing.location.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1;
                 }
               });
-            } else if (this.searchBy == "Retailer") {
+            } else if (this.searchBy == "Retailer Type") {
               this.listings = this.listings.filter(function (currentListing) {
                 if (currentListing.retailerType && searchTerm) {
                   return currentListing.retailerType.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1;
@@ -409,14 +421,14 @@
                         inputs: [{
                           name: 'radio1',
                           type: 'radio',
-                          label: 'Food',
-                          value: 'Food',
+                          label: 'Retailer',
+                          value: 'Retailer',
                           checked: true
                         }, {
                           name: 'radio2',
                           type: 'radio',
-                          label: 'Retailer',
-                          value: 'Retailer'
+                          label: 'Retailer Type',
+                          value: 'Retailer Type'
                         }, {
                           name: 'radio3',
                           type: 'radio',
@@ -514,6 +526,16 @@
                 }
               }, _callee6, this);
             }));
+          }
+        }, {
+          key: "getRetailer",
+          value: function getRetailer(uid) {
+            if (this.retailers) {
+              var user = this.retailers.find(function (element) {
+                return element.retailerUID == uid;
+              });
+              return user.name;
+            }
           }
         }]);
 

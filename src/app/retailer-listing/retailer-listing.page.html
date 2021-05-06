@@ -13,7 +13,7 @@
   <div *ngFor="let item of listing"> 
   <img [src]="url" style="width:100%;"> 
 
-  <h1 style="text-align: center; font-weight: bold"> {{ retailer }}: {{ item.name }}</h1>
+  <h1 style="text-align: center; font-weight: bold"> {{ retailer }}</h1>
   <hr>
   <ion-text color="primary">
   <h3 style="text-align: center; font-weight: bold;" > ${{ item.price | number:'1.2-2' }}</h3>
@@ -45,6 +45,7 @@
     <ion-label>Delete/Pick Up Time</ion-label>
     <ion-datetime value={{pickupTime}} display-format="h:mm A" picker-format="h:mm A" [(ngModel)]="time" (ionChange)="setPickupTime(this.time)"></ion-datetime>
   </ion-item> 
+ 
   <p style="text-align: center; font-size: large;"> {{ item.description }} </p>
 </div>
 </ion-content>

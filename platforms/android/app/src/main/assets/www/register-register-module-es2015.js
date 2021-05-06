@@ -157,7 +157,6 @@ let RegisterPage = class RegisterPage {
                     email,
                     firstname,
                     lastname,
-                    password,
                     isRetailer: false,
                     cart: [],
                     orders: [],

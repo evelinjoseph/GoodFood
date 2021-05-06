@@ -16,6 +16,7 @@ export class ListingsService {
   subscription;
 
   constructor( private firestore: AngularFirestore) { 
+    this.initializeItems();
   }
 
   async initializeItems() {
@@ -47,7 +48,6 @@ export class ListingsService {
       
       //add to archive    
       this.firestore.collection('archive').doc(element.listingID).set({
-        name: element.name,
         description: element.description,
         listingID: element.listingID,
         price: element.price,
@@ -83,7 +83,6 @@ export class ListingsService {
       
       this.firestore.doc(`users/${element.retailerUID}`).update({
         listings: firebase.firestore.FieldValue.arrayUnion({
-          name: element.name,
           description: element.description,
           listingID: element.listingID,
           price: element.price,
@@ -94,7 +93,7 @@ export class ListingsService {
   
       this.firestore.doc(`users/${element.retailerUID}`).update({
         listings: firebase.firestore.FieldValue.arrayRemove({
-          name: element.name,
+          
           description: element.description,
           listingID: element.listingID,
           price: element.price,
@@ -130,8 +129,7 @@ export class ListingsService {
         console.log(deleteUserListing);
         deleteUserListing.forEach(listing => {
           this.firestore.doc(`users/${user.userUID}`).update({
-            cart: firebase.firestore.FieldValue.arrayRemove({
-              name: listing.name,
+            cart: firebase.firestore.FieldValue.arrayRemove({              
               description: listing.description,
               listingID: listing.listingID,
               price: listing.price,
@@ -163,8 +161,7 @@ export class ListingsService {
 
       deleteUserListing.forEach(listing => {
         this.firestore.doc(`users/${user.userUID}`).update({
-          cart: firebase.firestore.FieldValue.arrayRemove({
-            name: listing.name,
+          cart: firebase.firestore.FieldValue.arrayRemove({            
             description: listing.description,
             listingID: listing.listingID,
             price: listing.price,

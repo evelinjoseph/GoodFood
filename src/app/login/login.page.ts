@@ -12,8 +12,8 @@ import { ListingsService} from '../listings.service';
 })
 export class LoginPage implements OnInit {
 
-  email: string = ""
-  password: string = ""
+  email: string = "";
+  password: string = "";
 
   constructor(public listingService: ListingsService, private nacCtrl: NavController, public afAuth: AngularFireAuth, public afstore: AngularFirestore,public alertController: AlertController) { }
 

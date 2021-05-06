@@ -22,7 +22,7 @@
       /* harmony default export */
 
 
-      __webpack_exports__["default"] = "<ion-header style=\"text-align: center\">\n  <ion-toolbar mode=\"ios\" color=\"primary\">\n    <ion-title>Good Food</ion-title>\n    <ion-buttons slot=\"start\">\n      <ion-menu-button autoHide=\"true\"></ion-menu-button>\n    </ion-buttons>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content fullscreen [hidden]=\"!isReady\">\n  <div *ngFor=\"let item of ((userItems | async)?.orders).sort().reverse()\">\n    <ion-card>\n\n     <ion-item>\n      <ion-card-title class=\"ion-text-wrap\">{{item.name}}</ion-card-title>\n    </ion-item>\n   \n     <ion-card-content> \n        <p> Description: {{item.description}}</p>\n        <p> Ordered: {{item.date.toDate().toLocaleString()}}</p>\n        <p> Retailer: {{getRetailer(item.retailerUID)}}</p>\n      \n     </ion-card-content>\n   </ion-card>\n  </div>\n\n  \n  \n    <ion-text *ngIf=\"((userItems | async)?.orders).length <= 0\" class=\"centerText\" color=\"primary\" style=\"text-align: center\">\n      <p>There are no orders currently.</p>\n    </ion-text>\n  \n</ion-content>\n";
+      __webpack_exports__["default"] = "<ion-header style=\"text-align: center\">\n  <ion-toolbar mode=\"ios\" color=\"primary\">\n    <ion-title>Good Food</ion-title>\n    <ion-buttons slot=\"start\">\n      <ion-menu-button autoHide=\"true\"></ion-menu-button>\n    </ion-buttons>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content fullscreen [hidden]=\"!isReady\">\n  <div *ngFor=\"let item of ((userItems | async)?.orders).sort().reverse()\">\n    <ion-card>\n\n     <ion-item>\n      <ion-card-title class=\"ion-text-wrap\">{{getRetailer(item.retailerUID)}}</ion-card-title>\n    </ion-item>\n   \n     <ion-card-content> \n        <p> Ordered: {{item.date.toDate().toLocaleString()}}</p> \n        <!-- <p> Quantity: {{item.quantity}}</p>       -->\n     </ion-card-content>\n   </ion-card>\n  </div>\n\n  \n  \n    <ion-text *ngIf=\"((userItems | async)?.orders).length <= 0\" class=\"centerText\" color=\"primary\" style=\"text-align: center\">\n      <p>There are no orders currently.</p>\n    </ion-text>\n  \n</ion-content>\n";
       /***/
     },
 
@@ -309,7 +309,7 @@
               var user = this.retailers.find(function (element) {
                 return element.retailerUID == uid;
               });
-              return user.name + " (" + uid + ")";
+              return user.name;
             }
           }
         }]);

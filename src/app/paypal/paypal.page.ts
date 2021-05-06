@@ -48,7 +48,7 @@ export class PaypalPage implements OnInit {
             });
             thisListing.forEach(element => {
               if(item.quantityCart>element.quantity){
-                throw new Error("Sorry, unfortunately there is not enough quantity to complete the " + element.name + " order. Please edit the quantity to be less than or equal to " + element.quantity +".");
+                throw new Error("Sorry, unfortunately there is not enough quantity to complete the order. Please edit the quantity to be less than or equal to " + element.quantity +".");
                 
               }           
             });
@@ -93,7 +93,6 @@ export class PaypalPage implements OnInit {
                   self.date = new Date();     
                   self.afstore.doc(`users/${self.userUID}`).update({
                     orders: firebase.firestore.FieldValue.arrayUnion({
-                      name: item.name,
                       description: item.description,
                       listingID: item.listingID,
                       retailerUID: item.retailerUID,
@@ -104,7 +103,6 @@ export class PaypalPage implements OnInit {
             
                   self.afstore.doc(`users/${self.userUID}`).update({
                     cart: firebase.firestore.FieldValue.arrayRemove({
-                      name: item.name,
                       description: item.description,
                       listingID: item.listingID,
                       retailerUID: item.retailerUID,
@@ -117,7 +115,6 @@ export class PaypalPage implements OnInit {
                   
                   self.afstore.doc(`users/${item.retailerUID}`).update({
                     orders: firebase.firestore.FieldValue.arrayUnion({
-                      name: item.name,
                       description: item.description,
                       listingID: item.listingID,
                       retailerUID: item.retailerUID,
@@ -140,7 +137,7 @@ export class PaypalPage implements OnInit {
                     To : `${self.currentRetailer[0].email}`,
                     From : 'goodfoodinnova@gmail.com',
                     Subject : "New Good Food Order",
-                    Body : 'Hello ' + self.currentRetailer[0].name + ', you have an order for your listing: ' + item.name + '. Please check the Good Food application for more details. Thank you!'
+                    Body : 'Hello ' + self.currentRetailer[0].name + ', you have an order for your listing. Please check the Good Food application for more details. Thank you!'
                   }).then(
                     message => console.log(message)
                   );    
@@ -167,7 +164,6 @@ export class PaypalPage implements OnInit {
                         }); 
 
                         self.afstore.collection('archive').doc(item.listingID).set({
-                          name: item.name,
                           description: item.description,
                           listingID: item.listingID,
                           price: item.price,
@@ -184,8 +180,7 @@ export class PaypalPage implements OnInit {
                         self.afstore.collection('listings').doc(item.listingID).delete();
                         //change isListed
                         self.afstore.doc(`users/${item.retailerUID}`).update({
-                          listings: firebase.firestore.FieldValue.arrayUnion({
-                            name: item.name,
+                          listings: firebase.firestore.FieldValue.arrayUnion({                            
                             description: item.description,
                             listingID: item.listingID,
                             price: item.price,
@@ -195,8 +190,7 @@ export class PaypalPage implements OnInit {
                         })
 
                         self.afstore.doc(`users/${item.retailerUID}`).update({
-                          listings: firebase.firestore.FieldValue.arrayRemove({
-                            name: item.name,
+                          listings: firebase.firestore.FieldValue.arrayRemove({                            
                             description: item.description,
                             listingID: item.listingID,
                             price: item.price,
@@ -241,9 +235,19 @@ export class PaypalPage implements OnInit {
         self.userUID = user.uid        
         await self.getCart();  
         self.changeDetection.detectChanges();
+        self.retailers = await self.afstore.collection('users').valueChanges().pipe(first()).toPromise();
       }
     });    
   }
+
+  getRetailer(uid) : String{  
+    if(this.retailers){
+     const user = this.retailers.find(element => element.retailerUID == uid);    
+     return user.name;
+
+    }
+  }
+
 
   async getCart(){    
     var self = this;
@@ -266,7 +270,7 @@ export class PaypalPage implements OnInit {
     this.changeDetection.detectChanges();     
   }
   
-
+//not using this method due to the deprecation!
   async payWithPayPal() {
     try{
       for(var item of this.cart){ 
@@ -278,7 +282,7 @@ export class PaypalPage implements OnInit {
         });
         thisListing.forEach(element => {
           if(item.quantityCart>element.quantity){
-            throw new Error("Sorry, unfortunately there is not enough quantity to complete the " + element.name + " order. Please edit the quantity to be less than or equal to " + element.quantity +".");
+            throw new Error("Sorry, unfortunately there is not enough quantity to complete the order. Please edit the quantity to be less than or equal to " + element.quantity +".");
           }           
         });
     } 
@@ -322,7 +326,6 @@ export class PaypalPage implements OnInit {
       this.date = new Date();     
       this.afstore.doc(`users/${this.userUID}`).update({
         orders: firebase.firestore.FieldValue.arrayUnion({
-          name: item.name,
           description: item.description,
           listingID: item.listingID,
           retailerUID: item.retailerUID,
@@ -333,7 +336,6 @@ export class PaypalPage implements OnInit {
 
       this.afstore.doc(`users/${this.userUID}`).update({
         cart: firebase.firestore.FieldValue.arrayRemove({
-          name: item.name,
           description: item.description,
           listingID: item.listingID,
           retailerUID: item.retailerUID,
@@ -346,7 +348,6 @@ export class PaypalPage implements OnInit {
       
       this.afstore.doc(`users/${item.retailerUID}`).update({
         orders: firebase.firestore.FieldValue.arrayUnion({
-          name: item.name,
           description: item.description,
           listingID: item.listingID,
           retailerUID: item.retailerUID,
@@ -367,12 +368,11 @@ export class PaypalPage implements OnInit {
         thisListing.forEach(element => {
           if(item.quantityCart==element.quantity){
             console.log(element);
-            console.log(item);
-            
+            console.log(item);           
 
 
             this.afstore.collection('listings').doc(item.listingID).delete()
-            //TODO: add to archive
+            
           }
           else{           
           this.afstore.doc(`listings/${item.listingID}`).update({

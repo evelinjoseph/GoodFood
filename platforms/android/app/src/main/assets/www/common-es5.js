@@ -722,6 +722,7 @@
           _classCallCheck(this, ListingsService);
 
           this.firestore = firestore;
+          this.initializeItems();
         }
 
         _createClass(ListingsService, [{
@@ -772,7 +773,6 @@
                                   this.firestore.collection('listings').doc(element.listingID)["delete"](); //add to archive    
 
                                   this.firestore.collection('archive').doc(element.listingID).set({
-                                    name: element.name,
                                     description: element.description,
                                     listingID: element.listingID,
                                     price: element.price,
@@ -801,7 +801,6 @@
                                   });
                                   this.firestore.doc("users/".concat(element.retailerUID)).update({
                                     listings: firebase_app__WEBPACK_IMPORTED_MODULE_4__["firestore"].FieldValue.arrayUnion({
-                                      name: element.name,
                                       description: element.description,
                                       listingID: element.listingID,
                                       price: element.price,
@@ -811,7 +810,6 @@
                                   });
                                   this.firestore.doc("users/".concat(element.retailerUID)).update({
                                     listings: firebase_app__WEBPACK_IMPORTED_MODULE_4__["firestore"].FieldValue.arrayRemove({
-                                      name: element.name,
                                       description: element.description,
                                       listingID: element.listingID,
                                       price: element.price,
@@ -869,7 +867,6 @@
                             deleteUserListing.forEach(function (listing) {
                               _this2.firestore.doc("users/".concat(user.userUID)).update({
                                 cart: firebase_app__WEBPACK_IMPORTED_MODULE_4__["firestore"].FieldValue.arrayRemove({
-                                  name: listing.name,
                                   description: listing.description,
                                   listingID: listing.listingID,
                                   price: listing.price,
@@ -917,7 +914,6 @@
                           deleteUserListing.forEach(function (listing) {
                             _this3.firestore.doc("users/".concat(user.userUID)).update({
                               cart: firebase_app__WEBPACK_IMPORTED_MODULE_4__["firestore"].FieldValue.arrayRemove({
-                                name: listing.name,
                                 description: listing.description,
                                 listingID: listing.listingID,
                                 price: listing.price,

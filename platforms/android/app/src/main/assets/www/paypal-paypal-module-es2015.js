@@ -9,7 +9,7 @@
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<ion-header style=\"text-align: center\">\r\n  <ion-toolbar color=\"primary\" mode=\"ios\">\r\n    <ion-buttons slot=\"start\">\r\n      <ion-back-button [text]=\"Back\" defaultHref=\"/tabs/tabs/tab3\"></ion-back-button>\r\n    </ion-buttons>\r\n    <ion-title>\r\n      Good Food\r\n    </ion-title>\r\n  </ion-toolbar>\r\n</ion-header>\r\n\r\n<ion-content>\r\n  <div *ngFor=\"let item of cart\">\r\n    <ion-card>      \r\n      <ion-card-header>\r\n        <ion-card-title>{{item.name}}</ion-card-title>      \r\n      </ion-card-header>\r\n      <ion-card-content>\r\n        <p> Quantity: {{item.quantityCart}} </p>\r\n        <p> Price: ${{item.totalPrice | number:'1.2-2'}} </p>\r\n      </ion-card-content>\r\n    </ion-card>\r\n  </div>\r\n\r\n  <ion-toolbar position=\"bottom\" style=\"text-align: center\">\r\n    <div class=\"ion-text-end\" id=\"subtotal\">\r\n      <ion-text > <p style=\"font-size: large;\"> Subtotal ${{paymentAmount | number:'1.2-2'}} </p></ion-text> \r\n      <ion-text > <p style=\"font-size: large;\"> Tax $-</p></ion-text> \r\n      <ion-text > <p id=\"total\"> TOTAL ${{paymentAmount | number:'1.2-2'}} </p></ion-text> \r\n    </div>  \r\n    <div id=\"paypal-button-container\" ></div>  \r\n  </ion-toolbar>\r\n\r\n \r\n</ion-content>\r\n\r\n\r\n\r\n<!-- <ion-footer class=\"ion-no-border\">\r\n   <ion-toolbar position=\"bottom\" style=\"text-align: center;\">\r\n    <div class=\"ion-text-end\" id=\"subtotal\">\r\n      <ion-text > <p style=\"font-size: large;\"> Subtotal ${{paymentAmount | number:'1.2-2'}} </p></ion-text> \r\n      <ion-text > <p style=\"font-size: large;\"> Tax $-</p></ion-text> \r\n      <ion-text > <p id=\"total\"> TOTAL ${{paymentAmount | number:'1.2-2'}} </p></ion-text> \r\n    </div>  \r\n    <div id=\"paypal-button-container\"></div>   \r\n    <div class=\"paypal_div\">\r\n    <ion-button class=\"paypal_button\" expand=\"full\" color=\"warning\" (click)=\"payWithPayPal()\">Pay with PayPal</ion-button>\r\n    \r\n  </div> \r\n </ion-toolbar>\r\n</ion-footer> -->");
+/* harmony default export */ __webpack_exports__["default"] = ("<ion-header style=\"text-align: center\">\r\n  <ion-toolbar color=\"primary\" mode=\"ios\">\r\n    <ion-buttons slot=\"start\">\r\n      <ion-back-button [text]=\"Back\" defaultHref=\"/tabs/tabs/tab3\"></ion-back-button>\r\n    </ion-buttons>\r\n    <ion-title>\r\n      Good Food\r\n    </ion-title>\r\n  </ion-toolbar>\r\n</ion-header>\r\n\r\n<ion-content>\r\n  <div *ngFor=\"let item of cart\">\r\n    <ion-card>      \r\n      <ion-card-header>\r\n        <ion-card-title>{{getRetailer(item.retailerUID)}}</ion-card-title>      \r\n      </ion-card-header>\r\n      <ion-card-content>\r\n        <p> Quantity: {{item.quantityCart}} </p>\r\n        <p> Price: ${{item.totalPrice | number:'1.2-2'}} </p>\r\n      </ion-card-content>\r\n    </ion-card>\r\n  </div>\r\n\r\n  <ion-toolbar position=\"bottom\" style=\"text-align: center\">\r\n    <div class=\"ion-text-end\" id=\"subtotal\">\r\n      <ion-text > <p style=\"font-size: large;\"> Subtotal ${{paymentAmount | number:'1.2-2'}} </p></ion-text> \r\n      <ion-text > <p style=\"font-size: large;\"> Tax $-</p></ion-text> \r\n      <ion-text > <p id=\"total\"> TOTAL ${{paymentAmount | number:'1.2-2'}} </p></ion-text> \r\n    </div>  \r\n    <div id=\"paypal-button-container\" ></div>  \r\n  </ion-toolbar>\r\n\r\n \r\n</ion-content>\r\n\r\n\r\n\r\n<!-- <ion-footer class=\"ion-no-border\">\r\n   <ion-toolbar position=\"bottom\" style=\"text-align: center;\">\r\n    <div class=\"ion-text-end\" id=\"subtotal\">\r\n      <ion-text > <p style=\"font-size: large;\"> Subtotal ${{paymentAmount | number:'1.2-2'}} </p></ion-text> \r\n      <ion-text > <p style=\"font-size: large;\"> Tax $-</p></ion-text> \r\n      <ion-text > <p id=\"total\"> TOTAL ${{paymentAmount | number:'1.2-2'}} </p></ion-text> \r\n    </div>  \r\n    <div id=\"paypal-button-container\"></div>   \r\n    <div class=\"paypal_div\">\r\n    <ion-button class=\"paypal_button\" expand=\"full\" color=\"warning\" (click)=\"payWithPayPal()\">Pay with PayPal</ion-button>\r\n    \r\n  </div> \r\n </ion-toolbar>\r\n</ion-footer> -->");
 
 /***/ }),
 
@@ -167,7 +167,7 @@ let PaypalPage = class PaypalPage {
                             });
                             thisListing.forEach(element => {
                                 if (item.quantityCart > element.quantity) {
-                                    throw new Error("Sorry, unfortunately there is not enough quantity to complete the " + element.name + " order. Please edit the quantity to be less than or equal to " + element.quantity + ".");
+                                    throw new Error("Sorry, unfortunately there is not enough quantity to complete the order. Please edit the quantity to be less than or equal to " + element.quantity + ".");
                                 }
                             });
                         }
@@ -204,7 +204,6 @@ let PaypalPage = class PaypalPage {
                             self.date = new Date();
                             self.afstore.doc(`users/${self.userUID}`).update({
                                 orders: firebase_app__WEBPACK_IMPORTED_MODULE_6__["firestore"].FieldValue.arrayUnion({
-                                    name: item.name,
                                     description: item.description,
                                     listingID: item.listingID,
                                     retailerUID: item.retailerUID,
@@ -214,7 +213,6 @@ let PaypalPage = class PaypalPage {
                             });
                             self.afstore.doc(`users/${self.userUID}`).update({
                                 cart: firebase_app__WEBPACK_IMPORTED_MODULE_6__["firestore"].FieldValue.arrayRemove({
-                                    name: item.name,
                                     description: item.description,
                                     listingID: item.listingID,
                                     retailerUID: item.retailerUID,
@@ -226,7 +224,6 @@ let PaypalPage = class PaypalPage {
                             });
                             self.afstore.doc(`users/${item.retailerUID}`).update({
                                 orders: firebase_app__WEBPACK_IMPORTED_MODULE_6__["firestore"].FieldValue.arrayUnion({
-                                    name: item.name,
                                     description: item.description,
                                     listingID: item.listingID,
                                     retailerUID: item.retailerUID,
@@ -248,7 +245,7 @@ let PaypalPage = class PaypalPage {
                                 To: `${self.currentRetailer[0].email}`,
                                 From: 'goodfoodinnova@gmail.com',
                                 Subject: "New Good Food Order",
-                                Body: 'Hello ' + self.currentRetailer[0].name + ', you have an order for your listing: ' + item.name + '. Please check the Good Food application for more details. Thank you!'
+                                Body: 'Hello ' + self.currentRetailer[0].name + ', you have an order for your listing. Please check the Good Food application for more details. Thank you!'
                             }).then(message => console.log(message));
                             if (item.quantityCart > 0) {
                                 const decrement = firebase_app__WEBPACK_IMPORTED_MODULE_6__["firestore"].FieldValue.increment(-item.quantityCart);
@@ -268,7 +265,6 @@ let PaypalPage = class PaypalPage {
                                             }
                                         });
                                         self.afstore.collection('archive').doc(item.listingID).set({
-                                            name: item.name,
                                             description: item.description,
                                             listingID: item.listingID,
                                             price: item.price,
@@ -285,7 +281,6 @@ let PaypalPage = class PaypalPage {
                                         //change isListed
                                         self.afstore.doc(`users/${item.retailerUID}`).update({
                                             listings: firebase_app__WEBPACK_IMPORTED_MODULE_6__["firestore"].FieldValue.arrayUnion({
-                                                name: item.name,
                                                 description: item.description,
                                                 listingID: item.listingID,
                                                 price: item.price,
@@ -295,7 +290,6 @@ let PaypalPage = class PaypalPage {
                                         });
                                         self.afstore.doc(`users/${item.retailerUID}`).update({
                                             listings: firebase_app__WEBPACK_IMPORTED_MODULE_6__["firestore"].FieldValue.arrayRemove({
-                                                name: item.name,
                                                 description: item.description,
                                                 listingID: item.listingID,
                                                 price: item.price,
@@ -336,9 +330,16 @@ let PaypalPage = class PaypalPage {
                     self.userUID = user.uid;
                     yield self.getCart();
                     self.changeDetection.detectChanges();
+                    self.retailers = yield self.afstore.collection('users').valueChanges().pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_7__["first"])()).toPromise();
                 }
             });
         });
+    }
+    getRetailer(uid) {
+        if (this.retailers) {
+            const user = this.retailers.find(element => element.retailerUID == uid);
+            return user.name;
+        }
     }
     getCart() {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
@@ -360,6 +361,7 @@ let PaypalPage = class PaypalPage {
             this.changeDetection.detectChanges();
         });
     }
+    //not using this method due to the deprecation!
     payWithPayPal() {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
             try {
@@ -372,7 +374,7 @@ let PaypalPage = class PaypalPage {
                     });
                     thisListing.forEach(element => {
                         if (item.quantityCart > element.quantity) {
-                            throw new Error("Sorry, unfortunately there is not enough quantity to complete the " + element.name + " order. Please edit the quantity to be less than or equal to " + element.quantity + ".");
+                            throw new Error("Sorry, unfortunately there is not enough quantity to complete the order. Please edit the quantity to be less than or equal to " + element.quantity + ".");
                         }
                     });
                 }
@@ -411,7 +413,6 @@ let PaypalPage = class PaypalPage {
                                 this.date = new Date();
                                 this.afstore.doc(`users/${this.userUID}`).update({
                                     orders: firebase_app__WEBPACK_IMPORTED_MODULE_6__["firestore"].FieldValue.arrayUnion({
-                                        name: item.name,
                                         description: item.description,
                                         listingID: item.listingID,
                                         retailerUID: item.retailerUID,
@@ -421,7 +422,6 @@ let PaypalPage = class PaypalPage {
                                 });
                                 this.afstore.doc(`users/${this.userUID}`).update({
                                     cart: firebase_app__WEBPACK_IMPORTED_MODULE_6__["firestore"].FieldValue.arrayRemove({
-                                        name: item.name,
                                         description: item.description,
                                         listingID: item.listingID,
                                         retailerUID: item.retailerUID,
@@ -433,7 +433,6 @@ let PaypalPage = class PaypalPage {
                                 });
                                 this.afstore.doc(`users/${item.retailerUID}`).update({
                                     orders: firebase_app__WEBPACK_IMPORTED_MODULE_6__["firestore"].FieldValue.arrayUnion({
-                                        name: item.name,
                                         description: item.description,
                                         listingID: item.listingID,
                                         retailerUID: item.retailerUID,
@@ -454,7 +453,6 @@ let PaypalPage = class PaypalPage {
                                             console.log(element);
                                             console.log(item);
                                             this.afstore.collection('listings').doc(item.listingID).delete();
-                                            //TODO: add to archive
                                         }
                                         else {
                                             this.afstore.doc(`listings/${item.listingID}`).update({

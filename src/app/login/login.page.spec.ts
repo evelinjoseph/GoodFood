@@ -29,24 +29,34 @@ describe('LoginPage', () => {
       return Promise.resolve();
     }
   } 
-  
-  const FirestoreStub = {
-    collection: (name: string) => ({
-      // doc: (_id: string) => ({
-      //   valueChanges: () => new BehaviorSubject({ foo: 'bar' }),
-      //   set: (_d: any) => new Promise((resolve, _reject) => resolve()),
-      // }),
-    }),
-  };
-
+ 
+  let afSpy: any;
 
   beforeEach(async(() => {
+
+    afSpy = jasmine.createSpyObj('AngularFirestore', ['collection', 
+    'valueChanges', 'snapshotChanges', 'ref', 'doc','add','update', 
+    'then', 'catch', 'finally', 'firestore', 'get', 'subscribe']);
+    afSpy.collection.and.returnValue(afSpy);
+    afSpy.valueChanges.and.returnValue(afSpy);
+    afSpy.snapshotChanges.and.returnValue(afSpy); 
+    afSpy.ref.and.returnValue(afSpy); 
+    afSpy.doc.and.returnValue(afSpy); 
+    afSpy.add.and.returnValue(afSpy);
+    afSpy.update.and.returnValue(Promise.resolve()); 
+    afSpy.then.and.returnValue(Promise.resolve('hello world')); 
+    afSpy.catch.and.returnValue(afSpy); 
+    afSpy.finally.and.callThrough()
+    afSpy.firestore.and.returnValue(afSpy); 
+    afSpy.get.and.returnValue(afSpy);
+    afSpy.subscribe.and.returnValue(afSpy);
+
     TestBed.configureTestingModule({
       declarations: [ LoginPage ],
       imports: [IonicModule.forRoot(), RouterTestingModule],
       providers:[
         { provide: AngularFireAuth, useValue: AngularFireAuthMock},
-        { provide: AngularFirestore, useValue: FirestoreStub },
+        { provide: AngularFirestore, useValue: afSpy },
         { provide: NavController, useClass: class { navigate = jasmine.createSpy('navigate') } }
     ]     
     }).compileComponents();

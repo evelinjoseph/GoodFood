@@ -28,10 +28,7 @@ export class RetailerListingPage implements OnInit {
   time;
   pDate;
   buttonText: string = "Edit";
-  isRead: boolean = true;
-   
-
-  // TODO: add the option to remove the listing that is currently published from the user view without deleting it for the retailer
+  isRead: boolean = true;  
 
   constructor(public listingService: ListingsService,private nacCtrl: NavController, private activatedRoute: ActivatedRoute, public afAuth: AngularFireAuth, private afstore: AngularFirestore, private afStorage: AngularFireStorage, private changeDetection: ChangeDetectorRef,public loadingController: LoadingController, public alertController: AlertController) { }
 
@@ -97,7 +94,6 @@ export class RetailerListingPage implements OnInit {
     const data = {
       description: listing.description,
       listingID: listing.listingID,
-      name: listing.name,
       price: listing.price,
       quantity: listing.quantity,
       retailerType: this.retailerType,
@@ -114,7 +110,6 @@ export class RetailerListingPage implements OnInit {
         quantity: listing.quantity,
         price: listing.price,
         description: listing.description,
-        name: listing.name,
         listingID: listing.listingID,
         isListed: true      
       })
@@ -125,7 +120,6 @@ export class RetailerListingPage implements OnInit {
         quantity: listing.quantity,
         price: listing.price,
         description: listing.description,
-        name: listing.name,
         listingID: listing.listingID,
         isListed: false      
       })
@@ -164,7 +158,7 @@ export class RetailerListingPage implements OnInit {
 
       this.afstore.doc(`users/${this.retailerUID}`).update({
         listings: firebase.firestore.FieldValue.arrayUnion({
-          name: listing.name,
+          
           description: listing.description,
           listingID: listing.listingID,
           price: listing.price,
@@ -175,7 +169,7 @@ export class RetailerListingPage implements OnInit {
 
     this.afstore.doc(`users/${this.retailerUID}`).update({
       listings: firebase.firestore.FieldValue.arrayRemove({
-        name: listing.name,
+        
         description: listing.description,
         listingID: listing.listingID,
         price: listing.price,
@@ -184,7 +178,6 @@ export class RetailerListingPage implements OnInit {
       })
     })
 
-    // TODO: may need to delete from carts?
     await this.listingService.deleteListing(listing)
     this.afstore.collection('listings').doc(listing.listingID).delete();
     this.nacCtrl.navigateRoot(["./retailertabs/retailertabs/retailertab2"]);
@@ -250,7 +243,6 @@ export class RetailerListingPage implements OnInit {
       const data = {
         description: listing.description,
         listingID: listing.listingID,
-        name: listing.name,
         price: listing.price,
         quantity: listing.quantity,
         retailerType: this.retailerType,

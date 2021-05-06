@@ -3,6 +3,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AlertController, NavController } from '@ionic/angular';
 import * as firebase from 'firebase/app';
+import { ListingsService} from '../listings.service';
 
 @Component({
   selector: 'app-tab3',
@@ -25,31 +26,47 @@ export class Tab3Page implements OnInit{
   date: Date;
   subtotal = 0;
   isReady = false;
+  retailers: any[];
 
-  constructor(public afauth: AngularFireAuth, private nacCtrl: NavController, public afstore: AngularFirestore, private changeDetection: ChangeDetectorRef, public alertCtrl: AlertController) {}
+  constructor(public listingService: ListingsService, public afauth: AngularFireAuth, private nacCtrl: NavController, public afstore: AngularFirestore, private changeDetection: ChangeDetectorRef, public alertCtrl: AlertController) {}
 
   ngOnInit() { 
     var self = this
     this.cart = []
     this.subtotal = 0;
-    this.afauth.onAuthStateChanged(function(user) {        
+    this.afauth.onAuthStateChanged(async function(user) {        
       if (user) {        
         self.userUID = user.uid
         self.items = self.afstore.doc(`users/${self.userUID}`);
-        self.userItems = self.items.valueChanges(); 
-        self.changeDetection.detectChanges();   
-        self.getCart();    
+        self.userItems = self.items.valueChanges();
+        await self.listingService.initializeItems();
+        self.retailers = self.listingService.getUsers().filter(currentUser => {
+          if (currentUser.isRetailer) {
+            return (currentUser.isRetailer);
+          }
+        });   
+        self.changeDetection.detectChanges(); 
+        self.getCart();  
+
       }
     });    
   }
 
-  ionViewWillEnter(){
+  async ionViewWillEnter(){
     this.cart = []
     this.subtotal = 0;
     if(this.items){
       this.userItems = this.items.valueChanges();
+      await this.listingService.initializeItems();
+      this.retailers = this.listingService.getUsers().filter(currentListing => {
+        if (currentListing.isRetailer) {
+          return (currentListing.isRetailer);
+        }
+      }); 
       this.getCart();
       this.changeDetection.detectChanges(); 
+
+      
     }    
   }
 
@@ -79,7 +96,6 @@ export class Tab3Page implements OnInit{
     if (confirm) {
     this.afstore.doc(`users/${this.userUID}`).update({
       cart: firebase.firestore.FieldValue.arrayRemove({
-        name: item.name,
         description: item.description,
         listingID: item.listingID,
         retailerUID: item.retailerUID,
@@ -129,7 +145,6 @@ export class Tab3Page implements OnInit{
 
       this.afstore.doc(`users/${this.userUID}`).update({
         cart: firebase.firestore.FieldValue.arrayUnion({
-          name: item.name,
           description: item.description,
           listingID: item.listingID,
           retailerUID: item.retailerUID,
@@ -142,7 +157,6 @@ export class Tab3Page implements OnInit{
   
       this.afstore.doc(`users/${this.userUID}`).update({
         cart: firebase.firestore.FieldValue.arrayRemove({
-          name: item.name,
           description: item.description,
           listingID: item.listingID,
           retailerUID: item.retailerUID,
@@ -166,7 +180,6 @@ export class Tab3Page implements OnInit{
 
       this.afstore.doc(`users/${this.userUID}`).update({
         cart: firebase.firestore.FieldValue.arrayUnion({
-          name: item.name,
           description: item.description,
           listingID: item.listingID,
           retailerUID: item.retailerUID,
@@ -179,7 +192,6 @@ export class Tab3Page implements OnInit{
   
       this.afstore.doc(`users/${this.userUID}`).update({
         cart: firebase.firestore.FieldValue.arrayRemove({
-          name: item.name,
           description: item.description,
           listingID: item.listingID,
           retailerUID: item.retailerUID,
@@ -192,6 +204,15 @@ export class Tab3Page implements OnInit{
       item.quantityCart--;
       item.totalPrice -= item.price;
       this.subtotal -= item.price;
+    }
+  }
+
+
+  getRetailer(uid) : String{  
+    if(this.retailers){
+     const user = this.retailers.find(element => element.retailerUID == uid);    
+     return user.name;
+
     }
   }
 

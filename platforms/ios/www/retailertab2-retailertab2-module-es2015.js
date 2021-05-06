@@ -9,7 +9,7 @@
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<ion-header>\n  <ion-toolbar mode=\"ios\" color=\"primary\">\n    <ion-title>Good Food</ion-title>\n    <ion-buttons slot=\"start\">\n      <ion-menu-button autoHide=\"false\"></ion-menu-button>\n    </ion-buttons>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content fullscreen [hidden]=\"!isReady\">\n\n  <div *ngIf=\"!((retailerItems | async)?.isVerified) ; else verified\" class=\"centerText\">\n    <ion-text class=\"centerText\" color=\"primary\" style=\"text-align: center\">\n      <p>Your account is not verified yet, please wait until verified to gain access to this tab!</p>\n    </ion-text>\n  </div>\n\n  <ng-template #verified>\n      <div *ngFor=\"let item of ((retailerItems | async)?.listings)\">\n        <ion-card>\n\n        <ion-item>\n          <ion-card-title class=\"ion-text-wrap\" [routerLink]=\"['/retailer-listing']\" [queryParams]=\"{ id: item.listingID }\" routerDirection=\"forward\">{{item.name}}</ion-card-title>\n        \n        </ion-item>\n      \n        <ion-card-content > \n          <div [routerLink]=\"['/retailer-listing']\" [queryParams]=\"{ id: item.listingID }\" routerDirection=\"forward\">\n\n          <p> Price: ${{item.price | number:'1.2-2'}}</p>\n          <p> Description: {{item.description}}</p>\n          <p> Location: {{location}}</p>\n          <p> Retailer Type: {{retailerType}}</p>\n          \n          </div>\n          <ion-button  (click)=\"delete(item)\" fill=\"outline\" slot=\"end\">Delete</ion-button> \n          <ion-button  *ngIf=\"item.isListed\" (click)=\"unpublish(item)\" slot=\"end\">Unpublish</ion-button>       \n        </ion-card-content>\n\n        \n      </ion-card>\n      </div>      \n        <ion-text *ngIf=\"((retailerItems | async)?.listings).length <= 0\" class=\"centerText\" color=\"primary\" style=\"text-align: center\">\n          <p>There are no listings currently.</p>\n        </ion-text>\n  </ng-template>\n</ion-content>\n\n<ion-footer class=\"ion-no-border\">\n  <div *ngIf=\"((retailerItems | async)?.isVerified)\">\n    <ion-toolbar position=\"bottom\" style=\"text-align: center;\">     \n      <ion-button size =\"large\" [routerLink]=\"['/new-listing']\" routerDirection=\"forward\">Add Listing</ion-button>    \n    </ion-toolbar>\n  </div>\n</ion-footer>\n\n");
+/* harmony default export */ __webpack_exports__["default"] = ("<ion-header>\n  <ion-toolbar mode=\"ios\" color=\"primary\">\n    <ion-title>Good Food</ion-title>\n    <ion-buttons slot=\"start\">\n      <ion-menu-button autoHide=\"false\"></ion-menu-button>\n    </ion-buttons>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content fullscreen [hidden]=\"!isReady\">\n\n  <div *ngIf=\"!((retailerItems | async)?.isVerified) ; else verified\" class=\"centerText\">\n    <ion-text class=\"centerText\" color=\"primary\" style=\"text-align: center\">\n      <p>Your account is not verified yet, please wait until verified to gain access to this tab!</p>\n    </ion-text>\n  </div>\n\n  <ng-template #verified>\n      <div *ngFor=\"let item of ((retailerItems | async)?.listings)\">\n        <ion-card>\n\n        <ion-item>\n          <ion-card-title class=\"ion-text-wrap\" [routerLink]=\"['/retailer-listing']\" [queryParams]=\"{ id: item.listingID }\" routerDirection=\"forward\">{{((retailerItems | async)?.name)}}</ion-card-title>\n        \n        </ion-item>\n      \n        <ion-card-content > \n          <div [routerLink]=\"['/retailer-listing']\" [queryParams]=\"{ id: item.listingID }\" routerDirection=\"forward\">\n\n          <p> Price: ${{item.price | number:'1.2-2'}}</p>\n          <p> Description: {{item.description}}</p>\n          <p> Location: {{location}}</p>\n          <p> Retailer Type: {{retailerType}}</p>\n          \n          </div>\n          <ion-button  (click)=\"delete(item)\" fill=\"outline\" slot=\"end\">Delete</ion-button> \n          <ion-button  *ngIf=\"item.isListed\" (click)=\"unpublish(item)\" slot=\"end\">Unpublish</ion-button>       \n        </ion-card-content>\n\n        \n      </ion-card>\n      </div>      \n        <ion-text *ngIf=\"((retailerItems | async)?.listings).length <= 0\" class=\"centerText\" color=\"primary\" style=\"text-align: center\">\n          <p>There are no listings currently.</p>\n        </ion-text>\n  </ng-template>\n</ion-content>\n\n<ion-footer class=\"ion-no-border\">\n  <div *ngIf=\"((retailerItems | async)?.isVerified)\">\n    <ion-toolbar position=\"bottom\" style=\"text-align: center;\">     \n      <ion-button size =\"large\" [routerLink]=\"['/new-listing']\" routerDirection=\"forward\">Add Listing</ion-button>    \n    </ion-toolbar>\n  </div>\n</ion-footer>\n\n");
 
 /***/ }),
 
@@ -172,7 +172,6 @@ let Retailertab2Page = class Retailertab2Page {
             if (confirm) {
                 this.afstore.doc(`users/${this.retailerUID}`).update({
                     listings: firebase_app__WEBPACK_IMPORTED_MODULE_5__["firestore"].FieldValue.arrayRemove({
-                        name: listing.name,
                         description: listing.description,
                         listingID: listing.listingID,
                         price: listing.price,
@@ -181,9 +180,8 @@ let Retailertab2Page = class Retailertab2Page {
                     })
                 });
                 this.afstore.collection('listings').doc(listing.listingID).delete();
-                //TODO: add to archive when deleted
+                //adding to archive after deletion
                 this.afstore.collection('archive').doc(listing.listingID).set({
-                    name: listing.name,
                     description: listing.description,
                     listingID: listing.listingID,
                     price: listing.price,
@@ -196,7 +194,7 @@ let Retailertab2Page = class Retailertab2Page {
                     .catch(function (error) {
                     console.error("Error writing document: ", error);
                 });
-                // TODO: may need to delete from carts?
+                //deleting from carts after deletion
                 yield this.listingService.deleteListing(listing);
             }
         });
@@ -207,7 +205,6 @@ let Retailertab2Page = class Retailertab2Page {
             if (confirm) {
                 this.afstore.doc(`users/${this.retailerUID}`).update({
                     listings: firebase_app__WEBPACK_IMPORTED_MODULE_5__["firestore"].FieldValue.arrayUnion({
-                        name: listing.name,
                         description: listing.description,
                         listingID: listing.listingID,
                         price: listing.price,
@@ -217,7 +214,6 @@ let Retailertab2Page = class Retailertab2Page {
                 });
                 this.afstore.doc(`users/${this.retailerUID}`).update({
                     listings: firebase_app__WEBPACK_IMPORTED_MODULE_5__["firestore"].FieldValue.arrayRemove({
-                        name: listing.name,
                         description: listing.description,
                         listingID: listing.listingID,
                         price: listing.price,
@@ -225,7 +221,7 @@ let Retailertab2Page = class Retailertab2Page {
                         isListed: listing.isListed
                     })
                 });
-                // TODO: may need to delete from carts?
+                // delete from carts
                 yield this.listingService.deleteListing(listing);
                 this.afstore.collection('listings').doc(listing.listingID).delete();
             }

@@ -11,7 +11,7 @@
   <div *ngFor="let item of cart">
     <ion-card>
      <ion-item>
-      <ion-card-title class="ion-text-wrap">{{item.name}}</ion-card-title>
+      <ion-card-title class="ion-text-wrap">{{getRetailer(item.retailerUID)}}</ion-card-title>
       <ion-button  (click)="delete(item)" fill="outline" slot="end">Delete</ion-button> 
     </ion-item>
    
@@ -25,7 +25,6 @@
             <ion-icon name="add-circle-outline"></ion-icon> 
           </ion-button></p>
           <p style="font-size: large;"> Price: ${{item.totalPrice | number:'1.2-2'}}</p>
-        <p style="font-size: large;"> Description: {{item.description}}</p>
      </ion-card-content>
    </ion-card>
   </div>

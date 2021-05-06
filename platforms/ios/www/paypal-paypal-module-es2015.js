@@ -9,7 +9,7 @@
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<ion-header style=\"text-align: center\">\n  <ion-toolbar color=\"primary\" mode=\"ios\">\n    <ion-buttons slot=\"start\">\n      <ion-back-button [text]=\"Back\" defaultHref=\"/tabs/tabs/tab3\"></ion-back-button>\n    </ion-buttons>\n    <ion-title>\n      Good Food\n    </ion-title>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content>\n  <div *ngFor=\"let item of cart\">\n    <ion-card>      \n      <ion-card-header>\n        <ion-card-title>{{item.name}}</ion-card-title>      \n      </ion-card-header>\n      <ion-card-content>\n        <p> Quantity: {{item.quantityCart}} </p>\n        <p> Price: ${{item.totalPrice | number:'1.2-2'}} </p>\n      </ion-card-content>\n    </ion-card>\n  </div>\n\n  <ion-toolbar position=\"bottom\" style=\"text-align: center\">\n    <div class=\"ion-text-end\" id=\"subtotal\">\n      <ion-text > <p style=\"font-size: large;\"> Subtotal ${{paymentAmount | number:'1.2-2'}} </p></ion-text> \n      <ion-text > <p style=\"font-size: large;\"> Tax $-</p></ion-text> \n      <ion-text > <p id=\"total\"> TOTAL ${{paymentAmount | number:'1.2-2'}} </p></ion-text> \n    </div>  \n    <div id=\"paypal-button-container\" ></div>  \n  </ion-toolbar>\n\n \n</ion-content>\n\n\n\n<!-- <ion-footer class=\"ion-no-border\">\n   <ion-toolbar position=\"bottom\" style=\"text-align: center;\">\n    <div class=\"ion-text-end\" id=\"subtotal\">\n      <ion-text > <p style=\"font-size: large;\"> Subtotal ${{paymentAmount | number:'1.2-2'}} </p></ion-text> \n      <ion-text > <p style=\"font-size: large;\"> Tax $-</p></ion-text> \n      <ion-text > <p id=\"total\"> TOTAL ${{paymentAmount | number:'1.2-2'}} </p></ion-text> \n    </div>  \n    <div id=\"paypal-button-container\"></div>   \n    <div class=\"paypal_div\">\n    <ion-button class=\"paypal_button\" expand=\"full\" color=\"warning\" (click)=\"payWithPayPal()\">Pay with PayPal</ion-button>\n    \n  </div> \n </ion-toolbar>\n</ion-footer> -->");
+/* harmony default export */ __webpack_exports__["default"] = ("<ion-header style=\"text-align: center\">\n  <ion-toolbar color=\"primary\" mode=\"ios\">\n    <ion-buttons slot=\"start\">\n      <ion-back-button [text]=\"Back\" defaultHref=\"/tabs/tabs/tab3\"></ion-back-button>\n    </ion-buttons>\n    <ion-title>\n      Good Food\n    </ion-title>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content>\n  <div *ngFor=\"let item of cart\">\n    <ion-card>      \n      <ion-card-header>\n        <ion-card-title>{{getRetailer(item.retailerUID)}}</ion-card-title>      \n      </ion-card-header>\n      <ion-card-content>\n        <p> Quantity: {{item.quantityCart}} </p>\n        <p> Price: ${{item.totalPrice | number:'1.2-2'}} </p>\n      </ion-card-content>\n    </ion-card>\n  </div>\n\n  <ion-toolbar position=\"bottom\" style=\"text-align: center\">\n    <div class=\"ion-text-end\" id=\"subtotal\">\n      <ion-text > <p style=\"font-size: large;\"> Subtotal ${{paymentAmount | number:'1.2-2'}} </p></ion-text> \n      <ion-text > <p style=\"font-size: large;\"> Tax $-</p></ion-text> \n      <ion-text > <p id=\"total\"> TOTAL ${{paymentAmount | number:'1.2-2'}} </p></ion-text> \n    </div>  \n    <div id=\"paypal-button-container\" ></div>  \n  </ion-toolbar>\n\n \n</ion-content>\n\n\n\n<!-- <ion-footer class=\"ion-no-border\">\n   <ion-toolbar position=\"bottom\" style=\"text-align: center;\">\n    <div class=\"ion-text-end\" id=\"subtotal\">\n      <ion-text > <p style=\"font-size: large;\"> Subtotal ${{paymentAmount | number:'1.2-2'}} </p></ion-text> \n      <ion-text > <p style=\"font-size: large;\"> Tax $-</p></ion-text> \n      <ion-text > <p id=\"total\"> TOTAL ${{paymentAmount | number:'1.2-2'}} </p></ion-text> \n    </div>  \n    <div id=\"paypal-button-container\"></div>   \n    <div class=\"paypal_div\">\n    <ion-button class=\"paypal_button\" expand=\"full\" color=\"warning\" (click)=\"payWithPayPal()\">Pay with PayPal</ion-button>\n    \n  </div> \n </ion-toolbar>\n</ion-footer> -->");
 
 /***/ }),
 
@@ -167,7 +167,7 @@ let PaypalPage = class PaypalPage {
                             });
                             thisListing.forEach(element => {
                                 if (item.quantityCart > element.quantity) {
-                                    throw new Error("Sorry, unfortunately there is not enough quantity to complete the " + element.name + " order. Please edit the quantity to be less than or equal to " + element.quantity + ".");
+                                    throw new Error("Sorry, unfortunately there is not enough quantity to complete the order. Please edit the quantity to be less than or equal to " + element.quantity + ".");
                                 }
                             });
                         }
@@ -204,7 +204,6 @@ let PaypalPage = class PaypalPage {
                             self.date = new Date();
                             self.afstore.doc(`users/${self.userUID}`).update({
                                 orders: firebase_app__WEBPACK_IMPORTED_MODULE_6__["firestore"].FieldValue.arrayUnion({
-                                    name: item.name,
                                     description: item.description,
                                     listingID: item.listingID,
                                     retailerUID: item.retailerUID,
@@ -214,7 +213,6 @@ let PaypalPage = class PaypalPage {
                             });
                             self.afstore.doc(`users/${self.userUID}`).update({
                                 cart: firebase_app__WEBPACK_IMPORTED_MODULE_6__["firestore"].FieldValue.arrayRemove({
-                                    name: item.name,
                                     description: item.description,
                                     listingID: item.listingID,
                                     retailerUID: item.retailerUID,
@@ -226,7 +224,6 @@ let PaypalPage = class PaypalPage {
                             });
                             self.afstore.doc(`users/${item.retailerUID}`).update({
                                 orders: firebase_app__WEBPACK_IMPORTED_MODULE_6__["firestore"].FieldValue.arrayUnion({
-                                    name: item.name,
                                     description: item.description,
                                     listingID: item.listingID,
                                     retailerUID: item.retailerUID,
@@ -248,7 +245,7 @@ let PaypalPage = class PaypalPage {
                                 To: `${self.currentRetailer[0].email}`,
                                 From: 'goodfoodinnova@gmail.com',
                                 Subject: "New Good Food Order",
-                                Body: 'Hello ' + self.currentRetailer[0].name + ', you have an order for your listing: ' + item.name + '. Please check the Good Food application for more details. Thank you!'
+                                Body: 'Hello ' + self.currentRetailer[0].name + ', you have an order for your listing. Please check the Good Food application for more details. Thank you!'
                             }).then(message => console.log(message));
                             if (item.quantityCart > 0) {
                                 const decrement = firebase_app__WEBPACK_IMPORTED_MODULE_6__["firestore"].FieldValue.increment(-item.quantityCart);
@@ -268,7 +265,6 @@ let PaypalPage = class PaypalPage {
                                             }
                                         });
                                         self.afstore.collection('archive').doc(item.listingID).set({
-                                            name: item.name,
                                             description: item.description,
                                             listingID: item.listingID,
                                             price: item.price,
@@ -285,7 +281,6 @@ let PaypalPage = class PaypalPage {
                                         //change isListed
                                         self.afstore.doc(`users/${item.retailerUID}`).update({
                                             listings: firebase_app__WEBPACK_IMPORTED_MODULE_6__["firestore"].FieldValue.arrayUnion({
-                                                name: item.name,
                                                 description: item.description,
                                                 listingID: item.listingID,
                                                 price: item.price,
@@ -295,7 +290,6 @@ let PaypalPage = class PaypalPage {
                                         });
                                         self.afstore.doc(`users/${item.retailerUID}`).update({
                                             listings: firebase_app__WEBPACK_IMPORTED_MODULE_6__["firestore"].FieldValue.arrayRemove({
-                                                name: item.name,
                                                 description: item.description,
                                                 listingID: item.listingID,
                                                 price: item.price,
@@ -336,9 +330,16 @@ let PaypalPage = class PaypalPage {
                     self.userUID = user.uid;
                     yield self.getCart();
                     self.changeDetection.detectChanges();
+                    self.retailers = yield self.afstore.collection('users').valueChanges().pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_7__["first"])()).toPromise();
                 }
             });
         });
+    }
+    getRetailer(uid) {
+        if (this.retailers) {
+            const user = this.retailers.find(element => element.retailerUID == uid);
+            return user.name;
+        }
     }
     getCart() {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
@@ -360,6 +361,7 @@ let PaypalPage = class PaypalPage {
             this.changeDetection.detectChanges();
         });
     }
+    //not using this method due to the deprecation!
     payWithPayPal() {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
             try {
@@ -372,7 +374,7 @@ let PaypalPage = class PaypalPage {
                     });
                     thisListing.forEach(element => {
                         if (item.quantityCart > element.quantity) {
-                            throw new Error("Sorry, unfortunately there is not enough quantity to complete the " + element.name + " order. Please edit the quantity to be less than or equal to " + element.quantity + ".");
+                            throw new Error("Sorry, unfortunately there is not enough quantity to complete the order. Please edit the quantity to be less than or equal to " + element.quantity + ".");
                         }
                     });
                 }
@@ -411,7 +413,6 @@ let PaypalPage = class PaypalPage {
                                 this.date = new Date();
                                 this.afstore.doc(`users/${this.userUID}`).update({
                                     orders: firebase_app__WEBPACK_IMPORTED_MODULE_6__["firestore"].FieldValue.arrayUnion({
-                                        name: item.name,
                                         description: item.description,
                                         listingID: item.listingID,
                                         retailerUID: item.retailerUID,
@@ -421,7 +422,6 @@ let PaypalPage = class PaypalPage {
                                 });
                                 this.afstore.doc(`users/${this.userUID}`).update({
                                     cart: firebase_app__WEBPACK_IMPORTED_MODULE_6__["firestore"].FieldValue.arrayRemove({
-                                        name: item.name,
                                         description: item.description,
                                         listingID: item.listingID,
                                         retailerUID: item.retailerUID,
@@ -433,7 +433,6 @@ let PaypalPage = class PaypalPage {
                                 });
                                 this.afstore.doc(`users/${item.retailerUID}`).update({
                                     orders: firebase_app__WEBPACK_IMPORTED_MODULE_6__["firestore"].FieldValue.arrayUnion({
-                                        name: item.name,
                                         description: item.description,
                                         listingID: item.listingID,
                                         retailerUID: item.retailerUID,
@@ -454,7 +453,6 @@ let PaypalPage = class PaypalPage {
                                             console.log(element);
                                             console.log(item);
                                             this.afstore.collection('listings').doc(item.listingID).delete();
-                                            //TODO: add to archive
                                         }
                                         else {
                                             this.afstore.doc(`listings/${item.listingID}`).update({

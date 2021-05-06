@@ -22,7 +22,7 @@
       /* harmony default export */
 
 
-      __webpack_exports__["default"] = "<ion-header style=\"text-align: center\">\n  <ion-toolbar color=\"primary\" mode=\"ios\">\n    <ion-buttons slot=\"start\">\n      <ion-back-button [text]=\"Back\" defaultHref=\"/tabs/tabs/tab1\"></ion-back-button>\n    </ion-buttons>\n    <ion-title>\n      Good Food\n    </ion-title>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content [hidden]=\"!isReady\" fullscreen>\n  <img [src]=\"url\" style=\"width:100%;\"> \n\n  <h1 style=\"text-align: center; font-weight: bold\"> {{ retailer }}: {{ name }}</h1>\n  <hr>\n  <ion-text color=\"primary\">\n  <h3 style=\"text-align: center; font-weight: bold;\" > ${{ price | number:'1.2-2' }}</h3>\n  </ion-text> \n\n  <div style=\"text-align: center; font-size: large;\">\n    <ion-icon name=\"location-outline\"></ion-icon> \n    {{ location }}\n  </div>\n\n  <p style=\"text-align: center\"> {{ quantity }} meals left</p>  \n  <hr> \n  <div style=\"text-align: center;\">\n    <ion-icon name=\"time-outline\"></ion-icon>\n   Pick Up By: {{deleteDate}}\n  </div>\n  <hr>\n  <p style=\"text-align: center; font-size: large;\"> {{ description }} </p>\n  <p style=\"text-align: center; font-weight: bold;\" > Please keep in mind that because the Good Food application deals with surplus food, all options vary on availability. Thank you!</p>   \n</ion-content>\n\n<ion-toolbar [hidden]=\"!isReady\" position=\"bottom\" style=\"text-align: center;\" color=\"translucent\"> \n  <ion-button size =\"large\" (click)=\"cart(listing)\">Add To Cart</ion-button>\n</ion-toolbar>\n\n";
+      __webpack_exports__["default"] = "<ion-header style=\"text-align: center\">\n  <ion-toolbar color=\"primary\" mode=\"ios\">\n    <ion-buttons slot=\"start\">\n      <ion-back-button [text]=\"Back\" defaultHref=\"/tabs/tabs/tab1\"></ion-back-button>\n    </ion-buttons>\n    <ion-title>\n      Good Food\n    </ion-title>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content [hidden]=\"!isReady\" fullscreen>\n  <img [src]=\"url\" style=\"width:100%;\"> \n\n  <h1 style=\"text-align: center; font-weight: bold\"> {{ retailer }}</h1>\n  <hr>\n  <ion-text color=\"primary\">\n  <h3 style=\"text-align: center; font-weight: bold;\" > ${{ price | number:'1.2-2' }}</h3>\n  </ion-text> \n\n  <div style=\"text-align: center; font-size: large;\">\n    <ion-icon name=\"location-outline\"></ion-icon> \n    {{ location }}\n  </div>\n\n  <p style=\"text-align: center; font-weight: bold;\"> {{ quantity }} meals left</p>  \n  <hr> \n  <div style=\"text-align: center;\">\n    <ion-icon name=\"time-outline\"></ion-icon>\n   Pick Up By: {{deleteDate}}\n  </div>\n  <hr>\n \n  <p style=\"text-align: center; font-weight: bold;\" > Please keep in mind that because the Good Food application deals with surplus food, all options vary on availability. Thank you!</p> \n  \n  <ion-toolbar [hidden]=\"!isReady\" position=\"bottom\" style=\"text-align: center;\" color=\"translucent\"> \n    <ion-button expand=\"block\" size =\"large\" (click)=\"cart(listing)\">Add To Cart</ion-button>\n  </ion-toolbar>\n</ion-content>\n\n\n\n";
       /***/
     },
 
@@ -257,6 +257,7 @@
           this.changeDetection = changeDetection;
           this.loadingController = loadingController;
           this.isReady = false;
+          this.userCart = [];
         }
 
         _createClass(UserListingPage, [{
@@ -278,7 +279,6 @@
 
                         this.listingSub = this.firestore.collection("listings").doc(this.ID).valueChanges().subscribe(function (data) {
                           _this.listing = data;
-                          _this.name = _this.listing.name;
                           _this.description = _this.listing.description;
                           _this.location = _this.listing.location;
                           _this.price = _this.listing.price;
@@ -324,14 +324,49 @@
           key: "cart",
           value: function cart(listing) {
             return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
-              var confirm;
+              var self, confirm, _confirm;
+
               return regeneratorRuntime.wrap(function _callee2$(_context2) {
                 while (1) {
                   switch (_context2.prev = _context2.next) {
                     case 0:
+                      self = this;
+                      _context2.next = 3;
+                      return this.firestore.doc("users/".concat(firebase_app__WEBPACK_IMPORTED_MODULE_5__["auth"]().currentUser.uid)).get().toPromise().then(function (querySnapshot) {
+                        self.userCart = [];
+                        var cart1 = querySnapshot.get("cart");
+                        self.changeDetection.detectChanges();
+                        cart1.forEach(function (element) {
+                          self.userCart.push(element);
+                        });
+                      })["catch"](function (error) {
+                        console.log("Error getting documents");
+                      });
+
+                    case 3:
+                      this.userCart = this.userCart.filter(function (cartItem) {
+                        if (cartItem.listingID && listing.listingID) {
+                          return cartItem.listingID.toLowerCase() === listing.listingID.toLowerCase();
+                        }
+                      });
+
+                      if (!(this.userCart.length > 0)) {
+                        _context2.next = 11;
+                        break;
+                      }
+
+                      _context2.next = 7;
+                      return this.presentAlert('Item Previously Added to Cart!');
+
+                    case 7:
+                      confirm = _context2.sent;
+                      this.nacCtrl.navigateRoot(['tabs/tabs/tab3']);
+                      _context2.next = 16;
+                      break;
+
+                    case 11:
                       this.firestore.doc("users/".concat(firebase_app__WEBPACK_IMPORTED_MODULE_5__["auth"]().currentUser.uid)).update({
                         cart: firebase_app__WEBPACK_IMPORTED_MODULE_5__["firestore"].FieldValue.arrayUnion({
-                          name: listing.name,
                           description: listing.description,
                           listingID: listing.listingID,
                           retailerUID: listing.retailerUID,
@@ -341,14 +376,14 @@
                           totalPrice: listing.price
                         })
                       });
-                      _context2.next = 3;
-                      return this.presentAlert();
+                      _context2.next = 14;
+                      return this.presentAlert('Successfully Added to Cart!');
 
-                    case 3:
-                      confirm = _context2.sent;
+                    case 14:
+                      _confirm = _context2.sent;
                       this.nacCtrl.navigateRoot(['tabs/tabs/tab3']);
 
-                    case 5:
+                    case 16:
                     case "end":
                       return _context2.stop();
                   }
@@ -400,7 +435,7 @@
           }
         }, {
           key: "presentAlert",
-          value: function presentAlert() {
+          value: function presentAlert(message) {
             return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
               var resolveFunction, promise, alert;
               return regeneratorRuntime.wrap(function _callee4$(_context4) {
@@ -412,7 +447,7 @@
                       });
                       _context4.next = 3;
                       return this.alertController.create({
-                        header: 'Successfully Added to Cart!',
+                        header: message,
                         buttons: [{
                           text: 'OK',
                           handler: function handler() {

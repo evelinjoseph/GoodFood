@@ -55,7 +55,7 @@ export class Tab4Page implements OnInit {
      if(this.retailers){
       const user = this.retailers.find(element => element.retailerUID == uid);
    
-      return user.name +  " (" + uid + ")";
+      return user.name ;
 
      }
      

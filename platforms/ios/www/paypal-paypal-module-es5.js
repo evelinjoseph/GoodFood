@@ -28,7 +28,7 @@
       /* harmony default export */
 
 
-      __webpack_exports__["default"] = "<ion-header style=\"text-align: center\">\n  <ion-toolbar color=\"primary\" mode=\"ios\">\n    <ion-buttons slot=\"start\">\n      <ion-back-button [text]=\"Back\" defaultHref=\"/tabs/tabs/tab3\"></ion-back-button>\n    </ion-buttons>\n    <ion-title>\n      Good Food\n    </ion-title>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content>\n  <div *ngFor=\"let item of cart\">\n    <ion-card>      \n      <ion-card-header>\n        <ion-card-title>{{item.name}}</ion-card-title>      \n      </ion-card-header>\n      <ion-card-content>\n        <p> Quantity: {{item.quantityCart}} </p>\n        <p> Price: ${{item.totalPrice | number:'1.2-2'}} </p>\n      </ion-card-content>\n    </ion-card>\n  </div>\n\n  <ion-toolbar position=\"bottom\" style=\"text-align: center\">\n    <div class=\"ion-text-end\" id=\"subtotal\">\n      <ion-text > <p style=\"font-size: large;\"> Subtotal ${{paymentAmount | number:'1.2-2'}} </p></ion-text> \n      <ion-text > <p style=\"font-size: large;\"> Tax $-</p></ion-text> \n      <ion-text > <p id=\"total\"> TOTAL ${{paymentAmount | number:'1.2-2'}} </p></ion-text> \n    </div>  \n    <div id=\"paypal-button-container\" ></div>  \n  </ion-toolbar>\n\n \n</ion-content>\n\n\n\n<!-- <ion-footer class=\"ion-no-border\">\n   <ion-toolbar position=\"bottom\" style=\"text-align: center;\">\n    <div class=\"ion-text-end\" id=\"subtotal\">\n      <ion-text > <p style=\"font-size: large;\"> Subtotal ${{paymentAmount | number:'1.2-2'}} </p></ion-text> \n      <ion-text > <p style=\"font-size: large;\"> Tax $-</p></ion-text> \n      <ion-text > <p id=\"total\"> TOTAL ${{paymentAmount | number:'1.2-2'}} </p></ion-text> \n    </div>  \n    <div id=\"paypal-button-container\"></div>   \n    <div class=\"paypal_div\">\n    <ion-button class=\"paypal_button\" expand=\"full\" color=\"warning\" (click)=\"payWithPayPal()\">Pay with PayPal</ion-button>\n    \n  </div> \n </ion-toolbar>\n</ion-footer> -->";
+      __webpack_exports__["default"] = "<ion-header style=\"text-align: center\">\n  <ion-toolbar color=\"primary\" mode=\"ios\">\n    <ion-buttons slot=\"start\">\n      <ion-back-button [text]=\"Back\" defaultHref=\"/tabs/tabs/tab3\"></ion-back-button>\n    </ion-buttons>\n    <ion-title>\n      Good Food\n    </ion-title>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content>\n  <div *ngFor=\"let item of cart\">\n    <ion-card>      \n      <ion-card-header>\n        <ion-card-title>{{getRetailer(item.retailerUID)}}</ion-card-title>      \n      </ion-card-header>\n      <ion-card-content>\n        <p> Quantity: {{item.quantityCart}} </p>\n        <p> Price: ${{item.totalPrice | number:'1.2-2'}} </p>\n      </ion-card-content>\n    </ion-card>\n  </div>\n\n  <ion-toolbar position=\"bottom\" style=\"text-align: center\">\n    <div class=\"ion-text-end\" id=\"subtotal\">\n      <ion-text > <p style=\"font-size: large;\"> Subtotal ${{paymentAmount | number:'1.2-2'}} </p></ion-text> \n      <ion-text > <p style=\"font-size: large;\"> Tax $-</p></ion-text> \n      <ion-text > <p id=\"total\"> TOTAL ${{paymentAmount | number:'1.2-2'}} </p></ion-text> \n    </div>  \n    <div id=\"paypal-button-container\" ></div>  \n  </ion-toolbar>\n\n \n</ion-content>\n\n\n\n<!-- <ion-footer class=\"ion-no-border\">\n   <ion-toolbar position=\"bottom\" style=\"text-align: center;\">\n    <div class=\"ion-text-end\" id=\"subtotal\">\n      <ion-text > <p style=\"font-size: large;\"> Subtotal ${{paymentAmount | number:'1.2-2'}} </p></ion-text> \n      <ion-text > <p style=\"font-size: large;\"> Tax $-</p></ion-text> \n      <ion-text > <p id=\"total\"> TOTAL ${{paymentAmount | number:'1.2-2'}} </p></ion-text> \n    </div>  \n    <div id=\"paypal-button-container\"></div>   \n    <div class=\"paypal_div\">\n    <ion-button class=\"paypal_button\" expand=\"full\" color=\"warning\" (click)=\"payWithPayPal()\">Pay with PayPal</ion-button>\n    \n  </div> \n </ion-toolbar>\n</ion-footer> -->";
       /***/
     },
 
@@ -328,7 +328,7 @@
                         });
                         thisListing.forEach(function (element) {
                           if (item.quantityCart > element.quantity) {
-                            throw new Error("Sorry, unfortunately there is not enough quantity to complete the " + element.name + " order. Please edit the quantity to be less than or equal to " + element.quantity + ".");
+                            throw new Error("Sorry, unfortunately there is not enough quantity to complete the order. Please edit the quantity to be less than or equal to " + element.quantity + ".");
                           }
                         });
 
@@ -401,7 +401,6 @@
                         self.date = new Date();
                         self.afstore.doc("users/".concat(self.userUID)).update({
                           orders: firebase_app__WEBPACK_IMPORTED_MODULE_6__["firestore"].FieldValue.arrayUnion({
-                            name: item.name,
                             description: item.description,
                             listingID: item.listingID,
                             retailerUID: item.retailerUID,
@@ -411,7 +410,6 @@
                         });
                         self.afstore.doc("users/".concat(self.userUID)).update({
                           cart: firebase_app__WEBPACK_IMPORTED_MODULE_6__["firestore"].FieldValue.arrayRemove({
-                            name: item.name,
                             description: item.description,
                             listingID: item.listingID,
                             retailerUID: item.retailerUID,
@@ -423,7 +421,6 @@
                         });
                         self.afstore.doc("users/".concat(item.retailerUID)).update({
                           orders: firebase_app__WEBPACK_IMPORTED_MODULE_6__["firestore"].FieldValue.arrayUnion({
-                            name: item.name,
                             description: item.description,
                             listingID: item.listingID,
                             retailerUID: item.retailerUID,
@@ -445,7 +442,7 @@
                           To: "".concat(self.currentRetailer[0].email),
                           From: 'goodfoodinnova@gmail.com',
                           Subject: "New Good Food Order",
-                          Body: 'Hello ' + self.currentRetailer[0].name + ', you have an order for your listing: ' + item.name + '. Please check the Good Food application for more details. Thank you!'
+                          Body: 'Hello ' + self.currentRetailer[0].name + ', you have an order for your listing. Please check the Good Food application for more details. Thank you!'
                         }).then(function (message) {
                           return console.log(message);
                         });
@@ -469,7 +466,6 @@
                                   }
                                 });
                                 self.afstore.collection('archive').doc(item.listingID).set({
-                                  name: item.name,
                                   description: item.description,
                                   listingID: item.listingID,
                                   price: item.price,
@@ -484,7 +480,6 @@
 
                                 self.afstore.doc("users/".concat(item.retailerUID)).update({
                                   listings: firebase_app__WEBPACK_IMPORTED_MODULE_6__["firestore"].FieldValue.arrayUnion({
-                                    name: item.name,
                                     description: item.description,
                                     listingID: item.listingID,
                                     price: item.price,
@@ -494,7 +489,6 @@
                                 });
                                 self.afstore.doc("users/".concat(item.retailerUID)).update({
                                   listings: firebase_app__WEBPACK_IMPORTED_MODULE_6__["firestore"].FieldValue.arrayRemove({
-                                    name: item.name,
                                     description: item.description,
                                     listingID: item.listingID,
                                     price: item.price,
@@ -543,7 +537,7 @@
                     switch (_context2.prev = _context2.next) {
                       case 0:
                         if (!user) {
-                          _context2.next = 5;
+                          _context2.next = 8;
                           break;
                         }
 
@@ -553,8 +547,13 @@
 
                       case 4:
                         self.changeDetection.detectChanges();
+                        _context2.next = 7;
+                        return self.afstore.collection('users').valueChanges().pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_7__["first"])()).toPromise();
 
-                      case 5:
+                      case 7:
+                        self.retailers = _context2.sent;
+
+                      case 8:
                       case "end":
                         return _context2.stop();
                     }
@@ -562,6 +561,16 @@
                 }, _callee2);
               }));
             });
+          }
+        }, {
+          key: "getRetailer",
+          value: function getRetailer(uid) {
+            if (this.retailers) {
+              var user = this.retailers.find(function (element) {
+                return element.retailerUID == uid;
+              });
+              return user.name;
+            }
           }
         }, {
           key: "getCart",
@@ -598,7 +607,8 @@
                 }
               }, _callee3, this);
             }));
-          }
+          } //not using this method due to the deprecation!
+
         }, {
           key: "payWithPayPal",
           value: function payWithPayPal() {
@@ -636,7 +646,7 @@
                       });
                       thisListing.forEach(function (element) {
                         if (item.quantityCart > element.quantity) {
-                          throw new Error("Sorry, unfortunately there is not enough quantity to complete the " + element.name + " order. Please edit the quantity to be less than or equal to " + element.quantity + ".");
+                          throw new Error("Sorry, unfortunately there is not enough quantity to complete the order. Please edit the quantity to be less than or equal to " + element.quantity + ".");
                         }
                       });
 
@@ -703,7 +713,6 @@
 
                                 _this.afstore.doc("users/".concat(_this.userUID)).update({
                                   orders: firebase_app__WEBPACK_IMPORTED_MODULE_6__["firestore"].FieldValue.arrayUnion({
-                                    name: item.name,
                                     description: item.description,
                                     listingID: item.listingID,
                                     retailerUID: item.retailerUID,
@@ -714,7 +723,6 @@
 
                                 _this.afstore.doc("users/".concat(_this.userUID)).update({
                                   cart: firebase_app__WEBPACK_IMPORTED_MODULE_6__["firestore"].FieldValue.arrayRemove({
-                                    name: item.name,
                                     description: item.description,
                                     listingID: item.listingID,
                                     retailerUID: item.retailerUID,
@@ -727,7 +735,6 @@
 
                                 _this.afstore.doc("users/".concat(item.retailerUID)).update({
                                   orders: firebase_app__WEBPACK_IMPORTED_MODULE_6__["firestore"].FieldValue.arrayUnion({
-                                    name: item.name,
                                     description: item.description,
                                     listingID: item.listingID,
                                     retailerUID: item.retailerUID,
@@ -752,8 +759,7 @@
                                         console.log(element);
                                         console.log(item);
 
-                                        _this.afstore.collection('listings').doc(item.listingID)["delete"](); //TODO: add to archive
-
+                                        _this.afstore.collection('listings').doc(item.listingID)["delete"]();
                                       } else {
                                         _this.afstore.doc("listings/".concat(item.listingID)).update({
                                           quantity: decrement

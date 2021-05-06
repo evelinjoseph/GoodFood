@@ -20,7 +20,7 @@
         <ion-card>
 
         <ion-item>
-          <ion-card-title class="ion-text-wrap" [routerLink]="['/retailer-listing']" [queryParams]="{ id: item.listingID }" routerDirection="forward">{{item.name}}</ion-card-title>
+          <ion-card-title class="ion-text-wrap" [routerLink]="['/retailer-listing']" [queryParams]="{ id: item.listingID }" routerDirection="forward">{{((retailerItems | async)?.name)}}</ion-card-title>
         
         </ion-item>
       

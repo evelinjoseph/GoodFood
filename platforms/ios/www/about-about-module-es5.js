@@ -22,7 +22,7 @@
       /* harmony default export */
 
 
-      __webpack_exports__["default"] = "<ion-header style=\"text-align: center\">\r\n  <ion-toolbar color=\"primary\" mode=\"ios\">\r\n    <ion-buttons slot=\"start\">\r\n      <ion-back-button [text]=\"Back\" defaultHref=\"/initial-page\"></ion-back-button>\r\n    </ion-buttons>\r\n    <ion-title>\r\n      Good Food\r\n    </ion-title>\r\n  </ion-toolbar>\r\n</ion-header>\r\n\r\n\r\n<ion-content>\r\n  <img class=\"displayed\" width=\"100%\" src=\"assets/images/GoodFoodLogo.png\" alt=\"logo\">\r\n  <p style=\"text-align: center;\"> This is the about page: please add your information about Innova Waste Consulting and the Good Food application.</p>\r\n\r\n</ion-content>\r\n";
+      __webpack_exports__["default"] = "<ion-header style=\"text-align: center\">\n  <ion-toolbar color=\"primary\" mode=\"ios\">\n    <ion-buttons slot=\"start\">\n      <ion-back-button [text]=\"Back\" defaultHref=\"/initial-page\"></ion-back-button>\n    </ion-buttons>\n    <ion-title>\n      Good Food\n    </ion-title>\n  </ion-toolbar>\n</ion-header>\n\n\n<ion-content>\n  <img class=\"displayed\" width=\"100%\" src=\"assets/images/GoodFoodLogo.png\" alt=\"logo\">\n  <p style=\"text-align: center;\"> This is the about page: please add your information about Innova Waste Consulting and the Good Food application.</p>\n\n</ion-content>\n";
       /***/
     },
 

@@ -22,7 +22,7 @@
       /* harmony default export */
 
 
-      __webpack_exports__["default"] = "<ion-header style=\"text-align: center\">\r\n  <ion-toolbar mode=\"ios\" color=\"primary\">\r\n    <ion-title>Good Food</ion-title>\r\n    <ion-buttons slot=\"start\">\r\n      <ion-menu-button autoHide=\"true\"></ion-menu-button>\r\n    </ion-buttons>\r\n  </ion-toolbar>\r\n</ion-header>\r\n\r\n<ion-content fullscreen [hidden]=\"!isReady\">\r\n  <div *ngFor=\"let item of ((userItems | async)?.orders).sort().reverse()\">\r\n    <ion-card>\r\n\r\n     <ion-item>\r\n      <ion-card-title class=\"ion-text-wrap\">{{item.name}}</ion-card-title>\r\n    </ion-item>\r\n   \r\n     <ion-card-content> \r\n        <p> Description: {{item.description}}</p>\r\n        <p> Ordered: {{item.date.toDate().toLocaleString()}}</p>\r\n        <p> Retailer: {{getRetailer(item.retailerUID)}}</p>\r\n      \r\n     </ion-card-content>\r\n   </ion-card>\r\n  </div>\r\n\r\n  \r\n  \r\n    <ion-text *ngIf=\"((userItems | async)?.orders).length <= 0\" class=\"centerText\" color=\"primary\" style=\"text-align: center\">\r\n      <p>There are no orders currently.</p>\r\n    </ion-text>\r\n  \r\n</ion-content>\r\n";
+      __webpack_exports__["default"] = "<ion-header style=\"text-align: center\">\r\n  <ion-toolbar mode=\"ios\" color=\"primary\">\r\n    <ion-title>Good Food</ion-title>\r\n    <ion-buttons slot=\"start\">\r\n      <ion-menu-button autoHide=\"true\"></ion-menu-button>\r\n    </ion-buttons>\r\n  </ion-toolbar>\r\n</ion-header>\r\n\r\n<ion-content fullscreen [hidden]=\"!isReady\">\r\n  <div *ngFor=\"let item of ((userItems | async)?.orders).sort().reverse()\">\r\n    <ion-card>\r\n\r\n     <ion-item>\r\n      <ion-card-title class=\"ion-text-wrap\">{{getRetailer(item.retailerUID)}}</ion-card-title>\r\n    </ion-item>\r\n   \r\n     <ion-card-content> \r\n        <p> Ordered: {{item.date.toDate().toLocaleString()}}</p> \r\n        <!-- <p> Quantity: {{item.quantity}}</p>       -->\r\n     </ion-card-content>\r\n   </ion-card>\r\n  </div>\r\n\r\n  \r\n  \r\n    <ion-text *ngIf=\"((userItems | async)?.orders).length <= 0\" class=\"centerText\" color=\"primary\" style=\"text-align: center\">\r\n      <p>There are no orders currently.</p>\r\n    </ion-text>\r\n  \r\n</ion-content>\r\n";
       /***/
     },
 
@@ -309,7 +309,7 @@
               var user = this.retailers.find(function (element) {
                 return element.retailerUID == uid;
               });
-              return user.name + " (" + uid + ")";
+              return user.name;
             }
           }
         }]);

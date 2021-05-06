@@ -22,7 +22,7 @@
       /* harmony default export */
 
 
-      __webpack_exports__["default"] = "<ion-header style=\"text-align: center\">\r\n  <ion-toolbar mode=\"ios\" color=\"primary\">\r\n    <ion-title>Good Food</ion-title>\r\n    <ion-buttons slot=\"start\">\r\n      <ion-menu-button autoHide=\"true\"></ion-menu-button>\r\n    </ion-buttons>\r\n  </ion-toolbar>\r\n</ion-header>\r\n\r\n<ion-content fullscreen [hidden]=\"!isReady\">\r\n  <div *ngFor=\"let item of cart\">\r\n    <ion-card>\r\n     <ion-item>\r\n      <ion-card-title class=\"ion-text-wrap\">{{item.name}}</ion-card-title>\r\n      <ion-button  (click)=\"delete(item)\" fill=\"outline\" slot=\"end\">Delete</ion-button> \r\n    </ion-item>\r\n   \r\n     <ion-card-content> \r\n        <p style=\"font-size: large;\" > Quantity: \r\n          <ion-button (click)=\"dec(item)\" size=\"small\" fill=\"clear\"> \r\n            <ion-icon name=\"remove-circle-outline\"></ion-icon> \r\n          </ion-button>\r\n          {{item.quantityCart}}\r\n          <ion-button (click)=\"inc(item)\" size=\"small\" fill=\"clear\"> \r\n            <ion-icon name=\"add-circle-outline\"></ion-icon> \r\n          </ion-button></p>\r\n          <p style=\"font-size: large;\"> Price: ${{item.totalPrice | number:'1.2-2'}}</p>\r\n        <p style=\"font-size: large;\"> Description: {{item.description}}</p>\r\n     </ion-card-content>\r\n   </ion-card>\r\n  </div>\r\n  <ion-text class=\"centerText\" *ngIf=\"((userItems | async)?.cart).length <= 0\" color=\"primary\" style=\"text-align: center\">\r\n      <p>There are no items in the cart.</p>\r\n  </ion-text>  \r\n</ion-content>\r\n\r\n<ion-footer *ngIf=\"((userItems | async)?.cart).length > 0\" >\r\n  <!-- class=\"ion-no-border\" -->\r\n \r\n  <ion-toolbar *ngIf=\"userItems | async as cartData\"  position=\"bottom\" style=\"text-align: center;\">\r\n    <div class=\"ion-text-end\" id=\"subtotal\">\r\n      <ion-text > <p style=\"font-size: large;\"> Subtotal: ${{subtotal | number:'1.2-2'}} </p></ion-text> \r\n    </div>     \r\n    <ion-button expand=\"block\" (click)=\"checkOut(cartData.cart)\" size=\"large\">Checkout</ion-button>\r\n </ion-toolbar>\r\n</ion-footer>\r\n";
+      __webpack_exports__["default"] = "<ion-header style=\"text-align: center\">\r\n  <ion-toolbar mode=\"ios\" color=\"primary\">\r\n    <ion-title>Good Food</ion-title>\r\n    <ion-buttons slot=\"start\">\r\n      <ion-menu-button autoHide=\"true\"></ion-menu-button>\r\n    </ion-buttons>\r\n  </ion-toolbar>\r\n</ion-header>\r\n\r\n<ion-content fullscreen [hidden]=\"!isReady\">\r\n  <div *ngFor=\"let item of cart\">\r\n    <ion-card>\r\n     <ion-item>\r\n      <ion-card-title class=\"ion-text-wrap\">{{getRetailer(item.retailerUID)}}</ion-card-title>\r\n      <ion-button  (click)=\"delete(item)\" fill=\"outline\" slot=\"end\">Delete</ion-button> \r\n    </ion-item>\r\n   \r\n     <ion-card-content> \r\n        <p style=\"font-size: large;\" > Quantity: \r\n          <ion-button (click)=\"dec(item)\" size=\"small\" fill=\"clear\"> \r\n            <ion-icon name=\"remove-circle-outline\"></ion-icon> \r\n          </ion-button>\r\n          {{item.quantityCart}}\r\n          <ion-button (click)=\"inc(item)\" size=\"small\" fill=\"clear\"> \r\n            <ion-icon name=\"add-circle-outline\"></ion-icon> \r\n          </ion-button></p>\r\n          <p style=\"font-size: large;\"> Price: ${{item.totalPrice | number:'1.2-2'}}</p>\r\n     </ion-card-content>\r\n   </ion-card>\r\n  </div>\r\n  <ion-text class=\"centerText\" *ngIf=\"((userItems | async)?.cart).length <= 0\" color=\"primary\" style=\"text-align: center\">\r\n      <p>There are no items in the cart.</p>\r\n  </ion-text>  \r\n</ion-content>\r\n\r\n<ion-footer *ngIf=\"((userItems | async)?.cart).length > 0\" >\r\n  <!-- class=\"ion-no-border\" -->\r\n \r\n  <ion-toolbar *ngIf=\"userItems | async as cartData\"  position=\"bottom\" style=\"text-align: center;\">\r\n    <div class=\"ion-text-end\" id=\"subtotal\">\r\n      <ion-text > <p style=\"font-size: large;\"> Subtotal: ${{subtotal | number:'1.2-2'}} </p></ion-text> \r\n    </div>     \r\n    <ion-button expand=\"block\" (click)=\"checkOut(cartData.cart)\" size=\"large\">Checkout</ion-button>\r\n </ion-toolbar>\r\n</ion-footer>\r\n";
       /***/
     },
 
@@ -247,11 +247,18 @@
 
 
       var firebase_app__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(firebase_app__WEBPACK_IMPORTED_MODULE_5__);
+      /* harmony import */
+
+
+      var _listings_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(
+      /*! ../listings.service */
+      "./src/app/listings.service.ts");
 
       var Tab3Page = /*#__PURE__*/function () {
-        function Tab3Page(afauth, nacCtrl, afstore, changeDetection, alertCtrl) {
+        function Tab3Page(listingService, afauth, nacCtrl, afstore, changeDetection, alertCtrl) {
           _classCallCheck(this, Tab3Page);
 
+          this.listingService = listingService;
           this.afauth = afauth;
           this.nacCtrl = nacCtrl;
           this.afstore = afstore;
@@ -269,38 +276,88 @@
             this.cart = [];
             this.subtotal = 0;
             this.afauth.onAuthStateChanged(function (user) {
-              if (user) {
-                self.userUID = user.uid;
-                self.items = self.afstore.doc("users/".concat(self.userUID));
-                self.userItems = self.items.valueChanges();
-                self.changeDetection.detectChanges();
-                self.getCart();
-              }
+              return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+                return regeneratorRuntime.wrap(function _callee$(_context) {
+                  while (1) {
+                    switch (_context.prev = _context.next) {
+                      case 0:
+                        if (!user) {
+                          _context.next = 9;
+                          break;
+                        }
+
+                        self.userUID = user.uid;
+                        self.items = self.afstore.doc("users/".concat(self.userUID));
+                        self.userItems = self.items.valueChanges();
+                        _context.next = 6;
+                        return self.listingService.initializeItems();
+
+                      case 6:
+                        self.retailers = self.listingService.getUsers().filter(function (currentUser) {
+                          if (currentUser.isRetailer) {
+                            return currentUser.isRetailer;
+                          }
+                        });
+                        self.changeDetection.detectChanges();
+                        self.getCart();
+
+                      case 9:
+                      case "end":
+                        return _context.stop();
+                    }
+                  }
+                }, _callee);
+              }));
             });
           }
         }, {
           key: "ionViewWillEnter",
           value: function ionViewWillEnter() {
-            this.cart = [];
-            this.subtotal = 0;
+            return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+              return regeneratorRuntime.wrap(function _callee2$(_context2) {
+                while (1) {
+                  switch (_context2.prev = _context2.next) {
+                    case 0:
+                      this.cart = [];
+                      this.subtotal = 0;
 
-            if (this.items) {
-              this.userItems = this.items.valueChanges();
-              this.getCart();
-              this.changeDetection.detectChanges();
-            }
+                      if (!this.items) {
+                        _context2.next = 9;
+                        break;
+                      }
+
+                      this.userItems = this.items.valueChanges();
+                      _context2.next = 6;
+                      return this.listingService.initializeItems();
+
+                    case 6:
+                      this.retailers = this.listingService.getUsers().filter(function (currentListing) {
+                        if (currentListing.isRetailer) {
+                          return currentListing.isRetailer;
+                        }
+                      });
+                      this.getCart();
+                      this.changeDetection.detectChanges();
+
+                    case 9:
+                    case "end":
+                      return _context2.stop();
+                  }
+                }
+              }, _callee2, this);
+            }));
           }
         }, {
           key: "getCart",
           value: function getCart() {
-            return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+            return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
               var self;
-              return regeneratorRuntime.wrap(function _callee$(_context) {
+              return regeneratorRuntime.wrap(function _callee3$(_context3) {
                 while (1) {
-                  switch (_context.prev = _context.next) {
+                  switch (_context3.prev = _context3.next) {
                     case 0:
                       self = this;
-                      _context.next = 3;
+                      _context3.next = 3;
                       return this.afstore.doc("users/".concat(this.userUID)).get().toPromise().then(function (querySnapshot) {
                         self.cart = [];
                         self.subtotal = 0;
@@ -320,31 +377,30 @@
 
                     case 5:
                     case "end":
-                      return _context.stop();
+                      return _context3.stop();
                   }
                 }
-              }, _callee, this);
+              }, _callee3, this);
             }));
           }
         }, {
           key: "delete",
           value: function _delete(item) {
-            return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+            return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
               var confirm;
-              return regeneratorRuntime.wrap(function _callee2$(_context2) {
+              return regeneratorRuntime.wrap(function _callee4$(_context4) {
                 while (1) {
-                  switch (_context2.prev = _context2.next) {
+                  switch (_context4.prev = _context4.next) {
                     case 0:
-                      _context2.next = 2;
+                      _context4.next = 2;
                       return this.presentAlertDelete();
 
                     case 2:
-                      confirm = _context2.sent;
+                      confirm = _context4.sent;
 
                       if (confirm) {
                         this.afstore.doc("users/".concat(this.userUID)).update({
                           cart: firebase_app__WEBPACK_IMPORTED_MODULE_5__["firestore"].FieldValue.arrayRemove({
-                            name: item.name,
                             description: item.description,
                             listingID: item.listingID,
                             retailerUID: item.retailerUID,
@@ -364,25 +420,25 @@
 
                     case 4:
                     case "end":
-                      return _context2.stop();
+                      return _context4.stop();
                   }
                 }
-              }, _callee2, this);
+              }, _callee4, this);
             }));
           }
         }, {
           key: "presentAlertDelete",
           value: function presentAlertDelete() {
-            return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
+            return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
               var resolveFunction, promise, alert;
-              return regeneratorRuntime.wrap(function _callee3$(_context3) {
+              return regeneratorRuntime.wrap(function _callee5$(_context5) {
                 while (1) {
-                  switch (_context3.prev = _context3.next) {
+                  switch (_context5.prev = _context5.next) {
                     case 0:
                       promise = new Promise(function (resolve) {
                         resolveFunction = resolve;
                       });
-                      _context3.next = 3;
+                      _context5.next = 3;
                       return this.alertCtrl.create({
                         header: 'Confirm Delete',
                         message: 'Are you sure you want to delete this item from your cart?',
@@ -400,19 +456,19 @@
                       });
 
                     case 3:
-                      alert = _context3.sent;
-                      _context3.next = 6;
+                      alert = _context5.sent;
+                      _context5.next = 6;
                       return alert.present();
 
                     case 6:
-                      return _context3.abrupt("return", promise);
+                      return _context5.abrupt("return", promise);
 
                     case 7:
                     case "end":
-                      return _context3.stop();
+                      return _context5.stop();
                   }
                 }
-              }, _callee3, this);
+              }, _callee5, this);
             }));
           }
         }, {
@@ -423,7 +479,6 @@
               var priceValue = item.totalPrice + item.price;
               this.afstore.doc("users/".concat(this.userUID)).update({
                 cart: firebase_app__WEBPACK_IMPORTED_MODULE_5__["firestore"].FieldValue.arrayUnion({
-                  name: item.name,
                   description: item.description,
                   listingID: item.listingID,
                   retailerUID: item.retailerUID,
@@ -435,7 +490,6 @@
               });
               this.afstore.doc("users/".concat(this.userUID)).update({
                 cart: firebase_app__WEBPACK_IMPORTED_MODULE_5__["firestore"].FieldValue.arrayRemove({
-                  name: item.name,
                   description: item.description,
                   listingID: item.listingID,
                   retailerUID: item.retailerUID,
@@ -458,7 +512,6 @@
               var priceValue = item.totalPrice - item.price;
               this.afstore.doc("users/".concat(this.userUID)).update({
                 cart: firebase_app__WEBPACK_IMPORTED_MODULE_5__["firestore"].FieldValue.arrayUnion({
-                  name: item.name,
                   description: item.description,
                   listingID: item.listingID,
                   retailerUID: item.retailerUID,
@@ -470,7 +523,6 @@
               });
               this.afstore.doc("users/".concat(this.userUID)).update({
                 cart: firebase_app__WEBPACK_IMPORTED_MODULE_5__["firestore"].FieldValue.arrayRemove({
-                  name: item.name,
                   description: item.description,
                   listingID: item.listingID,
                   retailerUID: item.retailerUID,
@@ -486,19 +538,29 @@
             }
           }
         }, {
+          key: "getRetailer",
+          value: function getRetailer(uid) {
+            if (this.retailers) {
+              var user = this.retailers.find(function (element) {
+                return element.retailerUID == uid;
+              });
+              return user.name;
+            }
+          }
+        }, {
           key: "checkOut",
           value: function checkOut(cart) {
-            return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
+            return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
               var confirm;
-              return regeneratorRuntime.wrap(function _callee4$(_context4) {
+              return regeneratorRuntime.wrap(function _callee6$(_context6) {
                 while (1) {
-                  switch (_context4.prev = _context4.next) {
+                  switch (_context6.prev = _context6.next) {
                     case 0:
-                      _context4.next = 2;
+                      _context6.next = 2;
                       return this.presentAlertCheck();
 
                     case 2:
-                      confirm = _context4.sent;
+                      confirm = _context6.sent;
 
                       if (confirm) {
                         this.nacCtrl.navigateRoot(['./paypal']);
@@ -506,25 +568,25 @@
 
                     case 4:
                     case "end":
-                      return _context4.stop();
+                      return _context6.stop();
                   }
                 }
-              }, _callee4, this);
+              }, _callee6, this);
             }));
           }
         }, {
           key: "presentAlertCheck",
           value: function presentAlertCheck() {
-            return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
+            return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee7() {
               var resolveFunction, promise, alert;
-              return regeneratorRuntime.wrap(function _callee5$(_context5) {
+              return regeneratorRuntime.wrap(function _callee7$(_context7) {
                 while (1) {
-                  switch (_context5.prev = _context5.next) {
+                  switch (_context7.prev = _context7.next) {
                     case 0:
                       promise = new Promise(function (resolve) {
                         resolveFunction = resolve;
                       });
-                      _context5.next = 3;
+                      _context7.next = 3;
                       return this.alertCtrl.create({
                         header: 'Confirm Check-Out',
                         message: 'Are you sure you want to check out these items from your cart?',
@@ -542,19 +604,19 @@
                       });
 
                     case 3:
-                      alert = _context5.sent;
-                      _context5.next = 6;
+                      alert = _context7.sent;
+                      _context7.next = 6;
                       return alert.present();
 
                     case 6:
-                      return _context5.abrupt("return", promise);
+                      return _context7.abrupt("return", promise);
 
                     case 7:
                     case "end":
-                      return _context5.stop();
+                      return _context7.stop();
                   }
                 }
-              }, _callee5, this);
+              }, _callee7, this);
             }));
           }
         }]);
@@ -564,6 +626,8 @@
 
       Tab3Page.ctorParameters = function () {
         return [{
+          type: _listings_service__WEBPACK_IMPORTED_MODULE_6__["ListingsService"]
+        }, {
           type: _angular_fire_auth__WEBPACK_IMPORTED_MODULE_3__["AngularFireAuth"]
         }, {
           type: _ionic_angular__WEBPACK_IMPORTED_MODULE_4__["NavController"]

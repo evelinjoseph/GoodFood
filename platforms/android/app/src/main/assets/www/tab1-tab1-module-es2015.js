@@ -9,7 +9,7 @@
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<ion-header>\r\n  <ion-toolbar mode=\"ios\" color=\"primary\">\r\n    <ion-title>Good Food</ion-title>\r\n    <ion-buttons slot=\"start\">\r\n      <ion-menu-button autoHide=\"false\"></ion-menu-button>\r\n    </ion-buttons>\r\n  </ion-toolbar>\r\n</ion-header>\r\n\r\n<ion-content fullscreen [hidden]=\"!isReady\"> \r\n\r\n  <ion-refresher slot=\"fixed\" (ionRefresh)=\"doRefresh($event)\">\r\n    <ion-refresher-content></ion-refresher-content>\r\n  </ion-refresher>\r\n  \r\n  <br>\r\n  <ion-toolbar> \r\n    <ion-row>\r\n      <ion-col size=\"10\">\r\n      <ion-searchbar mode=\"ios\" (ionInput)=\"search($event)\" placeholder = {{searchText}}></ion-searchbar>\r\n    </ion-col>\r\n      <ion-col size=\"1\">\r\n      <ion-icon size=\"4\" name=\"options\" (click)=\"filterSearch()\"></ion-icon>\r\n    </ion-col>\r\n  </ion-row> \r\n    </ion-toolbar> \r\n    <!-- \r\n    <ion-item>\r\n      <ion-range id=\"dual-range\" dual-knobs pin color=\"primary\" [(ngModel)]=\"dualValue2\" min=\"0\" max=\"100\" step=\"1\" snaps=\"true\">\r\n        <ion-label slot=\"start\" >0</ion-label>\r\n        <ion-label slot=\"end\">100</ion-label>\r\n      </ion-range>\r\n    </ion-item> -->\r\n  <div *ngFor=\"let item of listings\">   \r\n    <ion-card [routerLink]=\"['/user-listing']\" [queryParams]=\"{ id: item.listingID }\" routerDirection=\"forward\">\r\n     <!-- <ion-item> \r\n       <ion-icon name=\"restaurant\" slot=\"start\"></ion-icon>\r\n       <ion-label class=\"ion-text-wrap\">{{item.name}}</ion-label>   \r\n      </ion-item> \r\n       <ion-card> -->\r\n        <!-- <img src=\"./madison.jpg\" /> -->\r\n        \r\n        <img src={{item.url}} style=\"width:100%;\"> \r\n        <ion-card-header> \r\n          <ion-card-title class=\"ion-text-wrap\">{{item.name}}</ion-card-title>\r\n        </ion-card-header>\r\n   \r\n     <ion-card-content> \r\n     \r\n       <p> Price: ${{item.price | number:'1.2-2'}}</p>\r\n       <p> Description: {{item.description}}</p>\r\n       <p> Location: {{item.location}}</p>\r\n       <p> Retailer Type: {{item.retailerType}}</p>\r\n     </ion-card-content>\r\n   </ion-card>\r\n  </div>\r\n</ion-content>");
+/* harmony default export */ __webpack_exports__["default"] = ("<ion-header>\r\n  <ion-toolbar mode=\"ios\" color=\"primary\">\r\n    <ion-title>Good Food</ion-title>\r\n    <ion-buttons slot=\"start\">\r\n      <ion-menu-button autoHide=\"false\"></ion-menu-button>\r\n    </ion-buttons>\r\n  </ion-toolbar>\r\n</ion-header>\r\n\r\n<ion-content fullscreen [hidden]=\"!isReady\"> \r\n\r\n  <ion-refresher slot=\"fixed\" (ionRefresh)=\"doRefresh($event)\">\r\n    <ion-refresher-content></ion-refresher-content>\r\n  </ion-refresher>\r\n  \r\n  <br>\r\n  <ion-toolbar> \r\n    <ion-row>\r\n      <ion-col size=\"10\">\r\n      <ion-searchbar mode=\"ios\" (ionInput)=\"search($event)\" placeholder = {{searchText}}></ion-searchbar>\r\n    </ion-col>\r\n      <ion-col size=\"1\">\r\n      <ion-icon size=\"4\" name=\"options\" (click)=\"filterSearch()\"></ion-icon>\r\n    </ion-col>\r\n  </ion-row> \r\n    </ion-toolbar> \r\n    \r\n  <div *ngFor=\"let item of listings\">   \r\n    <ion-card [routerLink]=\"['/user-listing']\" [queryParams]=\"{ id: item.listingID }\" routerDirection=\"forward\">\r\n             \r\n        <img src={{item.url}} style=\"width:100%;\"> \r\n        <ion-card-header> \r\n          <ion-card-title class=\"ion-text-wrap\">{{getRetailer(item.retailerUID)}}</ion-card-title> \r\n        </ion-card-header>\r\n   \r\n     <ion-card-content> \r\n      <p style=\"font-weight: bold; color:black\"> {{item.quantity}} meals left</p>\r\n       <p> Price: ${{item.price | number:'1.2-2'}}</p>\r\n       <p> Location: {{item.location}}</p>\r\n       <p> Retailer Type: {{item.retailerType}}</p>\r\n     </ion-card-content>\r\n   </ion-card>\r\n  </div>\r\n</ion-content>");
 
 /***/ }),
 
@@ -142,8 +142,8 @@ let Tab1Page = class Tab1Page {
         this.changeDetection = changeDetection;
         this.loadingController = loadingController;
         this.alertController = alertController;
-        this.searchText = "Search By Food";
-        this.searchBy = "Food";
+        this.searchText = "Search By Retailer";
+        this.searchBy = "Retailer";
         this.isReady = false;
     }
     ngOnInit() {
@@ -155,6 +155,11 @@ let Tab1Page = class Tab1Page {
     initializeItems() {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
             let listing = yield this.listingService.initializeItems();
+            this.retailers = this.listingService.getUsers().filter(currentListing => {
+                if (currentListing.isRetailer) {
+                    return (currentListing.isRetailer);
+                }
+            });
             var self = this;
             listing.forEach(function (element, ind, array) {
                 return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
@@ -169,7 +174,6 @@ let Tab1Page = class Tab1Page {
                         description: element.description,
                         listingID: element.listingID,
                         location: element.location,
-                        name: element.name,
                         price: element.price,
                         quantity: element.quantity,
                         retailerType: element.retailerType,
@@ -190,10 +194,18 @@ let Tab1Page = class Tab1Page {
             this.changeDetection.detectChanges();
             return;
         }
-        if (this.searchBy == "Food") {
+        if (this.searchBy == "Retailer") {
+            let matchingRetailers = [];
+            matchingRetailers = this.retailers.filter(retailer => {
+                return (retailer.name.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1);
+            });
             this.listings = this.listings.filter(currentListing => {
-                if (currentListing.name && searchTerm) {
-                    return (currentListing.name.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1);
+                if (matchingRetailers.length > 0 && currentListing.retailerUID) {
+                    for (var i = 0; i < matchingRetailers.length; i++) {
+                        if (currentListing.retailerUID.toLowerCase().indexOf(matchingRetailers[i].retailerUID.toLowerCase()) > -1) {
+                            return true;
+                        }
+                    }
                 }
             });
         }
@@ -204,7 +216,7 @@ let Tab1Page = class Tab1Page {
                 }
             });
         }
-        else if (this.searchBy == "Retailer") {
+        else if (this.searchBy == "Retailer Type") {
             this.listings = this.listings.filter(currentListing => {
                 if (currentListing.retailerType && searchTerm) {
                     return (currentListing.retailerType.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1);
@@ -226,15 +238,15 @@ let Tab1Page = class Tab1Page {
                     {
                         name: 'radio1',
                         type: 'radio',
-                        label: 'Food',
-                        value: 'Food',
+                        label: 'Retailer',
+                        value: 'Retailer',
                         checked: true
                     },
                     {
                         name: 'radio2',
                         type: 'radio',
-                        label: 'Retailer',
-                        value: 'Retailer'
+                        label: 'Retailer Type',
+                        value: 'Retailer Type'
                     },
                     {
                         name: 'radio3',
@@ -279,9 +291,17 @@ let Tab1Page = class Tab1Page {
     }
     doRefresh(event) {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
+            // this.isReady = false;
+            // this.presentLoading();
             this.listings = yield this.initializeItems();
             event.target.complete();
         });
+    }
+    getRetailer(uid) {
+        if (this.retailers) {
+            const user = this.retailers.find(element => element.retailerUID == uid);
+            return user.name;
+        }
     }
 };
 Tab1Page.ctorParameters = () => [

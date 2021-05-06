@@ -9,7 +9,7 @@
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<ion-header style=\"text-align: center\">\n  <ion-toolbar mode=\"ios\" color=\"primary\">\n    <ion-title>Good Food</ion-title>\n    <ion-buttons slot=\"start\">\n      <ion-menu-button autoHide=\"true\"></ion-menu-button>\n    </ion-buttons>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content fullscreen [hidden]=\"!isReady\">\n  <div *ngFor=\"let item of cart\">\n    <ion-card>\n     <ion-item>\n      <ion-card-title class=\"ion-text-wrap\">{{item.name}}</ion-card-title>\n      <ion-button  (click)=\"delete(item)\" fill=\"outline\" slot=\"end\">Delete</ion-button> \n    </ion-item>\n   \n     <ion-card-content> \n        <p style=\"font-size: large;\" > Quantity: \n          <ion-button (click)=\"dec(item)\" size=\"small\" fill=\"clear\"> \n            <ion-icon name=\"remove-circle-outline\"></ion-icon> \n          </ion-button>\n          {{item.quantityCart}}\n          <ion-button (click)=\"inc(item)\" size=\"small\" fill=\"clear\"> \n            <ion-icon name=\"add-circle-outline\"></ion-icon> \n          </ion-button></p>\n          <p style=\"font-size: large;\"> Price: ${{item.totalPrice | number:'1.2-2'}}</p>\n        <p style=\"font-size: large;\"> Description: {{item.description}}</p>\n     </ion-card-content>\n   </ion-card>\n  </div>\n  <ion-text class=\"centerText\" *ngIf=\"((userItems | async)?.cart).length <= 0\" color=\"primary\" style=\"text-align: center\">\n      <p>There are no items in the cart.</p>\n  </ion-text>  \n</ion-content>\n\n<ion-footer *ngIf=\"((userItems | async)?.cart).length > 0\" >\n  <!-- class=\"ion-no-border\" -->\n \n  <ion-toolbar *ngIf=\"userItems | async as cartData\"  position=\"bottom\" style=\"text-align: center;\">\n    <div class=\"ion-text-end\" id=\"subtotal\">\n      <ion-text > <p style=\"font-size: large;\"> Subtotal: ${{subtotal | number:'1.2-2'}} </p></ion-text> \n    </div>     \n    <ion-button (click)=\"checkOut(cartData.cart)\" size=\"large\">Checkout</ion-button>\n </ion-toolbar>\n</ion-footer>\n");
+/* harmony default export */ __webpack_exports__["default"] = ("<ion-header style=\"text-align: center\">\n  <ion-toolbar mode=\"ios\" color=\"primary\">\n    <ion-title>Good Food</ion-title>\n    <ion-buttons slot=\"start\">\n      <ion-menu-button autoHide=\"true\"></ion-menu-button>\n    </ion-buttons>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content fullscreen [hidden]=\"!isReady\">\n  <div *ngFor=\"let item of cart\">\n    <ion-card>\n     <ion-item>\n      <ion-card-title class=\"ion-text-wrap\">{{getRetailer(item.retailerUID)}}</ion-card-title>\n      <ion-button  (click)=\"delete(item)\" fill=\"outline\" slot=\"end\">Delete</ion-button> \n    </ion-item>\n   \n     <ion-card-content> \n        <p style=\"font-size: large;\" > Quantity: \n          <ion-button (click)=\"dec(item)\" size=\"small\" fill=\"clear\"> \n            <ion-icon name=\"remove-circle-outline\"></ion-icon> \n          </ion-button>\n          {{item.quantityCart}}\n          <ion-button (click)=\"inc(item)\" size=\"small\" fill=\"clear\"> \n            <ion-icon name=\"add-circle-outline\"></ion-icon> \n          </ion-button></p>\n          <p style=\"font-size: large;\"> Price: ${{item.totalPrice | number:'1.2-2'}}</p>\n     </ion-card-content>\n   </ion-card>\n  </div>\n  <ion-text class=\"centerText\" *ngIf=\"((userItems | async)?.cart).length <= 0\" color=\"primary\" style=\"text-align: center\">\n      <p>There are no items in the cart.</p>\n  </ion-text>  \n</ion-content>\n\n<ion-footer *ngIf=\"((userItems | async)?.cart).length > 0\" >\n  <!-- class=\"ion-no-border\" -->\n \n  <ion-toolbar *ngIf=\"userItems | async as cartData\"  position=\"bottom\" style=\"text-align: center;\">\n    <div class=\"ion-text-end\" id=\"subtotal\">\n      <ion-text > <p style=\"font-size: large;\"> Subtotal: ${{subtotal | number:'1.2-2'}} </p></ion-text> \n    </div>     \n    <ion-button expand=\"block\" (click)=\"checkOut(cartData.cart)\" size=\"large\">Checkout</ion-button>\n </ion-toolbar>\n</ion-footer>\n");
 
 /***/ }),
 
@@ -125,6 +125,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @ionic/angular */ "./node_modules/@ionic/angular/__ivy_ngcc__/fesm2015/ionic-angular.js");
 /* harmony import */ var firebase_app__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! firebase/app */ "./node_modules/firebase/app/dist/index.cjs.js");
 /* harmony import */ var firebase_app__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(firebase_app__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _listings_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../listings.service */ "./src/app/listings.service.ts");
+
 
 
 
@@ -132,7 +134,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 let Tab3Page = class Tab3Page {
-    constructor(afauth, nacCtrl, afstore, changeDetection, alertCtrl) {
+    constructor(listingService, afauth, nacCtrl, afstore, changeDetection, alertCtrl) {
+        this.listingService = listingService;
         this.afauth = afauth;
         this.nacCtrl = nacCtrl;
         this.afstore = afstore;
@@ -147,23 +150,39 @@ let Tab3Page = class Tab3Page {
         this.cart = [];
         this.subtotal = 0;
         this.afauth.onAuthStateChanged(function (user) {
-            if (user) {
-                self.userUID = user.uid;
-                self.items = self.afstore.doc(`users/${self.userUID}`);
-                self.userItems = self.items.valueChanges();
-                self.changeDetection.detectChanges();
-                self.getCart();
-            }
+            return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
+                if (user) {
+                    self.userUID = user.uid;
+                    self.items = self.afstore.doc(`users/${self.userUID}`);
+                    self.userItems = self.items.valueChanges();
+                    yield self.listingService.initializeItems();
+                    self.retailers = self.listingService.getUsers().filter(currentUser => {
+                        if (currentUser.isRetailer) {
+                            return (currentUser.isRetailer);
+                        }
+                    });
+                    self.changeDetection.detectChanges();
+                    self.getCart();
+                }
+            });
         });
     }
     ionViewWillEnter() {
-        this.cart = [];
-        this.subtotal = 0;
-        if (this.items) {
-            this.userItems = this.items.valueChanges();
-            this.getCart();
-            this.changeDetection.detectChanges();
-        }
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
+            this.cart = [];
+            this.subtotal = 0;
+            if (this.items) {
+                this.userItems = this.items.valueChanges();
+                yield this.listingService.initializeItems();
+                this.retailers = this.listingService.getUsers().filter(currentListing => {
+                    if (currentListing.isRetailer) {
+                        return (currentListing.isRetailer);
+                    }
+                });
+                this.getCart();
+                this.changeDetection.detectChanges();
+            }
+        });
     }
     getCart() {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
@@ -191,7 +210,6 @@ let Tab3Page = class Tab3Page {
             if (confirm) {
                 this.afstore.doc(`users/${this.userUID}`).update({
                     cart: firebase_app__WEBPACK_IMPORTED_MODULE_5__["firestore"].FieldValue.arrayRemove({
-                        name: item.name,
                         description: item.description,
                         listingID: item.listingID,
                         retailerUID: item.retailerUID,
@@ -239,7 +257,6 @@ let Tab3Page = class Tab3Page {
             var priceValue = item.totalPrice + item.price;
             this.afstore.doc(`users/${this.userUID}`).update({
                 cart: firebase_app__WEBPACK_IMPORTED_MODULE_5__["firestore"].FieldValue.arrayUnion({
-                    name: item.name,
                     description: item.description,
                     listingID: item.listingID,
                     retailerUID: item.retailerUID,
@@ -251,7 +268,6 @@ let Tab3Page = class Tab3Page {
             });
             this.afstore.doc(`users/${this.userUID}`).update({
                 cart: firebase_app__WEBPACK_IMPORTED_MODULE_5__["firestore"].FieldValue.arrayRemove({
-                    name: item.name,
                     description: item.description,
                     listingID: item.listingID,
                     retailerUID: item.retailerUID,
@@ -272,7 +288,6 @@ let Tab3Page = class Tab3Page {
             var priceValue = item.totalPrice - item.price;
             this.afstore.doc(`users/${this.userUID}`).update({
                 cart: firebase_app__WEBPACK_IMPORTED_MODULE_5__["firestore"].FieldValue.arrayUnion({
-                    name: item.name,
                     description: item.description,
                     listingID: item.listingID,
                     retailerUID: item.retailerUID,
@@ -284,7 +299,6 @@ let Tab3Page = class Tab3Page {
             });
             this.afstore.doc(`users/${this.userUID}`).update({
                 cart: firebase_app__WEBPACK_IMPORTED_MODULE_5__["firestore"].FieldValue.arrayRemove({
-                    name: item.name,
                     description: item.description,
                     listingID: item.listingID,
                     retailerUID: item.retailerUID,
@@ -297,6 +311,12 @@ let Tab3Page = class Tab3Page {
             item.quantityCart--;
             item.totalPrice -= item.price;
             this.subtotal -= item.price;
+        }
+    }
+    getRetailer(uid) {
+        if (this.retailers) {
+            const user = this.retailers.find(element => element.retailerUID == uid);
+            return user.name;
         }
     }
     checkOut(cart) {
@@ -318,11 +338,12 @@ let Tab3Page = class Tab3Page {
                 message: 'Are you sure you want to check out these items from your cart?',
                 buttons: [
                     {
-                        text: 'Yes',
-                        handler: () => resolveFunction(true)
-                    }, {
                         text: 'No',
                         handler: () => resolveFunction(false)
+                    },
+                    {
+                        text: 'Yes',
+                        handler: () => resolveFunction(true)
                     }
                 ]
             });
@@ -332,6 +353,7 @@ let Tab3Page = class Tab3Page {
     }
 };
 Tab3Page.ctorParameters = () => [
+    { type: _listings_service__WEBPACK_IMPORTED_MODULE_6__["ListingsService"] },
     { type: _angular_fire_auth__WEBPACK_IMPORTED_MODULE_3__["AngularFireAuth"] },
     { type: _ionic_angular__WEBPACK_IMPORTED_MODULE_4__["NavController"] },
     { type: _angular_fire_firestore__WEBPACK_IMPORTED_MODULE_2__["AngularFirestore"] },

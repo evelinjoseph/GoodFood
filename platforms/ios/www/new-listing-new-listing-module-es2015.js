@@ -94,7 +94,7 @@ exports.Guid = Guid;
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<ion-header style=\"text-align: center\">\n  <ion-toolbar color=\"primary\" mode=\"ios\">\n    <ion-buttons slot=\"start\">\n      <ion-back-button [text]=\"Back\" defaultHref=\"/retailertabs/retailertabs/retailertab2\"></ion-back-button>\n    </ion-buttons>\n    <ion-title>\n      Good Food\n    </ion-title>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content fullscreen>\n      <br>\n      <p style=\"text-align: center;\" > Please Enter a Name, Description, Price, and Quantity for the New Listing </p>\n        <ion-item>\n          <ion-label position=\"floating\">Name</ion-label>\n          <ion-input autocapitalize='sentences' type=\"text\" [(ngModel)]=\"name\"></ion-input>\n        </ion-item>\n        <ion-item>\n          <ion-label position=\"floating\">Description</ion-label>\n          <ion-input [(ngModel)]=\"description\"></ion-input>\n        </ion-item>\n        <ion-item>\n          <ion-label position=\"floating\">Price</ion-label>\n          <ion-input type=\"number\" [(ngModel)]=\"price\"></ion-input>\n        </ion-item>\n        <ion-item>\n          <ion-label position=\"floating\">Quantity</ion-label>\n          <ion-input type=\"number\" [(ngModel)]=\"quantity\"></ion-input>\n        </ion-item>\n        <br>\n        <ion-footer class=\"ion-no-border\">\n          <ion-toolbar position=\"bottom\" style=\"text-align: center;\">     \n            <ion-button onmouseover=\"\" (click)=\"save()\">Add Listing\n              <span></span>\n            </ion-button> \n            <ion-button (click)=\"publish()\">Add and Publish Listing</ion-button> \n          </ion-toolbar>\n        </ion-footer>\n        \n</ion-content>\n\n");
+/* harmony default export */ __webpack_exports__["default"] = ("<ion-header style=\"text-align: center\">\n  <ion-toolbar color=\"primary\" mode=\"ios\">\n    <ion-buttons slot=\"start\">\n      <ion-back-button [text]=\"Back\" defaultHref=\"/retailertabs/retailertabs/retailertab2\"></ion-back-button>\n    </ion-buttons>\n    <ion-title>\n      Good Food\n    </ion-title>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content fullscreen>\n      <br>\n      <p style=\"text-align: center;\" > Please Enter a Description (Optional), Price, and Quantity for the New Listing </p>\n        \n        <ion-item>\n          <ion-label position=\"floating\">Description (Optional)</ion-label>\n          <ion-input [(ngModel)]=\"description\"></ion-input>\n        </ion-item>\n        <ion-item>\n          <ion-label position=\"floating\">Price</ion-label>\n          <ion-input type=\"number\" [(ngModel)]=\"price\"></ion-input>\n        </ion-item>\n        <ion-item>\n          <ion-label position=\"floating\">Quantity</ion-label>\n          <ion-input type=\"number\" [(ngModel)]=\"quantity\"></ion-input>\n        </ion-item>\n        <br>\n        <ion-footer class=\"ion-no-border\">\n          <ion-toolbar position=\"bottom\" style=\"text-align: center;\">     \n            <ion-button onmouseover=\"\" (click)=\"save()\">Add Listing\n              <span></span>\n            </ion-button> \n            <ion-button (click)=\"publish()\">Add and Publish Listing</ion-button> \n          </ion-toolbar>\n        </ion-footer>\n        \n</ion-content>\n\n");
 
 /***/ }),
 
@@ -222,8 +222,9 @@ __webpack_require__.r(__webpack_exports__);
 
 
 let NewListingPage = class NewListingPage {
-    constructor(afstore, alertController, activatedRoute, firestore, afStorage, afAuth, loadingController, changeDetection) {
+    constructor(afstore, nacCtrl, alertController, activatedRoute, firestore, afStorage, afAuth, loadingController, changeDetection) {
         this.afstore = afstore;
+        this.nacCtrl = nacCtrl;
         this.alertController = alertController;
         this.activatedRoute = activatedRoute;
         this.firestore = firestore;
@@ -231,7 +232,7 @@ let NewListingPage = class NewListingPage {
         this.afAuth = afAuth;
         this.loadingController = loadingController;
         this.changeDetection = changeDetection;
-        this.name = "";
+        //name: String = "";
         this.description = "";
         this.price = 0;
         this.quantity = 0;
@@ -254,31 +255,24 @@ let NewListingPage = class NewListingPage {
     ;
     save() {
         try {
-            if (this.name.length == 0) {
-                throw new Error('Please Enter a Name');
-            }
-            if (this.description.length == 0) {
-                throw new Error('Please Enter a Description');
-            }
             if (this.price <= 0) {
                 throw new Error('Please Enter Price');
             }
             if (this.quantity <= 0) {
                 throw new Error('Please Enter Quantity');
             }
-            //TODO: make error checks better
             this.listingID = ez_guid__WEBPACK_IMPORTED_MODULE_8__["Guid"].create().toShortString();
             this.afstore.doc(`users/${this.retailerUID}`).update({
                 listings: firebase_app__WEBPACK_IMPORTED_MODULE_6__["firestore"].FieldValue.arrayUnion({
                     quantity: this.quantity,
                     price: this.price,
                     description: this.description,
-                    name: this.name,
                     listingID: this.listingID,
                     isListed: false
                 })
             });
             this.presentAlert("Listing Added Successfully");
+            this.nacCtrl.navigateRoot(["./retailertabs/retailertabs/retailertab2"]);
         }
         catch (error) {
             this.presentError(error.message);
@@ -286,19 +280,12 @@ let NewListingPage = class NewListingPage {
     }
     publish() {
         try {
-            if (this.name.length == 0) {
-                throw new Error('Please Enter a Name');
-            }
-            if (this.description.length == 0) {
-                throw new Error('Please Enter a Description');
-            }
             if (this.price == 0) {
                 throw new Error('Please Enter Price');
             }
             if (this.quantity == 0) {
                 throw new Error('Please Enter Quantity');
             }
-            //TODO: make error checks better
             this.listingID = ez_guid__WEBPACK_IMPORTED_MODULE_8__["Guid"].create().toShortString();
             this.date = new Date();
             this.pickupDate = new Date(this.pickupTime.toDate());
@@ -306,7 +293,6 @@ let NewListingPage = class NewListingPage {
             const data = {
                 description: this.description,
                 listingID: this.listingID,
-                name: this.name,
                 price: this.price,
                 quantity: this.quantity,
                 retailerType: this.retailerType,
@@ -320,12 +306,12 @@ let NewListingPage = class NewListingPage {
                     quantity: this.quantity,
                     price: this.price,
                     description: this.description,
-                    name: this.name,
                     listingID: this.listingID,
                     isListed: true
                 })
             });
             this.presentAlert("Listing Added and Published Successfully");
+            this.nacCtrl.navigateRoot(["./retailertabs/retailertabs/retailertab2"]);
         }
         catch (error) {
             this.presentError(error.message);
@@ -373,6 +359,7 @@ let NewListingPage = class NewListingPage {
 };
 NewListingPage.ctorParameters = () => [
     { type: _angular_fire_firestore__WEBPACK_IMPORTED_MODULE_2__["AngularFirestore"] },
+    { type: _ionic_angular__WEBPACK_IMPORTED_MODULE_7__["NavController"] },
     { type: _ionic_angular__WEBPACK_IMPORTED_MODULE_7__["AlertController"] },
     { type: _angular_router__WEBPACK_IMPORTED_MODULE_3__["ActivatedRoute"] },
     { type: _angular_fire_firestore__WEBPACK_IMPORTED_MODULE_2__["AngularFirestore"] },
