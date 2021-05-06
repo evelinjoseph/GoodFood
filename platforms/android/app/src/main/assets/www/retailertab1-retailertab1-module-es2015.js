@@ -9,7 +9,7 @@
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<ion-header style=\"text-align: center\">\r\n  <ion-toolbar mode=\"ios\" color=\"primary\">\r\n    <ion-title>Good Food</ion-title>\r\n    <ion-buttons slot=\"start\">\r\n      <ion-menu-button autoHide=\"true\"></ion-menu-button>\r\n    </ion-buttons>\r\n  </ion-toolbar>\r\n</ion-header>\r\n\r\n<ion-content fullscreen [hidden]=\"!isReady\" >\r\n\r\n  <div *ngIf=\"!((retailerItems | async)?.isVerified) ; else verified\" class=\"centerText\">\r\n    <ion-text class=\"centerText\" color=\"primary\" style=\"text-align: center\">\r\n      <p>Your account is not verified yet, please wait until verified to gain access to this tab!</p>\r\n    </ion-text>\r\n  </div>\r\n  <ng-template #verified>\r\n    <div *ngFor=\"let item of ((retailerItems | async)?.orders).sort().reverse()\">\r\n      <ion-card>\r\n\r\n      <ion-item>\r\n        <ion-card-title class=\"ion-text-wrap\">{{item.name}}</ion-card-title>\r\n      </ion-item>\r\n    \r\n      <ion-card-content> \r\n          <p> Description: {{item.description}}</p>\r\n          <p> Ordered: {{item.date.toDate().toLocaleString()}}</p>\r\n          <p> User: {{getUser(item.userUID)}}</p>      \r\n      </ion-card-content>\r\n    </ion-card>\r\n    </div>  \r\n    \r\n      <ion-text *ngIf=\"((retailerItems | async)?.orders).length <= 0\" class=\"centerText\" color=\"primary\" style=\"text-align: center\">\r\n        <p>There are no orders currently.</p>\r\n      </ion-text>\r\n  </ng-template>  \r\n</ion-content>\r\n\r\n");
+/* harmony default export */ __webpack_exports__["default"] = ("<ion-header style=\"text-align: center\">\r\n  <ion-toolbar mode=\"ios\" color=\"primary\">\r\n    <ion-title>Good Food</ion-title>\r\n    <ion-buttons slot=\"start\">\r\n      <ion-menu-button autoHide=\"true\"></ion-menu-button>\r\n    </ion-buttons>\r\n  </ion-toolbar>\r\n</ion-header>\r\n\r\n<ion-content fullscreen [hidden]=\"!isReady\" >\r\n\r\n  <div *ngIf=\"!((retailerItems | async)?.isVerified) ; else verified\" class=\"centerText\">\r\n    <ion-text class=\"centerText\" color=\"primary\" style=\"text-align: center\">\r\n      <p>Your account is not verified yet, please wait until verified to gain access to this tab!</p>\r\n    </ion-text>\r\n  </div>\r\n  <ng-template #verified>\r\n    <div *ngFor=\"let item of ((retailerItems | async)?.orders).sort().reverse()\">\r\n      <ion-card>\r\n\r\n      <ion-item>\r\n        <ion-card-title class=\"ion-text-wrap\">{{getRetailer(item.retailerUID)}}</ion-card-title>\r\n      </ion-item>\r\n    \r\n      <ion-card-content> \r\n          <p> Description: {{item.description}}</p>\r\n          <p> Ordered: {{item.date.toDate().toLocaleString()}}</p>\r\n          <p> User: {{getUser(item.userUID)}}</p>      \r\n      </ion-card-content>\r\n    </ion-card>\r\n    </div>  \r\n    \r\n      <ion-text *ngIf=\"((retailerItems | async)?.orders).length <= 0\" class=\"centerText\" color=\"primary\" style=\"text-align: center\">\r\n        <p>There are no orders currently.</p>\r\n      </ion-text>\r\n  </ng-template>  \r\n</ion-content>\r\n\r\n");
 
 /***/ }),
 
@@ -146,6 +146,11 @@ let Retailertab1Page = class Retailertab1Page {
                     self.retailerItems = self.items.valueChanges();
                     yield self.listingService.initializeItems();
                     self.users = self.listingService.getUsers();
+                    self.retailers = self.users.filter(currentUser => {
+                        if (currentUser.isRetailer) {
+                            return (currentUser.isRetailer);
+                        }
+                    });
                     self.users = self.users.filter(currentUser => {
                         if (!currentUser.isRetailer) {
                             return (!currentUser.isRetailer);
@@ -172,6 +177,12 @@ let Retailertab1Page = class Retailertab1Page {
         if (this.users) {
             const user = this.users.find(element => element.userUID == uid);
             return user.firstname + " " + user.lastname + " (" + uid + ")";
+        }
+    }
+    getRetailer(uid) {
+        if (this.retailers) {
+            const user = this.retailers.find(element => element.retailerUID == uid);
+            return user.name;
         }
     }
 };

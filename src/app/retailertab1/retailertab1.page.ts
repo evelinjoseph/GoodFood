@@ -16,6 +16,7 @@ export class Retailertab1Page implements OnInit {
   retailerName;
   isReady = false;
   users: any[];
+  retailers: any[];
 
   constructor(public listingService: ListingsService, public afstore: AngularFirestore, public afAuth: AngularFireAuth, private changeDetection: ChangeDetectorRef, public alertCtrl: AlertController) { }
 
@@ -28,6 +29,12 @@ export class Retailertab1Page implements OnInit {
         self.retailerItems = self.items.valueChanges(); 
         await self.listingService.initializeItems();
         self.users = self.listingService.getUsers();
+
+        self.retailers = self.users.filter(currentUser => {
+          if (currentUser.isRetailer) {
+            return (currentUser.isRetailer);
+          }
+        });  
         self.users = self.users.filter(currentUser => {
           if (!currentUser.isRetailer) {
             return (!currentUser.isRetailer);
@@ -57,6 +64,14 @@ export class Retailertab1Page implements OnInit {
       return user.firstname + " " + user.lastname + " (" + uid + ")";
     }
    
+  }
+
+  getRetailer(uid) : String{  
+    if(this.retailers){
+     const user = this.retailers.find(element => element.retailerUID == uid);    
+     return user.name;
+
+    }
   }
 
 }
